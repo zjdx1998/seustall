@@ -4,7 +4,7 @@ let sequelize: any = require('sequelize');
 let Sequelize = sequelize.Sequelize;
 class data
 {
-	database = new Sequelize('foof', 'app', 'c17b41544bcab6b6b47a5c0bc6e1286a',
+	database = new Sequelize('foof', 'app', 'foof',
 		{
 			host: 'localhost',
 			dialect: 'mysql',
@@ -18,7 +18,14 @@ class data
 
 	goods()
 	{
-
+		this.database.authenticate()
+			.then(function (err: ExceptionInformation)
+			{
+				console.log("Connect had been established successfully.")
+			}).catch(function (err: ExceptionInformation)
+			{
+				console.log(err);
+			})
 		var goooods = this.database.define(
 			'goods',
 			{
