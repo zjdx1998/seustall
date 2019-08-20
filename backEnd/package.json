@@ -1,0 +1,17 @@
+{
+  "name": "foof-webserver",
+  "version": "1.0.0",
+  "description": "The background server of foof",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "foof"
+  ],
+  "author": "HanyuuFurude,TedZhan",
+  "license": "MIT",
+  "dependencies": {
+    "koa": "^2.8.1"
+  }
+}
