@@ -37,7 +37,7 @@ export default class SlideShow extends Component {
           height={240}
           autoplay
           onMomentumScrollEnd={(e, state, context) =>
-            console.log('index:', state.index)
+            console.log('--------------index:----------------', state.index)
           }
           dot={
             <View

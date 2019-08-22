@@ -5,7 +5,7 @@ import {View, StyleSheet} from 'react-native';
 export default class MainPages extends Component {
   render() {
     return (
-      <View style={{flex: 1}}>
+      <View style={styles.baseContainer}>
         <View style={styles.headerContainer}>
           <GlobalHeader />
         </View>
@@ -20,6 +20,11 @@ export default class MainPages extends Component {
 }
 
 const styles = StyleSheet.create({
+  baseContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    backgroundColor: '#FFF0F5',
+  },
   headerContainer: {
     flex: 1,
   },

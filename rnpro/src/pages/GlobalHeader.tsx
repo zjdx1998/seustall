@@ -4,7 +4,8 @@
   @date: 2019-8-22
 */
 import React, {Component} from 'react';
-import {Header, Icon, SearchBar} from 'react-native-elements';
+import {Header, SearchBar} from 'react-native-elements';
+import {Alert} from 'react-native';
 
 export default class extends Component {
   state = {
@@ -18,7 +19,11 @@ export default class extends Component {
         containerStyle={{marginTop: -20}}
         placement="center"
         backgroundColor="#EED2EE"
-        leftComponent={{icon: 'menu', color: '#030303'}}
+        leftComponent={{
+          icon: 'menu',
+          color: '#030303',
+          onPress: this._onClickList,
+        }}
         centerComponent={
           <SearchBar
             containerStyle={{
@@ -31,6 +36,7 @@ export default class extends Component {
               justifyContent: 'center',
             }}
             placeholder="请输入您要购买的商品"
+            inputStyle={{fontSize: 16}}
             onChangeText={this.updateSearch}
             lightTheme={true}
             value={search}
@@ -42,6 +48,9 @@ export default class extends Component {
       />
     );
   }
+  _onClickList = () => {
+    Alert.alert('Tips', 'You tapped the List!');
+  };
   updateSearch = (search: any) => {
     this.setState({search});
   };
