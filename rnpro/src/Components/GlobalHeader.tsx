@@ -10,14 +10,9 @@ import TotalNavigate from "./TotalNavigate";
 export default class extends Component {
   state = {
     search: '',
-    isClicked: false,
   };
   render() {
     const {search} = this.state;
-    if(this.state.isClicked){
-      this.setState({isClicked: false});
-      return <TotalNavigate />;
-    }
     return (
       <Header
         barStyle="light-content"
@@ -54,7 +49,7 @@ export default class extends Component {
     );
   }
   _onClickList = () => {
-    this.setState({isClicked: true});
+    TotalNavigate.props.navigation.openDrawer();
   };
   updateSearch = (search: any) => {
     this.setState({search});

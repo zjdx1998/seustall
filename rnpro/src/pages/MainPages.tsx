@@ -12,7 +12,6 @@ export default class MainPages extends Component {
         <View style={styles.slideshowContainer}>
           <SlideShow />
         </View>
-        <View style={styles.slideshowContainer} />
         <View style={styles.slideshowContainer}>
           <SlideShow />
         </View>
