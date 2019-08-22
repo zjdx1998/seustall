@@ -3,15 +3,15 @@
 +-----------+--------------+------+-----+---------+-------+
 | Field     | Type         | Null | Key | Default | Extra |
 +-----------+--------------+------+-----+---------+-------+
-| uuid      | varchar(20)  | NO   | PRI | NULL    |       |
-| password  | char(40)     | NO   |     | NULL    |       |
-| username  | varchar(100) | NO   |     | NULL    |       |
-| idcard    | char(20)     | NO   |     | NULL    |       |
-| studentid | char(20)     | NO   |     | NULL    |       |
-| address   | varchar(100) | NO   |     | NULL    |       |
-| avatorurl | varchar(100) | NO   |     | NULL    |       |
-| verified  | tinyint(1)   | YES  |     | NULL    |       |
-| score     | tinyint(4)   | YES  |     | NULL    |       |
+| uuid      | varchar(20)  | NO   | PRI | NULL    |       | 用户唯一id
+| password  | char(40)     | NO   |     | NULL    |       | 用户信息加密密码
+| username  | varchar(100) | NO   |     | NULL    |       | 用户名
+| idcard    | char(20)     | NO   |     | NULL    |       | 一卡通号
+| studentid | char(20)     | NO   |     | NULL    |       | 学号
+| address   | varchar(100) | NO   |     | NULL    |       | 分区地址
+| avatorurl | varchar(100) | NO   |     | NULL    |       | 头像
+| verified  | tinyint(1)   | YES  |     | NULL    |       | 是否验证
+| score     | tinyint(4)   | YES  |     | NULL    |       | 信用评分
 +-----------+--------------+------+-----+---------+-------+
 ```
 # goods
@@ -19,14 +19,14 @@
 +---------------+--------------+------+-----+---------+-------+
 | Field         | Type         | Null | Key | Default | Extra |
 +---------------+--------------+------+-----+---------+-------+
-| itemid        | char(20)     | NO   | PRI | NULL    |       |
-| uuid          | char(20)     | NO   |     | NULL    |       |
-| title         | varchar(100) | NO   |     | NULL    |       |
-| type          | tinyint(4)   | NO   |     | NULL    |       |
-| price         | double       | NO   |     | NULL    |       |
-| imgurl        | char(100)    | NO   |     | NULL    |       |
-| depreciatione | tinyint(4)   | NO   |     | NULL    |       |
-| note          | varchar(100) | NO   |     | NULL    |       |
-| sold          | tinyint(1)   | NO   |     | 0       |       |
+| itemid        | char(20)     | NO   | PRI | NULL    |       | 物品唯一id
+| uuid          | char(20)     | NO   |     | NULL    |       | 发布者唯一id
+| title         | varchar(100) | NO   |     | NULL    |       | 物品标题
+| type          | tinyint(4)   | NO   |     | NULL    |       | 类型
+| price         | double       | NO   |     | NULL    |       | 价格
+| imgurl        | char(100)    | NO   |     | NULL    |       | 物品图像
+| depreciatione | tinyint(4)   | NO   |     | NULL    |       | 折旧
+| note          | varchar(100) | NO   |     | NULL    |       | 详情
+| sold          | tinyint(1)   | NO   |     | 0       |       | 是否售出
 +---------------+--------------+------+-----+---------+-------+
 ```
