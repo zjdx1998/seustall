@@ -1,18 +1,23 @@
 /*
   @version: 0.3
-  @author: 7111723张建东
+  @author: 71117123张建东
   @date: 2019-8-22
 */
 import React, {Component} from 'react';
 import {Header, SearchBar} from 'react-native-elements';
 import {Alert} from 'react-native';
-
+import TotalNavigate from "./TotalNavigate";
 export default class extends Component {
   state = {
     search: '',
+    isClicked: false,
   };
   render() {
     const {search} = this.state;
+    if(this.state.isClicked){
+      this.setState({isClicked: false});
+      return <TotalNavigate />;
+    }
     return (
       <Header
         barStyle="light-content"
@@ -49,7 +54,7 @@ export default class extends Component {
     );
   }
   _onClickList = () => {
-    Alert.alert('Tips', 'You tapped the List!');
+    this.setState({isClicked: true});
   };
   updateSearch = (search: any) => {
     this.setState({search});
