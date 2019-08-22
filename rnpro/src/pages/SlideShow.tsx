@@ -7,14 +7,14 @@ import {
   Dimensions,
 } from 'react-native';
 import Swiper from 'react-native-swiper';
-import {Component} from 'react';
+import React, {Component} from 'react';
 const {width} = Dimensions.get('window'); //解构赋值 获取屏幕宽度
 
-export default class App extends Component {
+export default class SlideShow extends Component {
   render() {
     return (
       <View style={styles.container}>
-        {/*设置horizontal为竖向排列 autoplay为自动播放*/}
+        {/*
         <Swiper
           style={styles.wrapper}
           height={200}
@@ -31,7 +31,7 @@ export default class App extends Component {
             <Text style={styles.text}>And simple</Text>
           </View>
         </Swiper>
-
+        */}
         <Swiper
           style={styles.wrapper}
           height={240}
