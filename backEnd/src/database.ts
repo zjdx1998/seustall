@@ -2,9 +2,10 @@
 // import { Sequelize } from "sequelize";
 let sequelize: any = require('sequelize');
 let Sequelize = sequelize.Sequelize;
-class data
+import { PersonInterface, GoodInterface, Person } from './role';
+export default class data
 {
-	database = new Sequelize('foof', 'app', 'foof',
+	private database = new Sequelize('foof', 'app', 'foof',
 		{
 			host: 'localhost',
 			dialect: 'mysql',
@@ -15,43 +16,68 @@ class data
 			}
 
 		});
-
-	goods()
+	users: any;
+	goods: any;
+	constructor()
 	{
 		this.database.authenticate()
 			.then(function (err: ExceptionInformation)
 			{
-				console.log("Connect had been established successfully.")
+				console.log("√[info] connect had been established successfully.")
 			}).catch(function (err: ExceptionInformation)
 			{
 				console.log(err);
-			})
-		var goooods = this.database.define(
-			'goods',
+			});
+
+		this.users = this.database.define(
+			'users',
 			{
-				itemid: {
-					type: sequelize.INTEGER,
+				uuid:
+				{
+					type: sequelize.STRING,
 					primaryKey: true,
 				},
-				title: sequelize.STRING,
-				type: sequelize.INTEGER,
-				price: sequelize.DOUBLE,
-				depreciatione: sequelize.STRING,
-				note: sequelize.STRING
+				password: sequelize.STRING,
+				username: sequelize.STRING,
+				idcard: sequelize.STRING,
+				studentid: sequelize.STRING,
+				address: sequelize.STRING,
+				avatorurl: sequelize.STRING,
+				verififed: sequelize.INTEGER,
+				score: sequelize.INTEGER,
 			},
 			{
 				timestamps: false,
 			}
 		);
-		goooods.create(
+		this.goods = this.database.define(
+			'goods',
 			{
-				title: "Surface go 4g 64g 二手99新无锁国行未过保",
-				type: 3,
-				price: 2999.5,
-				depreciatione: 3,
-				note: "咸鱼是以盐腌渍后，晒干的鱼。以前因为没有低温保鲜技术，鱼很容易腐烂。因此世界各地沿海的渔民都有以此方法保存鱼。在中国古代，咸鱼称作“鲍鱼”，并有“鲍鱼之肆”此一成语（此非现在作为名贵海产的鲍鱼）。广东咸鱼中以马鲛著名，是梅香咸鱼的一种，有浓烈而特别的气味。广东特色菜肴咸鱼鸡粒炒饭便是以此制作。2017年10月27日，世界卫生组织国际癌症研究机构公布的致癌物清单初步整理参考，中式咸鱼 在一类致癌物清单中。"
+				itemid: {
+					type: sequelize.STRING,
+					primaryKey: true,
+				},
+				uuid: sequelize.STRING,
+				title: sequelize.STRING,
+				type: sequelize.INTEGER,
+				price: sequelize.DOUBLE,
+				imgurl: sequelize.STRING,
+				depreciatione: sequelize.INTEGER,
+				note: sequelize.STRING,
+				sold: sequelize.INTEGER
+			},
+			{
+				timestamps: false,
 			}
 		);
 	}
+
+	writeGood(good: GoodInterface)
+	{
+		this.goods.create(good);
+	}
+	writeUser(user: PersonInterface)
+	{
+		this.users.create(user);
+	}
 }
-export default data;
