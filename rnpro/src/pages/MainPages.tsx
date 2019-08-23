@@ -4,7 +4,7 @@ import SlideShow from '../Components/SlideShow';
 import {View, StyleSheet, ScrollView} from 'react-native';
 import RecommendationArea from '../Components/RecommendationArea';
 import ClassificationOfGoods from '../Components/ClassificationOfGoods';
-import Text from 'react-native';
+//import Text from 'react-native';
 export default class MainPages extends Component {
   render() {
     return (
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   ClassificationContainer: {
     flex: 3,
   },
-  recommendationAreaContainer:{
+  recommendationAreaContainer: {
     flex: 20,
   },
 });

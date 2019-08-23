@@ -107,6 +107,7 @@ export default class HelloWorldApp extends Component {
           这是一句用来测试分割线的文本，他看起来没什么用，但是如果没有它，就看不到下面的分割线
         </Text>
       </View>
+
     );
   }
 }

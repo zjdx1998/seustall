@@ -12,6 +12,7 @@ import {
   Image,
   Dimensions,
 } from 'react-native';
+
 import {Avatar} from 'react-native-elements';
 import {ListItem} from 'react-native-elements';
 import React, {Component} from 'react';
