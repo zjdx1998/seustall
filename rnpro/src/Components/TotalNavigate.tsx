@@ -31,12 +31,18 @@ const TotalNav = createDrawerNavigator(
     detailPage: {
       screen: detailPage,
       navigationOptions: {
-        drawerLabel: 'cnm',
+        drawerLabel: () => null,
+      },
+    },
+    page2: {
+      screen: FirstPage,
+      navigationOptions: {
+        drawerLabel: 'SecondPage',
       },
     },
   },
   {
-    order: ['home', 'page1'],
+    order: ['home', 'page1', 'detailPage', 'page2'],
     initialRouteName: 'home',
     drawerLockMode: 'unlocked',
     drawerPosition: 'left',
