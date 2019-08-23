@@ -4,13 +4,16 @@ import SlideShow from '../Components/SlideShow';
 import {View, StyleSheet, ScrollView} from 'react-native';
 import RecommendationArea from '../Components/RecommendationArea';
 import ClassificationOfGoods from '../Components/ClassificationOfGoods';
+import AppTotalNavigation from '../Components/TotalNavigate';
+import {Button} from 'react-native-elements';
+//import AppTotalNavigation from "../Components/TotalNavigate";
 //import Text from 'react-native';
 export default class MainPages extends Component {
   render() {
     return (
       <ScrollView style={styles.baseContainer}>
         <View style={styles.headerContainer}>
-          <GlobalHeader />
+          <GlobalHeader navigation={this.props.navigation} />
         </View>
         <View style={styles.slideshowContainer}>
           <SlideShow />
@@ -30,6 +33,12 @@ export default class MainPages extends Component {
         </View>
         <View style={styles.recommendationAreaContainer}>
           <RecommendationArea />
+        </View>
+        <View style={styles.headerContainer}>
+          <Button
+            onPress={() => this.props.navigation.navigate('detailPage')}
+            title=" MyHomeScreen ----> open drawer"
+          />
         </View>
       </ScrollView>
     );

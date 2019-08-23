@@ -1,8 +1,18 @@
-import React from 'react';
+/*
+  @version: 0.3
+  @author: 71117123张建东
+  @date: 2019-8-22
+*/
+import React, {Component} from 'react';
 import MainPages from '../pages/MainPages';
-import {createDrawerNavigator, DrawerItems} from 'react-navigation';
+import {
+  createAppContainer,
+  createDrawerNavigator,
+  DrawerItems,
+} from 'react-navigation';
 import FirstPage from '../pages/FirstPage';
 import {ScrollView, SafeAreaView} from 'react-native';
+import detailPage from '../pages/detailPage';
 
 const TotalNav = createDrawerNavigator(
   {
@@ -18,6 +28,12 @@ const TotalNav = createDrawerNavigator(
         drawerLabel: 'FirstPage',
       },
     },
+    detailPage: {
+      screen: detailPage,
+      navigationOptions: {
+        drawerLabel: 'cnm',
+      },
+    },
   },
   {
     order: ['home', 'page1'],
@@ -25,7 +41,7 @@ const TotalNav = createDrawerNavigator(
     drawerLockMode: 'unlocked',
     drawerPosition: 'left',
     contentComponent: props => (
-      <ScrollView style={{backgroundColor: '#987656', flex: 1}}>
+      <ScrollView style={{backgroundColor: '#FFE4E1', flex: 1}}>
         <SafeAreaView forceInset={{top: 'always', horizontal: 'never'}}>
           <DrawerItems {...props} />
         </SafeAreaView>
@@ -33,3 +49,15 @@ const TotalNav = createDrawerNavigator(
     ),
   },
 );
+
+const AppNavigation = createAppContainer(TotalNav);
+
+export default class AppTotalNavigation extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return <AppNavigation />;
+  }
+}
