@@ -1,29 +1,17 @@
 import React, {Component} from 'react';
-import GlobalHeader from './src/pages/GlobalHeader';
-import SlideShow from './src/pages/SlideShow';
-import {View, StyleSheet} from 'react-native';
-export default class MainPages extends Component {
+import MainPages from './src/pages/MainPages';
+import TotalNavigate from './src/Components/TotalNavigate';
+
+export default class App extends Component {
+  state = {
+    isShowingNav: false,
+  };
+
   render() {
+    let MP = MainPages;
     return (
-      <View style={{flex: 1}}>
-        <View style={styles.headerContainer}>
-          <GlobalHeader />
-        </View>
-        <View style={styles.slideshowContainer}>
-          <SlideShow />
-        </View>
-        <View style={styles.slideshowContainer}>
-        </View>
-      </View>
+      <MainPages />
+      //<TotalNavigate />
     );
   }
 }
-
-const styles = StyleSheet.create({
-  headerContainer: {
-    flex: 1,
-  },
-  slideshowContainer: {
-    flex: 5,
-  },
-});
