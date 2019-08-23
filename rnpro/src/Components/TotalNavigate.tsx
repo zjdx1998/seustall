@@ -1,49 +1,69 @@
-import {TouchableOpacity, View, Text} from "react-native";
-import React from 'react';
-import {createAppContainer, createDrawerNavigator} from 'react-navigation'
+/*
+  @version: 0.3
+  @author: 71117123张建东
+  @date: 2019-8-22
+*/
+import React, {Component} from 'react';
+import MainPages from '../pages/MainPages';
+import {
+  createAppContainer,
+  createDrawerNavigator,
+  DrawerItems,
+} from 'react-navigation';
 import FirstPage from '../pages/FirstPage';
-class HomeScreen extends React.Component {
-  render() {
-    return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <TouchableOpacity onPress={this.props.navigation.openDrawer}>
-          <Text>Open Drawer</Text>
-        </TouchableOpacity>
-        <Text style={{fontWeight: 'bold', marginTop: 20}}>Home</Text>
-      </View>
-    );
-  }
-}
+import {ScrollView, SafeAreaView} from 'react-native';
+import detailPage from '../pages/detailPage';
 
-class SettingsScreen extends React.Component {
-  render() {
-    return (
-      // eslint-disable-next-line react-native/no-inline-styles
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <TouchableOpacity onPress={this.props.navigation.openDrawer}>
-          <Text>Open Drawer</Text>
-        </TouchableOpacity>
-        <Text style={{fontWeight: 'bold', marginTop: 20}}>Settings</Text>
-      </View>
-    );
-  }
-}
-
-const DrawerNavigator = createDrawerNavigator(
+const TotalNav = createDrawerNavigator(
   {
-    Home: HomeScreen,
-    Settings: SettingsScreen,
-    page1: FirstPage,
+    home: {
+      screen: MainPages,
+      navigationOptions: {
+        drawerLabel: 'Home',
+      },
+    },
+    page1: {
+      screen: FirstPage,
+      navigationOptions: {
+        drawerLabel: 'FirstPage',
+      },
+    },
+    detailPage: {
+      screen: detailPage,
+      navigationOptions: {
+        drawerLabel: () => null,
+      },
+    },
+    page2: {
+      screen: FirstPage,
+      navigationOptions: {
+        drawerLabel: 'SecondPage',
+      },
+    },
   },
   {
-    hideStatusBar: true,
-    drawerBackgroundColor: 'rgba(255,255,255,.9)',
-    overlayColor: '#6b52ae',
-    contentOptions: {
-      activeTintColor: '#fff',
-      activeBackgroundColor: '#6b52ae',
-    },
+    order: ['home', 'page1', 'detailPage', 'page2'],
+    initialRouteName: 'home',
+    drawerLockMode: 'unlocked',
+    drawerPosition: 'left',
+    contentComponent: props => (
+      <ScrollView style={{backgroundColor: '#FFE4E1', flex: 1}}>
+        <SafeAreaView forceInset={{top: 'always', horizontal: 'never'}}>
+          <DrawerItems {...props} />
+        </SafeAreaView>
+      </ScrollView>
+    ),
   },
 );
 
-export default createAppContainer(DrawerNavigator);
+const AppNavigation = createAppContainer(TotalNav);
+
+export default class AppTotalNavigation extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return <AppNavigation />;
+  }
+}

@@ -1,4 +1,4 @@
-package com.rnpro;
+package com.SEUGrocery;
 
 import android.app.Application;
 import android.util.Log;

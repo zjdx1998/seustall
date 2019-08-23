@@ -1,3 +1,8 @@
+/*
+  @version: 0.3
+  @author: 71117123张建东
+  @date: 2019-8-22
+*/
 import {
   Platform,
   StyleSheet,

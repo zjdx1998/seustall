@@ -5,19 +5,16 @@
 */
 import React, {Component} from 'react';
 import {Header, SearchBar} from 'react-native-elements';
-import {Alert} from 'react-native';
-import TotalNavigate from "./TotalNavigate";
+//import TotalNavigate from "./TotalNavigate";
 export default class extends Component {
+  constructor(props) {
+    super(props);
+  }
   state = {
     search: '',
-    isClicked: false,
   };
   render() {
     const {search} = this.state;
-    if(this.state.isClicked){
-      this.setState({isClicked: false});
-      return <TotalNavigate />;
-    }
     return (
       <Header
         barStyle="light-content"
@@ -27,7 +24,7 @@ export default class extends Component {
         leftComponent={{
           icon: 'menu',
           color: '#030303',
-          onPress: this._onClickList,
+          onPress: () => this.props.navigation.openDrawer(),
         }}
         centerComponent={
           <SearchBar
@@ -54,7 +51,7 @@ export default class extends Component {
     );
   }
   _onClickList = () => {
-    this.setState({isClicked: true});
+    //this.props.navigation.openDrawer();
   };
   updateSearch = (search: any) => {
     this.setState({search});
