@@ -17,6 +17,11 @@ import { Text, Button, ThemeProvider, Image, Avatar } from 'react-native-element
 var { height, width } = Dimensions.get('window');
 export default class DetailPage extends Component
 {
+	constructor(props:string)
+	{
+		super(props);
+		this.state.uuid = props;
+	};
 	state = {
 		itemid: "",
 		uuid: "",
