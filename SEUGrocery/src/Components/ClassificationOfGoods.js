@@ -1,5 +1,5 @@
 /*
-  @version: 0.2
+  @version: 0.3
   @author: 71117133张睦婕
   @date: 2019-8-23
 */
@@ -18,11 +18,8 @@ export default class GoodsClassification extends Component {
           <Icon name="pagelines" type="font-awesome" color={'#cc6699'}/>
           <Text h4 style={styles.titleFont}> 杂货百般</Text>
         </View>
-        <ScrollView
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            style={styles.block}
-            >
+        <View style={styles.block}>
+          <View style={styles.container_row}>
             {classes1.map((x)=>(
                 <Item
                     iconName={x.iconName}
@@ -31,7 +28,18 @@ export default class GoodsClassification extends Component {
                     goodsName={x.goodsName}
                 />
                 ))}
-        </ScrollView>
+        </View>
+        <View style={styles.container_row}>
+          {classes2.map((x)=>(
+              <Item
+                  iconName={x.iconName}
+                  type={x.type}
+                  color={x.color}
+                  goodsName={x.goodsName}
+              />
+          ))}
+      </View>
+        </View>
         <Divider style={styles.line} />
         <Text>
         </Text>
@@ -69,6 +77,8 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'center',
+    margin:5,
+    padding:5,
   },
   line: {
     height: 3,
@@ -82,14 +92,14 @@ const styles = StyleSheet.create({
   },
   block:{
     backgroundColor: '#EED2EE',
-    borderRadius:8,
-    width:width-8,
+    borderRadius:10,
+    width:width-20,
   },
   titleFont:{
     color:'#cc6699'
   },
   goodsFont:{
-    color: 'black',
+    color:'#000',
   },
 
 });
@@ -119,7 +129,9 @@ const classes1=[
     type:"font-awesome",
     color:'#f50',
     goodsName:'美妆个护',
-  },
+  }]
+
+const classes2=[
   {
     iconName:"umbrella",
     type:"font-awesome",

@@ -20,13 +20,31 @@ const TotalNav = createDrawerNavigator(
     home: {
       screen: MainPages,
       navigationOptions: {
-        drawerLabel: 'Home',
+        drawerLabel: '首页',
       },
     },
     page1: {
       screen: FirstPage,
       navigationOptions: {
-        drawerLabel: 'FirstPage',
+        drawerLabel: '我的铺子',
+      },
+    },
+    page2: {
+      screen: FirstPage,
+      navigationOptions: {
+        drawerLabel: '我买到的',
+      },
+    },
+    page3: {
+      screen: FirstPage,
+      navigationOptions: {
+        drawerLabel: '我想买的',
+      },
+    },
+    page4: {
+      screen: FirstPage,
+      navigationOptions: {
+        drawerLabel: '收藏夹',
       },
     },
     detailPage: {
@@ -43,8 +61,8 @@ const TotalNav = createDrawerNavigator(
     },
   },
   {
-    order: ['home', 'detailPage', 'page1', 'startP'],
-    initialRouteName: 'startP',
+    order: ['home', 'detailPage', 'page1', 'page2', 'page3', 'page4', 'startP'],
+    initialRouteName: 'home',
     drawerLockMode: 'unlocked',
     drawerPosition: 'left',
     contentComponent: props => (
