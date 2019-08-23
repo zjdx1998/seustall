@@ -5,8 +5,7 @@
 */
 import React, {Component} from 'react';
 import {Header, SearchBar} from 'react-native-elements';
-import {Alert} from 'react-native';
-import TotalNavigate from "./TotalNavigate";
+//import TotalNavigate from "./TotalNavigate";
 export default class extends Component {
   state = {
     search: '',
@@ -49,7 +48,7 @@ export default class extends Component {
     );
   }
   _onClickList = () => {
-    TotalNavigate.props.navigation.openDrawer();
+    //TotalNavigate.props.navigation.openDrawer();
   };
   updateSearch = (search: any) => {
     this.setState({search});

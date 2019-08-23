@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import GlobalHeader from '../Components/GlobalHeader';
 import SlideShow from '../Components/SlideShow';
 import {View, StyleSheet, ScrollView} from 'react-native';
+import RecommendationArea from '../Components/RecommendationArea';
+import ClassificationOfGoods from '../Components/ClassificationOfGoods';
+import Text from 'react-native';
 export default class MainPages extends Component {
   render() {
     return (
@@ -13,13 +16,20 @@ export default class MainPages extends Component {
           <SlideShow />
         </View>
         <View style={styles.slideshowContainer}>
-          <SlideShow />
+          <ClassificationOfGoods />
         </View>
+        <View style={styles.headerContainer} />
         <View style={styles.slideshowContainer}>
           <SlideShow />
         </View>
         <View style={styles.slideshowContainer}>
           <SlideShow />
+        </View>
+        <View style={styles.slideshowContainer}>
+          <SlideShow />
+        </View>
+        <View style={styles.recommendationAreaContainer}>
+          <RecommendationArea />
         </View>
       </ScrollView>
     );
@@ -37,5 +47,11 @@ const styles = StyleSheet.create({
   },
   slideshowContainer: {
     flex: 5,
+  },
+  ClassificationContainer: {
+    flex: 3,
+  },
+  recommendationAreaContainer:{
+    flex: 20,
   },
 });

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-export default class SecondPage extends Component {
+export default class FirstPage extends Component {
   static navigationOptions = {
     //tabBarLabel: '页面1',
     drawerLabel: '页面1',
