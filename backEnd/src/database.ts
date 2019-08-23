@@ -1,5 +1,6 @@
-// import sequelize = require("sequelize");
-// import { Sequelize } from "sequelize";
+/**
+ * @author Hanyuu
+ */
 let sequelize: any = require('sequelize');
 let Sequelize = sequelize.Sequelize;
 import { PersonInterface, GoodInterface, Person } from './role';
@@ -12,7 +13,7 @@ export default class data
 			pool: {
 				max: 5,
 				min: 0,
-				idle: 3000
+				idle: 1000
 			}
 
 		});
