@@ -4,7 +4,6 @@ import SlideShow from '../Components/SlideShow';
 import {View, StyleSheet, ScrollView} from 'react-native';
 import RecommendationArea from '../Components/RecommendationArea';
 import ClassificationOfGoods from '../Components/ClassificationOfGoods';
-import AppTotalNavigation from '../Components/TotalNavigate';
 import {Button} from 'react-native-elements';
 //import AppTotalNavigation from "../Components/TotalNavigate";
 //import Text from 'react-native';

@@ -4,8 +4,7 @@
   @date: 2019-8-22
 */
 import React, {Component} from 'react';
-import MainPages from './src/pages/MainPages';
-import AppTotalNavigation from "./src/Components/TotalNavigate";
+import AppTotalNavigation from './src/Components/TotalNavigate';
 
 export default class App extends Component {
   state = {
@@ -13,9 +12,6 @@ export default class App extends Component {
   };
 
   render() {
-    return (
-      // <MainPages />
-      <AppTotalNavigation />
-    );
+    return <AppTotalNavigation />;
   }
 }

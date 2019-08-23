@@ -1,11 +1,10 @@
 /*
-  @version: 0.3
+  @version: 0.6
   @author: 71117123张建东
   @date: 2019-8-22
 */
 import React, {Component} from 'react';
 import {Header, SearchBar} from 'react-native-elements';
-//import TotalNavigate from "./TotalNavigate";
 export default class extends Component {
   constructor(props) {
     super(props);

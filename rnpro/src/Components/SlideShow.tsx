@@ -83,7 +83,7 @@ export default class SlideShow extends Component {
             <Image
               resizeMode="stretch"
               style={styles.image}
-              source={require('../pages/img/1.jpg')}
+              source={require('../Common/img/1.jpg')}
             />
           </View>
           <View style={styles.slide}>
@@ -91,7 +91,7 @@ export default class SlideShow extends Component {
             <Image
               resizeMode="stretch"
               style={styles.image}
-              source={require('../pages/img/2.jpg')}
+              source={require('../Common/img/2.jpg')}
             />
           </View>
           <View style={styles.slide}>
@@ -99,7 +99,7 @@ export default class SlideShow extends Component {
             <Image
               resizeMode="stretch"
               style={styles.image}
-              source={require('../pages/img/3.jpg')}
+              source={require('../Common/img/3.jpg')}
             />
           </View>
           <View style={styles.slide}>
@@ -107,7 +107,7 @@ export default class SlideShow extends Component {
             <Image
               resizeMode="stretch"
               style={styles.image}
-              source={require('../pages/img/4.jpg')}
+              source={require('../Common/img/4.jpg')}
             />
           </View>
         </Swiper>

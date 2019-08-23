@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Text} from 'react-native';
-import {Icon, Divider} from 'react-native-elements';
+import {StyleSheet, View} from 'react-native';
+import {Icon, Divider, Text} from 'react-native-elements';
 
 export default class HelloWorldApp extends Component {
   render() {
@@ -8,7 +8,7 @@ export default class HelloWorldApp extends Component {
       <View style={styles.container_col}>
         <View style={styles.title}>
           <Icon name="pagelines" type="font-awesome" />
-          <Text h1> 杂货百般</Text>
+          <Text h4> 杂货百般</Text>
         </View>
         <Divider style={styles.line} />
         <View style={styles.container_row}>
@@ -20,7 +20,7 @@ export default class HelloWorldApp extends Component {
               color={'#517fa4'}
               onPress={() => {}}
             />
-            <Text h1>电子产品</Text>
+            <Text>电子产品</Text>
           </View>
 
           <View>
@@ -31,7 +31,7 @@ export default class HelloWorldApp extends Component {
               color={'#CC6655'}
               onPress={() => {}}
             />
-            <Text h1>服饰鞋包</Text>
+            <Text>服饰鞋包</Text>
           </View>
 
           <View>
@@ -42,7 +42,7 @@ export default class HelloWorldApp extends Component {
               color={'#5154a4'}
               onPress={() => {}}
             />
-            <Text h1>交通工具</Text>
+            <Text>交通工具</Text>
           </View>
 
           <View>
@@ -53,7 +53,7 @@ export default class HelloWorldApp extends Component {
               color={'#f50'}
               onPress={() => {}}
             />
-            <Text h1>美妆个护</Text>
+            <Text>美妆个护</Text>
           </View>
         </View>
 
@@ -66,7 +66,7 @@ export default class HelloWorldApp extends Component {
               color={'#989976'}
               onPress={() => {}}
             />
-            <Text h1>日常用品</Text>
+            <Text>日常用品</Text>
           </View>
 
           <View>
@@ -77,7 +77,7 @@ export default class HelloWorldApp extends Component {
               color={'#ab4387'}
               onPress={() => {}}
             />
-            <Text h1>书本文具</Text>
+            <Text>书本文具</Text>
           </View>
 
           <View>
@@ -88,7 +88,7 @@ export default class HelloWorldApp extends Component {
               color={'#98cc99'}
               onPress={() => {}}
             />
-            <Text h1>运动健身</Text>
+            <Text>运动健身</Text>
           </View>
 
           <View>
@@ -99,7 +99,7 @@ export default class HelloWorldApp extends Component {
               color={'#980403'}
               onPress={() => {}}
             />
-            <Text h1>其他商品</Text>
+            <Text>其他商品</Text>
           </View>
         </View>
         <Divider style={styles.line} />
@@ -107,7 +107,6 @@ export default class HelloWorldApp extends Component {
           这是一句用来测试分割线的文本，他看起来没什么用，但是如果没有它，就看不到下面的分割线
         </Text>
       </View>
-
     );
   }
 }
