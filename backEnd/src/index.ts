@@ -1,6 +1,6 @@
-import webServer from "./webServer";
+import Server from "./webServer";
 
-webServer();
+Server();
 
 // webServer();
 // var da = new data();

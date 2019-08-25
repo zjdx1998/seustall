@@ -1,12 +1,12 @@
-console.log("√[info] index loaded.");
+console.log("[info] index loaded.");
 import path from 'path';
 import Koa from 'koa';
 import koaRouter from 'koa-router';
 import parser from 'koa-bodyparser';
-import koaStatic from 'koa-static';
+// import koaStatic from 'koa-static';
 import fs from 'fs';
 import data from "./database";
-import { User, UserInterface, Good, GoodInterface } from './role';
+import { User, Good } from './role';
 
 const router = new koaRouter();
 const staticPath = path.join(__dirname,'../src/asset')
@@ -16,16 +16,15 @@ function webServer()
 	const database = new data();
 	const app = new Koa();
 	app.use(parser());
-	app.use(koaStatic(staticPath));
+	// app.use(koaStatic(staticPath));
 	app.use(router.routes());
 	console.log('[asset]' + staticPath);
 	app.use(async ctx =>
-	{
-		console.log(ctx.type)
-		ctx.response.body = fs.readFileSync(path.join(staticPath, './about.html'));
-		ctx.response.status = 400;
-		ctx.response.type = 'text/html';
-	})
+		{
+			ctx.response.body = fs.readFileSync(path.join(staticPath, './about.html'));
+			ctx.response.status = 400;
+			ctx.response.type = 'text/html';
+		})
 	router.get('/item/:itemid', async (ctx, next) =>
 	{
 		const res = await database.queryGood(ctx.params.itemid);

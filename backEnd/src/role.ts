@@ -1,36 +1,4 @@
-/**
- * @name role
- * @author Hanyuu Furude
- * @description .
- * - ??????
- * - ????
- * - ????
- */
 
-/**
- * @description
- *   ????????
- */
-export interface UserInterface
-{
-	uuid: string,
-	password?: string,
-	username?: string,
-	idcard?: string,
-	studentid?: string,
-	address?: string,
-	avatorurl?: string,
-	verified?: boolean,
-	score?: number,
-}
-/**
- * @description .
- * 	- ????
- * @todo .
- *  - ????
- *  - ????
- *  - etc
- */
 export class User
 {
 	data: any;
@@ -38,25 +6,11 @@ export class User
 	{
 		this.data = data as any;
 	}
-	/**
-	 * @param none
-	 * @returns .
-	 * - string : json
-	 * @description .
-	 *   - ?????????json
-	 *   - **????????????????**
-	 */
 	private jsonPrivate(): string
 	{
 		return JSON.stringify(this.data);
 	}
-	/**
-	 * @param none
-	 * @returns .
-	 * - string : json
-	 * @description .
-	 *   - ?????????json
-	 */
+
 	public jsonPublic(): string
 	{
 		var temp: any = this.data;
@@ -66,14 +20,7 @@ export class User
 		delete temp.address;
 		return JSON.stringify(this.data);
 	}
-	/**
-	 * @param none
-	 * @returns .
-	 * - string : json
-	 * @description .
-	 *   - ?????????json
-	 *   - **?????????????**
-	 */
+
 	public jsonProtect(): string
 	{
 		var temp: any = this.data;
@@ -83,11 +30,7 @@ export class User
 		// delete temp.address;
 		return JSON.stringify(this.data);
 	}
-	/**
-	 * @param modify requests:PersonInterface
-	 * @returns json:string
-	 * @description
-	 */
+
 	modify(requests: UserInterface): string
 	{
 		var response = new Object() as any;
@@ -122,18 +65,6 @@ export class User
 }
 
 
-export interface GoodInterface
-{
-	itemid?: number,
-	uuid: number,
-	title: string,
-	type: number,
-	price: number,
-	imgurl: string,
-	depreciatione: number,
-	note: string,
-	sold: number
-}
 export class Good
 {
 	data: GoodInterface;
@@ -149,5 +80,29 @@ export class Good
 	{
 		return JSON.stringify(this.data);
 	}
+}
+export interface UserInterface
+{
+	uuid: string,
+	password?: string,
+	username?: string,
+	idcard?: string,
+	studentid?: string,
+	address?: string,
+	avatorurl?: string,
+	verified?: boolean,
+	score?: number,
+}
+export interface GoodInterface
+{
+	itemid?: number,
+	uuid: number,
+	title: string,
+	type: number,
+	price: number,
+	imgurl: string,
+	depreciatione: number,
+	note: string,
+	sold: number
 }
 console.log("role module loaded.")

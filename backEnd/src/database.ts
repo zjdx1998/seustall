@@ -1,15 +1,19 @@
 /**
  * @author Hanyuu
  */
-let sequelize: any = require('sequelize');
-let Sequelize = sequelize.Sequelize;
-import { UserInterface, GoodInterface, User } from './role';
-import { exists } from 'fs';
-import { json } from 'body-parser';
+// let sequelize: any = require('sequelize');
+import sequelize, { Sequelize } from 'sequelize';
+// let Sequelize = sequelize.Sequelize;
+import { UserInterface, GoodInterface } from './role';
+// The bug of Sequalize https://github.com/sequelize/sequelize/issues/9489
+let mysql2 = require('mysql2');
+
+
+// import { exists } from 'fs';
+// import { json } from 'body-parser';
 export default class data
 {
-
-	database: typeof Sequelize;
+	database: Sequelize;
 	users: any;
 	goods: any;
 	constructor()
@@ -22,6 +26,7 @@ export default class data
 				{
 					host: 'localhost',
 					dialect: 'mysql',
+					dialectModule:mysql2,
 					pool: {
 						max: 5,
 						min: 0,
@@ -30,10 +35,10 @@ export default class data
 
 				});
 			this.database.authenticate()
-				.then(function (err: ExceptionInformation)
+				.then(function (err: any)
 				{
 					console.log("√[info] connect had been established successfully.")
-				}).catch(function (err: ExceptionInformation)
+				}).catch(function (err: any)
 				{
 					console.log(err);
 				});
