@@ -3,82 +3,150 @@
  */
 let sequelize: any = require('sequelize');
 let Sequelize = sequelize.Sequelize;
-import { PersonInterface, GoodInterface, Person } from './role';
+import { UserInterface, GoodInterface, User } from './role';
+import { exists } from 'fs';
+import { json } from 'body-parser';
 export default class data
 {
-	private database = new Sequelize('foof', 'app', 'foof',
-		{
-			host: 'localhost',
-			dialect: 'mysql',
-			pool: {
-				max: 5,
-				min: 0,
-				idle: 1000
-			}
 
-		});
+	database: typeof Sequelize;
 	users: any;
 	goods: any;
 	constructor()
 	{
-		this.database.authenticate()
-			.then(function (err: ExceptionInformation)
-			{
-				console.log("√[info] connect had been established successfully.")
-			}).catch(function (err: ExceptionInformation)
-			{
-				console.log(err);
-			});
+		try
+		{
 
-		this.users = this.database.define(
-			'users',
-			{
-				uuid:
+
+			this.database = new Sequelize('foof', 'app', 'foof',
 				{
-					type: sequelize.STRING,
-					primaryKey: true,
+					host: 'localhost',
+					dialect: 'mysql',
+					pool: {
+						max: 5,
+						min: 0,
+						idle: 1000
+					}
+
+				});
+			this.database.authenticate()
+				.then(function (err: ExceptionInformation)
+				{
+					console.log("√[info] connect had been established successfully.")
+				}).catch(function (err: ExceptionInformation)
+				{
+					console.log(err);
+				});
+
+			this.users = this.database.define(
+				'users',
+				{
+					uuid:
+					{
+						type: sequelize.INTEGER,
+						primaryKey: true,
+					},
+					password: sequelize.STRING,
+					username: sequelize.STRING,
+					idcard: sequelize.STRING,
+					studentid: sequelize.STRING,
+					address: sequelize.STRING,
+					avatorurl: sequelize.STRING,
+					verified: sequelize.INTEGER,
+					score: sequelize.INTEGER,
 				},
-				password: sequelize.STRING,
-				username: sequelize.STRING,
-				idcard: sequelize.STRING,
-				studentid: sequelize.STRING,
-				address: sequelize.STRING,
-				avatorurl: sequelize.STRING,
-				verififed: sequelize.INTEGER,
-				score: sequelize.INTEGER,
-			},
-			{
-				timestamps: false,
-			}
-		);
-		this.goods = this.database.define(
-			'goods',
-			{
-				itemid: {
-					type: sequelize.STRING,
-					primaryKey: true,
+				{
+					timestamps: false,
+				}
+			);
+			this.goods = this.database.define(
+				'goods',
+				{
+					itemid: {
+						type: sequelize.INTEGER,
+						primaryKey: true,
+					},
+					uuid: sequelize.INTEGER,
+					title: sequelize.STRING,
+					type: sequelize.INTEGER,
+					price: sequelize.DOUBLE,
+					imgurl: sequelize.STRING,
+					depreciatione: sequelize.INTEGER,
+					note: sequelize.STRING,
+					sold: sequelize.INTEGER
 				},
-				uuid: sequelize.STRING,
-				title: sequelize.STRING,
-				type: sequelize.INTEGER,
-				price: sequelize.DOUBLE,
-				imgurl: sequelize.STRING,
-				depreciatione: sequelize.INTEGER,
-				note: sequelize.STRING,
-				sold: sequelize.INTEGER
-			},
-			{
-				timestamps: false,
-			}
-		);
+				{
+					timestamps: false,
+				}
+			);
+		} catch (error)
+		{
+			throw new Error("[ERROR] Database connect failed.\n" + error);
+		}
 	}
 
-	writeGood(good: GoodInterface)
+	async writeGood(good: GoodInterface)
 	{
-		this.goods.create(good);
+		try
+		{
+			await this.goods.create(good);
+		} catch (error)
+		{
+			throw new Error("[ERROR] Database connect failed.\n" + error);
+		}
 	}
-	writeUser(user: PersonInterface)
+	async writeUser(user: UserInterface)
 	{
-		this.users.create(user);
+		try
+		{
+			await this.users.create(user);
+		} catch (error)
+		{
+			throw new Error("[ERROR] Database connect failed.\n" + error);
+		}
+	}
+	async queryGood(itemid: number)
+	{
+		try
+		{
+
+			const res = await this.goods.findOne({
+				where:
+				{
+					itemid
+				}
+			})
+			return this.clientJSON(res);
+		} catch (error)
+		{
+			throw new Error("[ERROR] Database connect failed.\n" + error);
+		}
+	}
+	async queryUser(uuid: number)
+	{
+		try
+		{
+			const res = await this.users.findOne({
+				where:
+				{
+					uuid
+				}
+			})
+			return this.clientJSON(res);
+		} catch (error)
+		{
+			throw new Error("[ERROR] Database connect failed.\n" + error);
+		}
+	}
+	clientJSON(res: any): string
+	{
+		if (res && res.dataValues)
+		{
+			res.dataValues.status = 'success';
+			return JSON.stringify(res.dataValues);
+		}
+		const noneRes: any = new Object();
+		noneRes.status = 'none';
+		return JSON.stringify(noneRes);
 	}
 }

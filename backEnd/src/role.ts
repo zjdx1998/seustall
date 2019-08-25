@@ -11,7 +11,7 @@
  * @description
  *   ????????
  */
-export interface PersonInterface
+export interface UserInterface
 {
 	uuid: string,
 	password?: string,
@@ -31,10 +31,10 @@ export interface PersonInterface
  *  - ????
  *  - etc
  */
-export class Person
+export class User
 {
 	data: any;
-	constructor(data: PersonInterface)
+	constructor(data: UserInterface)
 	{
 		this.data = data as any;
 	}
@@ -88,7 +88,7 @@ export class Person
 	 * @returns json:string
 	 * @description
 	 */
-	modify(requests: PersonInterface): string
+	modify(requests: UserInterface): string
 	{
 		var response = new Object() as any;
 		var temp = requests as any;
@@ -124,8 +124,8 @@ export class Person
 
 export interface GoodInterface
 {
-	itemid: string,
-	uuid: string,
+	itemid?: number,
+	uuid: number,
 	title: string,
 	type: number,
 	price: number,
@@ -144,10 +144,6 @@ export class Good
 		{
 			console.log(key);
 		}
-	}
-	jsonPrivate(): string
-	{
-		return JSON.stringify(this.data);
 	}
 	json(): string
 	{
