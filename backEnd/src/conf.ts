@@ -1,3 +1,6 @@
+/**
+ * @author Hanyuu
+ */
 export default {
 	"host":"localhost",
 	"datatable":"foof",

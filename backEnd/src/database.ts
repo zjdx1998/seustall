@@ -1,17 +1,13 @@
 /**
  * @author Hanyuu
  */
-import sequelize, { Sequelize } from 'sequelize';
+import sequelize, { Sequelize, ConnectionRefusedError } from 'sequelize';
+// The bug of sequelize https://github.com/sequelize/sequelize/issues/9489
 let mysql2 = require('mysql2');
 import conf from './conf';
-import { UserInterface, GoodInterface } from './role';
-// The bug of sequelize https://github.com/sequelize/sequelize/issues/9489
-import fs from 'fs';
-import path from 'path';
+import { UserInterface, GoodInterface, User } from './role';
+import { ResolvePlugin } from 'webpack';
 
-
-// import { exists } from 'fs';
-// import { json } from 'body-parser';
 export default class data
 {
 	database: Sequelize;
@@ -60,18 +56,50 @@ export default class data
 					{
 						type: sequelize.INTEGER,
 						primaryKey: true,
+						autoIncrement: true,
+						allowNull: false,
 					},
-					password: sequelize.STRING,
-					username: sequelize.STRING,
-					idcard: sequelize.STRING,
-					studentid: sequelize.STRING,
-					address: sequelize.STRING,
-					avatorurl: sequelize.STRING,
-					verified: sequelize.INTEGER,
-					score: sequelize.INTEGER,
+					password: {
+						type: sequelize.STRING,
+						allowNull: false,
+					},
+					username: {
+						type: sequelize.STRING,
+						allowNull: false,
+					},
+					phonenumber: {
+						type: sequelize.INTEGER,
+						allowNull: false,
+					},
+					idcard: {
+						type: sequelize.STRING,
+						allowNull: false,
+					},
+					studentid: {
+						type: sequelize.STRING,
+						allowNull: false,
+					},
+					address: {
+						type: sequelize.STRING,
+						allowNull: false,
+					},
+					avatarurl: {
+						type: sequelize.STRING,
+						allowNull: false,
+					},
+					verified: {
+						type: sequelize.INTEGER,
+						allowNull: false,
+					},
+					score: {
+						type: sequelize.INTEGER,
+						allowNull: false,
+					},
 				},
 				{
 					timestamps: false,
+					engine: "Innodb",
+					charset: "utf8",
 				}
 			);
 			this.goods = this.database.define(
@@ -80,20 +108,50 @@ export default class data
 					itemid: {
 						type: sequelize.INTEGER,
 						primaryKey: true,
+						autoIncrement: true,
+						allowNull: false,
 					},
-					uuid: sequelize.INTEGER,
-					title: sequelize.STRING,
-					type: sequelize.INTEGER,
-					price: sequelize.DOUBLE,
-					imgurl: sequelize.STRING,
-					depreciatione: sequelize.INTEGER,
-					note: sequelize.STRING,
-					sold: sequelize.INTEGER
+					uuid:
+					{
+						type: sequelize.INTEGER,
+						allowNull: false,
+					},
+					title: {
+						type: sequelize.STRING,
+						allowNull: false,
+					},
+					type: {
+						type: sequelize.INTEGER,
+						allowNull: false,
+					},
+					price: {
+						type: sequelize.DOUBLE,
+						allowNull: false,
+					},
+					imgurl: {
+						type: sequelize.STRING,
+						allowNull: false,
+					},
+					depreciatione: {
+						type: sequelize.INTEGER,
+						allowNull: false,
+					},
+					note: {
+						type: sequelize.STRING,
+						allowNull: false
+					},
+					sold: {
+						type: sequelize.INTEGER,
+						allowNull: false,
+					}
 				},
 				{
 					timestamps: false,
+					engine: "Innodb",
+					charset: "utf8",
 				}
 			);
+			this.database.sync();
 		} catch (error)
 		{
 			console.error("[ERROR] Database connect failed.\n" + error);
@@ -120,12 +178,25 @@ export default class data
 	}
 	async writeUser(user: UserInterface)
 	{
+		var response = new Object() as any;
 		try
 		{
+			const res = await this.loginByPhonenumber(user.phonenumber as number);
+			if (res)
+			{
+				response.status = "failure";
+				response.info = "phone number already token"
+				return response;
+			}
 			await this.users.create(user);
+			response.status = "success";
+			return response;
 		} catch (error)
 		{
-			throw new Error("[ERROR] Database connect failed.\n" + error);
+			console.error("[ERROR] Database connect failed.\n" + error);
+			response.status = "failure";
+			response.info = "invaild request";
+			return response;
 		}
 	}
 	async queryGood(itemid: number)
@@ -139,7 +210,7 @@ export default class data
 					itemid
 				}
 			})
-			return this.clientJSON(res);
+			return JSON.stringify(this.requestFix(res));
 		} catch (error)
 		{
 			throw new Error("[ERROR] Database connect failed.\n" + error);
@@ -155,21 +226,56 @@ export default class data
 					uuid
 				}
 			})
-			return this.clientJSON(res);
+			const userRes = new User(res);
+			return JSON.stringify(this.requestFix(userRes.protect));
 		} catch (error)
 		{
 			throw new Error("[ERROR] Database connect failed.\n" + error);
 		}
 	}
-	clientJSON(res: any): string
+	async loginByPhonenumber(body: any)
+	{
+		var response = new Object() as any;
+		try
+		{
+			const phonenumber = body.phonenumber
+			const res = await this.users.findOne({
+				where:
+				{
+					phonenumber
+				}
+			})
+			if (res)
+			{
+				if (res.password === body.password)
+				{
+					response.status = "success";
+					return response;
+				}
+				response.status = "failure";
+				response.info = "password incorrect";
+				return response;
+			}
+			response.status = "failure";
+			response.info = "user not found";
+			return response;
+		} catch (error)
+		{
+			console.error("[ERROR] Database connect failed.\n" + error);
+			response.status = "failure";
+			response.info = "bad request";
+			return response;
+		}
+	}
+	requestFix(res: any): string
 	{
 		if (res && res.dataValues)
 		{
 			res.dataValues.status = 'success';
-			return JSON.stringify(res.dataValues);
+			return res.dataValues;
 		}
 		const noneRes: any = new Object();
 		noneRes.status = 'none';
-		return JSON.stringify(noneRes);
+		return noneRes;
 	}
 }
