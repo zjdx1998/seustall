@@ -1,0 +1,1 @@
+__d(function(g,r,i,a,m,e,d){m.exports=r(d[0]).registerAsset({__packager_asset:!0,httpServerLocation:"/assets/node_modules/react-native-ratings/src/images",width:50,height:50,scales:[1],hash:"4bdd6aad790c6c8370a06876ec7d31e1",name:"airbnb-star",type:"png"})},600,[158]);

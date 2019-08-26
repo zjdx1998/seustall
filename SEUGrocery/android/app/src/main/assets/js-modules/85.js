@@ -1,0 +1,1 @@
+__d(function(g,r,i,a,m,e,d){'use strict';var l=r(d[0]);function o(o,t,n){var c=Object.getOwnPropertyDescriptor(o,t),b=c||{},f=b.enumerable,u=b.writable,p=b.configurable;!c||p?l(o,t,{get:n,enumerable:!1!==f,writable:!1!==u}):console.error('Failed to set polyfill. '+t+' is not configurable.')}m.exports={polyfillObjectProperty:o,polyfillGlobal:function(l,t){o(g,l,t)}}},85,[34]);

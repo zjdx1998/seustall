@@ -1,0 +1,1 @@
+__d(function(g,r,i,a,m,e,d){var n=r(d[0]),t=Math.max;m.exports=function(o,f,u){return f=t(void 0===f?o.length-1:f,0),function(){for(var h=arguments,v=-1,c=t(h.length-f,0),l=Array(c);++v<c;)l[v]=h[f+v];v=-1;for(var s=Array(f+1);++v<f;)s[v]=h[v];return s[f]=u(l),n(o,this,s)}}},505,[506]);

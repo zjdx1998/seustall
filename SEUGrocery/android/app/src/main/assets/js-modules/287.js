@@ -1,0 +1,1 @@
+__d(function(g,r,i,a,m,e,d){var t,n=r(d[0]),u=r(d[1]),f=(r(d[2]),r(d[3])),l=r(d[4]),o=f.forwardRef(function(t,o){t.emulateUnlessSupported;var p=u(t,["emulateUnlessSupported"]);return f.createElement(l,n({},p,{ref:o}))});o.displayName='SafeAreaView',t=o,m.exports=t},287,[17,15,49,53,79]);

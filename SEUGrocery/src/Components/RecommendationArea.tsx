@@ -73,7 +73,7 @@ class Good extends Component {
       <TouchableOpacity
         onPress={() => this.props.navigation.navigate('detailPage')}>
         <View style={styles.block}>
-          <Image source={this.props.image} style={{width: 180, height: 180}} />
+          <Image source={this.props.image} style={{width: width / 2 - 20, height: width / 2 - 20}} />
           <Text style={styles.name}>{this.props.name}</Text>
           <Text>{this.props.text}</Text>
           <Text style={styles.price}>￥ {this.props.price}</Text>

@@ -1,0 +1,1 @@
+__d(function(g,r,i,a,m,e,d){Object.defineProperty(e,"__esModule",{value:!0}),e.default=function(n){if(!n)return{};var t=n._childrenNavigation||(n._childrenNavigation={}),o=n.state.routes.map(function(n){return n.key});return Object.keys(t).forEach(function(u){o.includes(u)||n.state.isTransitioning||delete t[u]}),n._childrenNavigation}},647,[]);

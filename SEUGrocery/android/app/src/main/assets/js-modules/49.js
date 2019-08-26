@@ -1,0 +1,1 @@
+__d(function(g,r,i,a,m,e,d){'use strict';var t=r(d[0]),n={OS:'android',get Version(){var n=t.PlatformConstants;return n&&n.Version},get isTesting(){return!1},get isTV(){var n=t.PlatformConstants;return n&&'tv'===n.uiMode},select:function(t){return'android'in t?t.android:t.default}};m.exports=n},49,[14]);

@@ -1,0 +1,1 @@
+__d(function(g,r,i,a,m,e,d){var n=r(d[0]),t=r(d[1]),o='[object AsyncFunction]',c='[object Function]',u='[object GeneratorFunction]',b='[object Proxy]';m.exports=function(j){if(!t(j))return!1;var f=n(j);return f==c||f==u||f==o||f==b}},404,[376,405]);

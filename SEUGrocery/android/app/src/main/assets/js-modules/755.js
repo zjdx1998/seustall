@@ -1,0 +1,1 @@
+__d(function(g,r,i,a,m,e,d){m.exports=r(d[0]).registerAsset({__packager_asset:!0,httpServerLocation:"/assets/src/Common/img",width:721,height:1280,scales:[1],hash:"89f4a19b1b989686ea9c027c109b0d9f",name:"splash_screen1",type:"png"})},755,[158]);

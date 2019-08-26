@@ -1,0 +1,1 @@
+__d(function(g,r,i,a,m,e,d){'use strict';var n=r(d[0]),t=r(d[1]);Object.defineProperty(e,"__esModule",{value:!0}),e.default=void 0;var u=t(r(d[2]));function o(){var t=n(r(d[3]));return o=function(){return t},t}var f='ios'===o().default.OS?u.getEnforcing('LinkingManager'):u.getEnforcing('IntentAndroid');e.default=f},325,[7,143,144,49]);
