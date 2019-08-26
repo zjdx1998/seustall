@@ -5,9 +5,9 @@ import {View, StyleSheet, ScrollView} from 'react-native';
 import RecommendationArea from '../Components/RecommendationArea';
 import ClassificationOfGoods from '../Components/ClassificationOfGoods';
 import {Button} from 'react-native-elements';
-//import AppTotalNavigation from "../Components/TotalNavigate";
-//import Text from 'react-native';
+
 export default class MainPages extends Component {
+  private props: any;
   render() {
     return (
       <ScrollView style={styles.baseContainer}>
@@ -31,7 +31,7 @@ export default class MainPages extends Component {
           <SlideShow />
         </View>
         <View style={styles.recommendationAreaContainer}>
-          <RecommendationArea />
+          <RecommendationArea navigation={this.props.navigation} />
         </View>
         <View style={styles.headerContainer}>
           <Button
