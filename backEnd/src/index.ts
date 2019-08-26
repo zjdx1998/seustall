@@ -1,6 +1,10 @@
-import webServer from "./webServer";
+import Server from "./webServer";
 
-webServer();
+try {
+	Server();
+} catch (error) {
+	console.error(error);
+}
 
 // webServer();
 // var da = new data();

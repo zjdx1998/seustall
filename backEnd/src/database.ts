@@ -1,39 +1,54 @@
 /**
  * @author Hanyuu
  */
-let sequelize: any = require('sequelize');
-let Sequelize = sequelize.Sequelize;
-import { UserInterface, GoodInterface, User } from './role';
-import { exists } from 'fs';
-import { json } from 'body-parser';
+import sequelize, { Sequelize } from 'sequelize';
+let mysql2 = require('mysql2');
+import conf from './conf';
+import { UserInterface, GoodInterface } from './role';
+// The bug of sequelize https://github.com/sequelize/sequelize/issues/9489
+import fs from 'fs';
+import path from 'path';
+
+
+// import { exists } from 'fs';
+// import { json } from 'body-parser';
 export default class data
 {
-
-	database: typeof Sequelize;
+	database: Sequelize;
 	users: any;
 	goods: any;
+	isConnected: boolean
+
 	constructor()
+	{
+		this.isConnected = false;
+		this.database = new Sequelize(
+			conf.datatable,
+			conf.username,
+			conf.password,
+			{
+				host: conf.host,
+				dialect: 'mysql',
+				dialectModule: mysql2,
+				pool: {
+					max: 5,
+					min: 0,
+					idle: 1000
+				}
+
+			});
+		this.connect();
+	}
+
+	connect()
 	{
 		try
 		{
-
-
-			this.database = new Sequelize('foof', 'app', 'foof',
-				{
-					host: 'localhost',
-					dialect: 'mysql',
-					pool: {
-						max: 5,
-						min: 0,
-						idle: 1000
-					}
-
-				});
 			this.database.authenticate()
-				.then(function (err: ExceptionInformation)
+				.then(function (err: any)
 				{
-					console.log("√[info] connect had been established successfully.")
-				}).catch(function (err: ExceptionInformation)
+					console.log("[info] connect had been established successfully.")
+				}).catch(function (err: any)
 				{
 					console.log(err);
 				});
@@ -81,18 +96,26 @@ export default class data
 			);
 		} catch (error)
 		{
-			throw new Error("[ERROR] Database connect failed.\n" + error);
+			console.error("[ERROR] Database connect failed.\n" + error);
+			return false;
 		}
+		console.log("[info] database connect success")
+		return true;
 	}
-
 	async writeGood(good: GoodInterface)
 	{
-		try
+		if (this.isConnected)
 		{
-			await this.goods.create(good);
-		} catch (error)
+			try
+			{
+				await this.goods.create(good);
+			} catch (error)
+			{
+				throw new Error("[ERROR] Database connect failed.\n" + error);
+			}
+		} else
 		{
-			throw new Error("[ERROR] Database connect failed.\n" + error);
+			console.error("")
 		}
 	}
 	async writeUser(user: UserInterface)
