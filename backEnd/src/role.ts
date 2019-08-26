@@ -1,40 +1,42 @@
-
+/**
+ * @author Hanyuu
+ */
 export class User
 {
-	data: any;
+	data: UserInterface;
 	constructor(data: UserInterface)
 	{
 		this.data = data as any;
 	}
-	private jsonPrivate(): string
+	private jsonPrivate(): UserInterface
 	{
-		return JSON.stringify(this.data);
+		return this.data;
 	}
 
-	public jsonPublic(): string
+	public public(): UserInterface
 	{
 		var temp: any = this.data;
 		delete temp.password;
 		delete temp.idcard;
 		delete temp.studentid;
 		delete temp.address;
-		return JSON.stringify(this.data);
+		return this.data;
 	}
 
-	public jsonProtect(): string
+	public protect(): UserInterface
 	{
 		var temp: any = this.data;
 		delete temp.password;
 		// delete temp.idcard;
 		// delete temp.studentid;
 		// delete temp.address;
-		return JSON.stringify(this.data);
+		return this.data;
 	}
 
 	modify(requests: UserInterface): string
 	{
 		var response = new Object() as any;
-		var temp = requests as any;
+		var temp = requests as UserInterface;
 		if (requests['uuid'] != this.data['uuid'])
 		{
 			response['status'] = 'failure';
@@ -53,12 +55,13 @@ export class User
 				return JSON.stringify(response);
 			}
 		}
-		for (var key in temp)
-		{
-			if (key.localeCompare('uuid') == 0)
-			{ continue; }
-			this.data[key] = temp[key];
-		}
+		//TODO,更新数据库列表
+		// for (var key in temp)
+		// {
+		// 	if (key.localeCompare('uuid') == 0)
+		// 	{ continue; }
+		// 	this.data[key] = temp[key];
+		// }
 		response['status'] = 'success';
 		return JSON.stringify(response);
 	}
@@ -70,15 +73,15 @@ export class Good
 	data: GoodInterface;
 	constructor(data: GoodInterface)
 	{
-		this.data = data;
+		this.data = data as any;
 		for (var key in data)
 		{
 			console.log(key);
 		}
 	}
-	json(): string
+	json(): GoodInterface
 	{
-		return JSON.stringify(this.data);
+		return this.data;
 	}
 }
 export interface UserInterface
@@ -86,10 +89,11 @@ export interface UserInterface
 	uuid: string,
 	password?: string,
 	username?: string,
+	phonenumber?:number,
 	idcard?: string,
 	studentid?: string,
 	address?: string,
-	avatorurl?: string,
+	avatarurl?: string,
 	verified?: boolean,
 	score?: number,
 }
