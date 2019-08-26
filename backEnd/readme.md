@@ -1,7 +1,9 @@
 # FOOF Background Service
 > Author
 ## SQL table fields
-[view](SQLTables.md)
+[view](/doc/SQLTables.md)
+## Interface
+[view](/doc/Interface.md)
 ## Warning
 1. If you meet Exception like this
 	> Error: Client does not support authentication protocol requested by server; consider upgrading MySQL client
