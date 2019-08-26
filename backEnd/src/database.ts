@@ -2,11 +2,12 @@
  * @author Hanyuu
  */
 import sequelize, { Sequelize } from 'sequelize';
-import fs from 'fs';
-import { UserInterface, GoodInterface } from './role';
-// The bug of Sequalize https://github.com/sequelize/sequelize/issues/9489
-import path from 'path';
 let mysql2 = require('mysql2');
+import conf from './conf';
+import { UserInterface, GoodInterface } from './role';
+// The bug of sequelize https://github.com/sequelize/sequelize/issues/9489
+import fs from 'fs';
+import path from 'path';
 
 
 // import { exists } from 'fs';
@@ -20,12 +21,6 @@ export default class data
 
 	constructor()
 	{
-		// const confpath = path.join(__dirname, 'foof.conf.json')
-		// console.log("[info] dirPath: " + __dirname);
-		// console.log("[info] confpath: " + confpath);
-		// const databaseconf: string = fs.readFileSync(confpath, 'utf-8')
-		// const conf = JSON.parse(databaseconf);
-		const conf = require('./foof.conf.json')
 		this.isConnected = false;
 		this.database = new Sequelize(
 			conf.datatable,
