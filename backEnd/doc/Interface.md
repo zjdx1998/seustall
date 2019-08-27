@@ -11,7 +11,7 @@ e.g.
 - return
 ``` json
 \\success
-{"uuid":2,"password":"412458ea93597da7a7f9e72a9469bc86c49c4bfb","username":"WakamiyaEve","idcard":"213182873","studentid":"71117503","address":"M1A","avatorurl":"https://avatars2.githubusercontent.com/u/45632558?s=400&v=4","verified":1,"score":10,"status":"success"}
+{"uuid":2,"password":"412458ea93597da7a7f9e72a9469bc86c49c4bfb","username":"WakamiyaEve","idcard":"213182873","studentid":"71117503","address":"M1A","avatarurl":"https://avatars2.githubusercontent.com/u/45632558?s=400&v=4","verified":1,"score":10,"status":"success"}
 \\no user
 {"status":"none"}
 ```

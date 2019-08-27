@@ -1,7 +1,7 @@
 /**
  * @author Hanyuu
  */
-import sequelize, { Sequelize, ConnectionRefusedError, JSON } from 'sequelize';
+import sequelize, { Sequelize, ConnectionRefusedError, JSON, where } from 'sequelize';
 // The bug of sequelize https://github.com/sequelize/sequelize/issues/9489
 let mysql2 = require('mysql2');
 import conf from './conf';
@@ -228,7 +228,7 @@ export default class data
 				}
 			})
 			const userRes = new User(res);
-			return this.requestFix(userRes.protect);
+			return this.requestFix(userRes.protect());
 		} catch (error)
 		{
 			throw new Error("[ERROR] Database connect failed.\n" + error);
@@ -258,7 +258,7 @@ export default class data
 		try
 		{
 			const phonenumber = body.phonenumber
-			const res:UserInterface = await this.users.findOne({
+			const res: UserInterface = await this.users.findOne({
 				where:
 				{
 					phonenumber
@@ -285,6 +285,31 @@ export default class data
 			response.status = "failure";
 			response.info = "bad request";
 			return response;
+		}
+	}
+	public async updateAvatorURL(uuid: number, avator: string)
+	{
+		try
+		{
+			const queryres:any = await this.queryUser(uuid)
+			if (queryres.status == "none")
+			{
+				return false;
+			}
+			const res = await this.users.update(
+				{
+					avatarurl: avator
+				}, {
+					where:
+					{
+						uuid
+					}
+				}
+			);
+			return true;
+		} catch (error)
+		{
+			return false;
 		}
 	}
 	private requestFix(res: any): string

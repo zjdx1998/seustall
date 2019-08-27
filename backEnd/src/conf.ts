@@ -6,6 +6,8 @@ export default {
 	"datatable":"foof",
 	"username":"app",
 	"password": "foof",
-	"avator": "./image/avator",
+	"avatar": "./image/avatar",
 	"itempic":"./image/item",
+	"avatarfs": "./asset/image/avatar",
+	"itempicfs":"./asset/image/item",
 }

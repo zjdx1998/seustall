@@ -6,7 +6,7 @@ import logger from 'koa-logger';
 import path from 'path';
 import Koa from 'koa';
 import koaRouter from 'koa-router';
-import parser from 'koa-bodyparser';
+// import parser from 'koa-bodyparser';
 // import koaStatic from 'koa-static';
 import fs from 'fs';
 import data from "./database";
@@ -15,7 +15,8 @@ import conf from './conf';
 import mkdirp from 'mkdirp';
 import koaBody from 'koa-body';
 
-
+console.log(conf);
+console.log(conf.avatar);
 const router = new koaRouter();
 // const staticPath = path.join(__dirname,'../src/asset')
 // const staticPath = '../src/asset';
@@ -27,7 +28,7 @@ function webServer()
 		const app = new Koa();
 		app.use(logger());
 		app.use(koaBody({ multipart: true }));
-		app.use(parser());
+		// app.use(parser());
 		app.use(router.routes());
 		router.get('/item/:itemid', async (ctx, next) =>
 		{
@@ -63,7 +64,7 @@ function webServer()
 			newUser = ctx.request.body;
 			newUser.score = 10;
 			newUser.verified = false;
-			newUser.avatarurl = path.join(conf.avator, "default.jpg")
+			newUser.avatarurl = path.join(conf.avatar, "default.jpg")
 			const res = await database.writeUser(newUser);
 			ctx.response.body = JSON.stringify(res);
 			ctx.response.type = 'application/json';
@@ -90,18 +91,34 @@ function webServer()
 			var response = new Object() as any;
 			try
 			{
-				const uuid = ctx.body.uuid;
-				const fileObj:any = ctx.request.files;
-				const file = fileObj.avatar;
-				const reader = fs.createReadStream(file.path);
-				const stream = fs.createWriteStream(path.join(conf.avator, uuid + ".jpg"));
-				reader.pipe(stream);
-				console.log(`${file.name} -> ${stream.path}`);
-				ctx.response.body = JSON.stringify({ "status": "success" });
-				ctx.response.type = "application/json";
+				const uuid = ctx.request.body.uuid;
+				const files: any = ctx.request.files;
+				const file = files.file;
+				const url = path.join(conf.avatarfs, `${uuid}.jpg`)
+				const exist = await database.updateAvatorURL(uuid, path.join(conf.avatar, `${uuid}.jpg`));
+				if (exist)
+				{
+					const reader = fs.createReadStream(file.path);
+					const stream = fs.createWriteStream(url);
+					reader.pipe(stream);
+					console.log(`${file.name} -> ${url}`);
+					response.status = "success"
+					ctx.response.body = JSON.stringify(response);
+					ctx.response.type = "application/json";
+				} else
+				{
+					response.status = "failure";
+					response.info = "invaild request";
+					ctx.response.body = JSON.stringify(response);
+					ctx.response.type = "application/json";
+				}
 			} catch (error)
 			{
 				console.error(`[ERROR] ${error}`);
+				response.status = "failure";
+				response.info = "server failed";
+				ctx.response.body = JSON.stringify(response);
+				ctx.response.type = "application/json";
 			}
 
 		})

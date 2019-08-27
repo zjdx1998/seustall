@@ -38,7 +38,7 @@ module.exports = {
 		new webpack.ProvidePlugin({
 			lod:'lodash'
 		}),
-		// new webpack.DefinePlugin({ "global.GENTLY": false })
+		new webpack.DefinePlugin({ "global.GENTLY": false })
 	],
 	target:"node",
 

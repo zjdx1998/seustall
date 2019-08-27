@@ -8,12 +8,12 @@
 	<link rel="stylesheet" type="text/css" href="/demo.css">
 </head>
 <body>
-		<form action="/user/avatar" method="POST">
+		<form action="/user/avatar" method="POST" enctype="multipart/form-data">
 			<h1>modify avatar</h1>
 			uuid<br>
 			<input type="text" name="uuid"><br>
 			avatar<br>
-			<input type="file" name="avatar" accept="image/*"><br>
+			<input type="file" name="file" accept="image/* multiple"><br>
 			<input type="submit" value="commit">
 		</form>
 </body>

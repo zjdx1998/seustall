@@ -14,7 +14,7 @@ docker run --network host -d -v [locationOfAvatarOnPhysicsMachine]:[locationOfAv
 ```
 - e.g.
 ``` docker
-docker run --network host -d -v /home/admin/avator:/foof/avator hanyuufurude/foofserver:v4
+docker run --network host -d -v /home/admin/avatar:/foof/avatar hanyuufurude/foofserver:v4
 ```
 ## Warning
 1. If you meet Exception like this
@@ -37,7 +37,7 @@ docker run --network host -d -v /home/admin/avator:/foof/avator hanyuufurude/foo
 | idcard    | char(20)     | NO   |     | NULL    |                |
 | studentid | char(20)     | NO   |     | NULL    |                |
 | address   | varchar(100) | NO   |     | NULL    |                |
-| avatorurl | varchar(100) | NO   |     | NULL    |                |
+| avatarurl | varchar(100) | NO   |     | NULL    |                |
 | verified  | tinyint(1)   | YES  |     | NULL    |                |
 | score     | tinyint(4)   | YES  |     | NULL    |                |
 +-----------+--------------+------+-----+---------+----------------+
@@ -71,7 +71,7 @@ e.g.
 - return
 ``` json
 \\success
-{"uuid":2,"password":"412458ea93597da7a7f9e72a9469bc86c49c4bfb","username":"WakamiyaEve","idcard":"213182873","studentid":"71117503","address":"M1A","avatorurl":"https://avatars2.githubusercontent.com/u/45632558?s=400&v=4","verified":1,"score":10,"status":"success"}
+{"uuid":2,"password":"412458ea93597da7a7f9e72a9469bc86c49c4bfb","username":"WakamiyaEve","idcard":"213182873","studentid":"71117503","address":"M1A","avatarurl":"https://avatars2.githubusercontent.com/u/45632558?s=400&v=4","verified":1,"score":10,"status":"success"}
 \\no user
 {"status":"none"}
 ```

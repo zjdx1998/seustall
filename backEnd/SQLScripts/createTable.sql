@@ -5,7 +5,7 @@ create table `users`(
     `idcard` varchar(100) not null,
     `studentid` varchar(100) not null,
     `address` varchar(100) not null,
-    `avatorurl` varchar(100) not null,
+    `avatarurl` varchar(100) not null,
     `verified` boolean,
     `score` tinyint,
     primary key (`uuid`))
