@@ -25,6 +25,8 @@ import StartPage from '../pages/StartPage';
 import * as SP from '../Common/ScreenProperty';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import SignInUI from "../pages/SignInUI";
+import MyGroceryPage from "../pages/MyGroceryPage";
+import WhatIBoughtPage from "../pages/WhatIBoughtPage";
 // const customComponent = props => (
 //   <ScrollView style={{backgroundColor: '#FFE4E1', flex: 1}}>
 //     <SafeAreaView forceInset={{top: 'always', horizontal: 'never'}}>
@@ -105,7 +107,7 @@ const customComponents = props => (
           if (that.state.currentIndex === 3) {
             props.navigation.closeDrawer();
           } else {
-            props.navigation.navigate('detailPage');
+            props.navigation.navigate('page2');
           }
           that.setState({currentIndex: 3});
           // props.navigation.navigate('firstPage', {
@@ -136,13 +138,13 @@ const TotalNav = createDrawerNavigator(
       },
     },
     page1: {
-      screen: FirstPage,
+      screen: MyGroceryPage,
       navigationOptions: {
         drawerLabel: '我的铺子',
       },
     },
     page2: {
-      screen: FirstPage,
+      screen: WhatIBoughtPage,
       navigationOptions: {
         drawerLabel: '我买到的',
       },
