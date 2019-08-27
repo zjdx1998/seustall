@@ -1,7 +1,8 @@
 /**
  * @author Hanyuu
  */
-console.log("[info] index loaded.");
+console.log("[info] in dex loaded.");
+import logger from 'koa-logger';
 import path from 'path';
 import Koa from 'koa';
 import koaRouter from 'koa-router';
@@ -10,7 +11,10 @@ import parser from 'koa-bodyparser';
 import fs from 'fs';
 import data from "./database";
 import { User, Good, UserInterface, GoodInterface } from './role';
-import { DatabaseError } from 'sequelize/types';
+import conf from './conf';
+import mkdirp from 'mkdirp';
+import koaBody from 'koa-body';
+
 
 const router = new koaRouter();
 // const staticPath = path.join(__dirname,'../src/asset')
@@ -21,6 +25,8 @@ function webServer()
 	{
 		const database = new data();;
 		const app = new Koa();
+		app.use(logger());
+		app.use(koaBody({ multipart: true }));
 		app.use(parser());
 		app.use(router.routes());
 		router.get('/item/:itemid', async (ctx, next) =>
@@ -57,6 +63,7 @@ function webServer()
 			newUser = ctx.request.body;
 			newUser.score = 10;
 			newUser.verified = false;
+			newUser.avatarurl = path.join(conf.avator, "default.jpg")
 			const res = await database.writeUser(newUser);
 			ctx.response.body = JSON.stringify(res);
 			ctx.response.type = 'application/json';
@@ -77,6 +84,26 @@ function webServer()
 			const res = await database.writeGood(newGood);
 			ctx.response.body = JSON.stringify(res);
 			ctx.response.type = 'application/json';
+		})
+		router.post('/user/avatar', async (ctx, next) =>
+		{
+			var response = new Object() as any;
+			try
+			{
+				const uuid = ctx.body.uuid;
+				const fileObj:any = ctx.request.files;
+				const file = fileObj.avatar;
+				const reader = fs.createReadStream(file.path);
+				const stream = fs.createWriteStream(path.join(conf.avator, uuid + ".jpg"));
+				reader.pipe(stream);
+				console.log(`${file.name} -> ${stream.path}`);
+				ctx.response.body = JSON.stringify({ "status": "success" });
+				ctx.response.type = "application/json";
+			} catch (error)
+			{
+				console.error(`[ERROR] ${error}`);
+			}
+
 		})
 		app.listen(4000);
 	} catch (error)
