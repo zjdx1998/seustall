@@ -1,3 +1,9 @@
+/*
+  @version: 0.3
+  @author: 71117123张建东
+  @date: 2019-8-22
+*/
+
 import React, {Component} from 'react';
 import GlobalHeader from '../Components/GlobalHeader';
 import SlideShow from '../Components/SlideShow';
@@ -21,9 +27,7 @@ export default class MainPages extends Component {
           <ClassificationOfGoods />
         </View>
         <View style={styles.headerContainer} />
-        <View style={styles.slideshowContainer}>
-          <SlideShow />
-        </View>
+        <View style={styles.slideshowContainer} />
         <View style={styles.slideshowContainer}>
           <SlideShow />
         </View>

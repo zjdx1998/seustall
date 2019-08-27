@@ -185,7 +185,7 @@ const TotalNav = createDrawerNavigator(
       'page4',
       'startP',
     ],
-    initialRouteName: 'home',
+    initialRouteName: 'startP',
     // initialRouteParams: {
     //   jumpHomeCallBack: index => {
     //     this.setState({currentIndex: index});

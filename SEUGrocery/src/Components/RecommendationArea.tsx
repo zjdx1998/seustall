@@ -4,14 +4,8 @@
   @date: 2019-8-23
 */
 
-import {
-  StyleSheet,
-  View,
-  Dimensions,
-  Image,
-  Text,
-} from 'react-native';
-
+import {StyleSheet, View, Dimensions, Image, Text} from 'react-native';
+import * as SP from '../Common/ScreenProperty';
 //import { Image,Text} from 'react-native-elements';
 import React, {Component} from 'react';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -19,6 +13,7 @@ const {width} = Dimensions.get('window'); //解构赋值 获取屏幕宽度
 
 const Goods = [
   {
+    itemid: 1,
     name: 'name1',
     icon_url: 'https://avatars2.githubusercontent.com/u/45632558?s=400&v=4',
     price: '10',
@@ -26,6 +21,7 @@ const Goods = [
     info: '这还是一本书，一本很好的书，是一本非常好的书',
   },
   {
+    itemid: 2,
     name: 'name2',
     icon_url: 'https://hanyuufurude.github.io/img/covers.jpg',
     price: '20',
@@ -33,6 +29,7 @@ const Goods = [
     info: 'balabalablab',
   },
   {
+    itemid: 3,
     name: 'name3',
     icon_url: 'https://hanyuufurude.github.io/img/covers.jpg',
     price: '30',
@@ -40,6 +37,7 @@ const Goods = [
     info: 'balabalablab',
   },
   {
+    itemid: 4,
     name: 'name4',
     icon_url: 'https://hanyuufurude.github.io/img/covers.jpg',
     price: '40',
@@ -49,11 +47,13 @@ const Goods = [
 ];
 
 export default class RecommendationArea extends Component {
+  private props: any;
   render() {
     return (
       <View style={styles.goodsList}>
         {Goods.map(i => (
           <Good
+            itemid={i.itemid}
             image={{uri: i.icon_url}}
             name={i.name}
             price={i.price}
@@ -71,11 +71,20 @@ class Good extends Component {
   render() {
     return (
       <TouchableOpacity
-        onPress={() => this.props.navigation.navigate('detailPage')}>
+        onPress={() =>
+          this.props.navigation.navigate('detailPage', {
+            itemid: this.props.itemid,
+          })
+        }>
         <View style={styles.block}>
-          <Image source={this.props.image} style={{width: width / 2 - 20, height: width / 2 - 20}} />
+          <Image
+            source={this.props.image}
+            style={{width: width / 2 - 20, height: width / 2 - 20, flex: 4}}
+          />
           <Text style={styles.name}>{this.props.name}</Text>
-          <Text>{this.props.text}</Text>
+          <Text style={styles.textdes} numberOfLines={2}>
+            {' ' + this.props.text}
+          </Text>
           <Text style={styles.price}>￥ {this.props.price}</Text>
         </View>
       </TouchableOpacity>
@@ -88,9 +97,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     borderRadius: 10,
     width: width / 2 - 20,
+    height: SP.HB(35),
     alignItems: 'center',
     margin: 10,
     padding: 10,
+    flexDirection: 'column',
+    flex: 1,
   },
   goodsList: {
     flex: 1,
@@ -100,9 +112,16 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 20,
     color: '#cc6699',
+    flex: 1,
+  },
+  textdes: {
+    fontSize: 12,
+    color: '#000',
+    flex: 1,
   },
   name: {
     fontSize: 28,
     color: '#cc6699',
+    flex: 1,
   },
 });

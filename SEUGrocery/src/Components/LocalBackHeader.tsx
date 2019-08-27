@@ -23,9 +23,9 @@ export default class extends Component {
         leftComponent={
           <AntDesign
             name="left"
-            size={30}
+            size={36}
             color="#030303"
-            onPress={() => this.props.navigation.navigate('home')}
+            onPress={() => this.props.navigation.goBack()}
           />
         }
       />

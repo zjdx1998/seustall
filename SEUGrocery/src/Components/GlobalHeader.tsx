@@ -6,6 +6,7 @@
 import React, {Component} from 'react';
 import {Header, SearchBar} from 'react-native-elements';
 export default class extends Component {
+  private props: any;
   constructor(props) {
     super(props);
   }
@@ -18,22 +19,25 @@ export default class extends Component {
       <Header
         statusBarProps={{
           barStyle: 'light-content',
-          backgroundColor: '#EED2EE',
+          backgroundColor: '#CC6699',
         }}
         containerStyle={{marginTop: -25}}
         placement="center"
-        backgroundColor="#EED2EE"
+        backgroundColor="#CC6699"
         leftComponent={{
           icon: 'menu',
           color: '#030303',
           onPress: () => this.props.navigation.openDrawer(),
+          size: 30,
         }}
         centerComponent={
           <SearchBar
+            searchIcon={{size: 30}}
             containerStyle={{
-              backgroundColor: '#EED2EE',
+              backgroundColor: '#CC6699',
               flex: 1,
               flexDirection: 'row',
+              marginBottom: -1.1,
             }}
             inputContainerStyle={{
               backgroundColor: '#FFFFFF',
@@ -42,13 +46,18 @@ export default class extends Component {
             placeholder="请输入您要购买的商品"
             inputStyle={{fontSize: 16}}
             onChangeText={this.updateSearch}
-            lightTheme={true}
+            lightTheme="default"
             value={search}
             showLoading={true}
           />
         }
-        centerContainerStyle={{flex: 10, alignSelf: 'stretch'}}
-        rightComponent={{icon: 'camera', color: '#030303'}}
+        centerContainerStyle={{flex: 9, marginTop: -2}}
+        rightComponent={{
+          icon: 'camera',
+          color: '#030303',
+          backgroundColor: '#CC6699',
+          size: 30,
+        }}
       />
     );
   }
