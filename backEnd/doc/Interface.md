@@ -24,7 +24,7 @@ e.g.
 - return
 ``` json
 \\ success
-{"status":"success"}
+{"status":"success","info":{"uuid":2,"password":"2322dbbdcaa610d99a2ee9d0154294a4e41c279c","username":"WakamiyaEve","phonenumber":"0101234567","idcard":"21341","studentid":"213413","address":"M2C","avatarurl":"https://avatars2.githubusercontent.com/u/45632558?s=400&v=4","verified":0,"score":10}}
 \\ password incorrect
 {"status":"failure","info":"password incorrect"}
 \\ invaild request

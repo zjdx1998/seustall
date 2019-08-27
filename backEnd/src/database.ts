@@ -1,7 +1,7 @@
 /**
  * @author Hanyuu
  */
-import sequelize, { Sequelize, ConnectionRefusedError } from 'sequelize';
+import sequelize, { Sequelize, ConnectionRefusedError, JSON } from 'sequelize';
 // The bug of sequelize https://github.com/sequelize/sequelize/issues/9489
 let mysql2 = require('mysql2');
 import conf from './conf';
@@ -68,7 +68,7 @@ export default class data
 						allowNull: false,
 					},
 					phonenumber: {
-						type: sequelize.INTEGER,
+						type: sequelize.STRING,
 						allowNull: false,
 					},
 					idcard: {
@@ -160,28 +160,29 @@ export default class data
 		console.log("[info] database connect success")
 		return true;
 	}
-	async writeGood(good: GoodInterface)
-	{
-		if (this.isConnected)
-		{
-			try
-			{
-				await this.goods.create(good);
-			} catch (error)
-			{
-				throw new Error("[ERROR] Database connect failed.\n" + error);
-			}
-		} else
-		{
-			console.error("")
-		}
-	}
-	async writeUser(user: UserInterface)
+	public async writeGood(good: GoodInterface)
 	{
 		var response = new Object() as any;
 		try
 		{
-			const res = await this.loginByPhonenumber(user.phonenumber as number);
+			await this.goods.create(good);
+			response.status = "success";
+			return response;
+		} catch (error)
+		{
+			console.error(`[ERROR] failed while writing good\n${error}`);
+			response.status = "faliure";
+			response.info = "invaild request";
+			return response;
+		}
+
+	}
+	public async writeUser(user: UserInterface)
+	{
+		var response = new Object() as any;
+		try
+		{
+			const res = await this.queryPhoneNumber(user.phonenumber as number);
 			if (res)
 			{
 				response.status = "failure";
@@ -199,7 +200,7 @@ export default class data
 			return response;
 		}
 	}
-	async queryGood(itemid: number)
+	public async queryGood(itemid: number)
 	{
 		try
 		{
@@ -210,13 +211,13 @@ export default class data
 					itemid
 				}
 			})
-			return JSON.stringify(this.requestFix(res));
+			return this.requestFix(res);
 		} catch (error)
 		{
 			throw new Error("[ERROR] Database connect failed.\n" + error);
 		}
 	}
-	async queryUser(uuid: number)
+	public async queryUser(uuid: number)
 	{
 		try
 		{
@@ -227,19 +228,37 @@ export default class data
 				}
 			})
 			const userRes = new User(res);
-			return JSON.stringify(this.requestFix(userRes.protect));
+			return this.requestFix(userRes.protect);
 		} catch (error)
 		{
 			throw new Error("[ERROR] Database connect failed.\n" + error);
 		}
 	}
-	async loginByPhonenumber(body: any)
+	private async queryPhoneNumber(phonenumber: number)
+	{
+		try
+		{
+			const res = await this.users.findOne({
+				where:
+				{
+					phonenumber
+				}
+			})
+			const userRes = new User(res);
+			return res;
+		} catch (error)
+		{
+			console.error(`[ERROR] on query phone number ${error}"`);
+			return { status: "failure" };
+		}
+	}
+	public async loginByPhonenumber(body: any)
 	{
 		var response = new Object() as any;
 		try
 		{
 			const phonenumber = body.phonenumber
-			const res = await this.users.findOne({
+			const res:UserInterface = await this.users.findOne({
 				where:
 				{
 					phonenumber
@@ -250,6 +269,7 @@ export default class data
 				if (res.password === body.password)
 				{
 					response.status = "success";
+					response.info = new User(res).protect();
 					return response;
 				}
 				response.status = "failure";
@@ -267,7 +287,7 @@ export default class data
 			return response;
 		}
 	}
-	requestFix(res: any): string
+	private requestFix(res: any): string
 	{
 		if (res && res.dataValues)
 		{
