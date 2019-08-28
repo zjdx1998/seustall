@@ -28,63 +28,282 @@ docker run --network host -d -v /home/admin/avatar:/foof/avatar hanyuufurude/foo
 ## SQL table fields
 #### users
 ```
-+-----------+--------------+------+-----+---------+----------------+
-| Field     | Type         | Null | Key | Default | Extra          |
-+-----------+--------------+------+-----+---------+----------------+
-| uuid      | bigint(20)   | NO   | PRI | NULL    | auto_increment |
-| password  | char(40)     | NO   |     | NULL    |                |
-| username  | varchar(100) | NO   |     | NULL    |                |
-| idcard    | char(20)     | NO   |     | NULL    |                |
-| studentid | char(20)     | NO   |     | NULL    |                |
-| address   | varchar(100) | NO   |     | NULL    |                |
-| avatarurl | varchar(100) | NO   |     | NULL    |                |
-| verified  | tinyint(1)   | YES  |     | NULL    |                |
-| score     | tinyint(4)   | YES  |     | NULL    |                |
-+-----------+--------------+------+-----+---------+----------------+
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| uuid        | int(11)      | NO   | PRI | NULL    | auto_increment |
+| password    | varchar(255) | NO   |     | NULL    |                |
+| username    | varchar(255) | NO   |     | NULL    |                |
+| phonenumber | varchar(255) | NO   |     | NULL    |                |
+| idcard      | varchar(255) | NO   |     | NULL    |                |
+| studentid   | varchar(255) | NO   |     | NULL    |                |
+| address     | varchar(255) | NO   |     | NULL    |                |
+| avatarurl   | varchar(255) | NO   |     | NULL    |                |
+| verified    | int(11)      | NO   |     | NULL    |                |
+| score       | int(11)      | NO   |     | NULL    |                |
++-------------+--------------+------+-----+---------+----------------+
 ```
 #### goods
 ```
 +---------------+--------------+------+-----+---------+----------------+
 | Field         | Type         | Null | Key | Default | Extra          |
 +---------------+--------------+------+-----+---------+----------------+
-| itemid        | bigint(20)   | NO   | PRI | NULL    | auto_increment |
-| uuid          | bigint(20)   | NO   |     | NULL    |                |
-| title         | varchar(100) | NO   |     | NULL    |                |
-| type          | tinyint(4)   | NO   |     | NULL    |                |
+| itemid        | int(11)      | NO   | PRI | NULL    | auto_increment |
+| uuid          | int(11)      | NO   |     | NULL    |                |
+| title         | varchar(255) | NO   |     | NULL    |                |
+| type          | int(11)      | NO   |     | NULL    |                |
 | price         | double       | NO   |     | NULL    |                |
-| imgurl        | char(100)    | NO   |     | NULL    |                |
-| depreciatione | tinyint(4)   | NO   |     | NULL    |                |
-| note          | varchar(100) | NO   |     | NULL    |                |
-| sold          | tinyint(1)   | NO   |     | 0       |                |
+| imgurl        | varchar(255) | NO   |     | NULL    |                |
+| depreciatione | int(11)      | NO   |     | NULL    |                |
+| note          | varchar(255) | NO   |     | NULL    |                |
+| sold          | int(11)      | NO   |     | NULL    |                |
 +---------------+--------------+------+-----+---------+----------------+
 ```
 ## Interface to frond end.
-### Test page
+# Interface to frond end.
+
+## Test page
 [inari.ml:8080](http://inari.ml:8080)
-### Users
-#### public query
+
+## Users
+
+### public query
+
 ```
-inari:ml:8080/user/[uuid]
+GET /user/[uuid]
 ```
-e.g.
-[inari.ml:8080/user/2](http://inari.ml:8080/user/2)
-- return
+```
+None
+```
+
 ``` json
-\\success
-{"uuid":2,"password":"412458ea93597da7a7f9e72a9469bc86c49c4bfb","username":"WakamiyaEve","idcard":"213182873","studentid":"71117503","address":"M1A","avatarurl":"https://avatars2.githubusercontent.com/u/45632558?s=400&v=4","verified":1,"score":10,"status":"success"}
-\\no user
-{"status":"none"}
+//success
+{
+  "uuid": 2,
+  "password": "2322dbbdcaa610d99a2ee9d0154294a4e41c279c",
+  "username": "WakamiyaEve",
+  "phonenumber": null,
+  "idcard": null,
+  "studentid": null,
+  "address": null,
+  "avatarurl": "image\\avatar\\2.jpg",
+  "verified": 0,
+  "score": 10,
+  "status": "success"
+}
 ```
-### Goods
+### login
+```
+POST /user/login
+```
+```json
+{"表单数据":{"phonenumber":"0101234567","password":"2322dbbdcaa610d99a2ee9d0154294a4e41c279c"}}
+```
+
+``` json
+//success
+{
+  "status": "success",
+  "info": {
+    "uuid": 2,
+    "password": "2322dbbdcaa610d99a2ee9d0154294a4e41c279c",
+    "username": "WakamiyaEve",
+    "phonenumber": "0101234567",
+    "idcard": "21341",
+    "studentid": "213413",
+    "address": "M2C",
+    "avatarurl": "image\\avatar\\2.jpg",
+    "verified": 0,
+    "score": 10
+  },
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoyLCJnZW5lcmF0ZSI6MTU2Njk4OTc3MDk4OSwiaWF0IjoxNTY2OTg5NzcwfQ.s5o0Vn8TN-EyWEz-dwwlUfz7CwXnbj5yynwiUO5rjho"
+}
+// password incorrect
+{
+  "status": "failure",
+  "info": "password incorrect",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJnZW5lcmF0ZSI6MTU2Njk4OTcxMjAyMywiaWF0IjoxNTY2OTg5NzEyfQ.cLwu0_TK_Z4mYI3xDp3RJQ9NJoa4R1Pc-tX8E4xFUWY"
+}
+```
+### register
+```
+POST /user/register
+```
+``` json
+{"username":"王胜男","phonenumber":"2333","password":"2333","idcard":"234234","studentid":"slfdf","address":"m2c"}
+```
+
+``` json
+// success
+{"status":"success"}
+// phone number already token
+{"status":"failure","info":"phone number already token"}
+// invaild request
+{"status":"failure","info":"invaild request"}
+```
+### upload avatar
+
+```
+POST /user/avatar
+```
+
+``` json
+-----------------------------697348710942
+Content-Disposition: form-data; name="token"
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjo4LCJnZW5lcmF0ZSI6MTU2NzAwNTkxMzk0MSwiaWF0IjoxNTY3MDA1OTEzfQ.p9VEup6vB3VVkR-o6PfexryAuGCndAyywJvbpdgtvx8
+-----------------------------697348710942
+Content-Disposition: form-data; name="uuid"
+
+8
+-----------------------------697348710942
+Content-Disposition: form-data; name="file"; filename="error.jpg"
+Content-Type: image/jpeg
+
+ÿØÿá
+```
+
+``` json
+{"status":"success"}
+```
+
+### me
+
+```
+POST \user\me
+```
+
+```json
+{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzAwNzQ0NjA2MiwiaWF0IjoxNTY3MDA3NDQ2fQ.DTgLQeHdrkZYS1Z-8Pdg3FVk9PjZ-6OfENrgSF2I-JI","uuid":"1"}
+```
+
+```json
+{
+  "uuid": 1,
+  "password": null,
+  "username": "slkdjflk",
+  "phonenumber": "12345678901",
+  "idcard": "2341234",
+  "studentid": "21341234",
+  "address": "T1C",
+  "avatarurl": "e79ce7ff03c1245a15b566515a",
+  "verified": 0,
+  "score": 10,
+  "status": "success"
+}
+```
+
+### published
+
+```
+POST \user\published
+```
+
+``` json
+{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzAwNzQ0NjA2MiwiaWF0IjoxNTY3MDA3NDQ2fQ.DTgLQeHdrkZYS1Z-8Pdg3FVk9PjZ-6OfENrgSF2I-JI","uuid":"1"}
+```
+
+``` json
+[
+  {
+    "itemid": 1,
+    "uuid": 1,
+    "title": "窝窝头",
+    "type": 1,
+    "price": 0.25,
+    "imgurl": "[\"image\\\\item\\\\1_0.jpg\",\"image\\\\item\\\\1_1.jpg\",\"image\\\\item\\\\1_2.jpg\",\"image\\\\item\\\\1_3.jpg\"]",
+    "depreciatione": 1,
+    "note": "嘿嘿！",
+    "sold": 0
+  },
+  {
+    "itemid": 2,
+    "uuid": 1,
+    "title": "两个窝窝头",
+    "type": 1,
+    "price": 0.5,
+    "imgurl": "https://www.meishij.net/zuofa/wowotou_2.html",
+    "depreciatione": 1,
+    "note": "嘿嘿！",
+    "sold": 0
+  }
+]
+```
+
+
+
+
+
+
+
+
+
+## Items
+
 * query
 ```
-inari:ml:8080/item/[itemid]
+GET /item/[itemid]
 ```
-e.g.
-[inari.ml:8080/item/3](http://inari.ml:8080/item/3)
 ```json
-\\success
-{"itemid":3,"uuid":1,"title":"ASUS ZenBook S UX391 Full HD 13.3 Inch Metal Laptop","type":1,"price":499.99,"imgurl":"https://images-cn.ssl-images-amazon.com/images/I/71qjdWFl%2BqL._SL1500_.jpg","depreciatione":1,"note":"Slim. Stunning. Supreme. ZenBook S is all these, yet so much more. ","sold":0,"status":"success"}
-\\no item
+None
+```
+
+``` json
+//success
+{"status":"success"}
+//no item
 {"status":"none"}
+```
+* add
+```
+POST \item\add
+```
+
+``` json
+{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjo4LCJnZW5lcmF0ZSI6MTU2NzAwNTkxMzk0MSwiaWF0IjoxNTY3MDA1OTEzfQ.p9VEup6vB3VVkR-o6PfexryAuGCndAyywJvbpdgtvx8","uuid":"8","title":"散装纯净水","type":"3","price":"234.6","imgurl":"86358268","depreciatione":"100","note":"jsdfjsdsf"}
+```
+
+``` json
+//success
+{"status":"success"}
+//no item
+{"status":"none"}
+```
+
+*  upload avatar
+
+```
+POST \item\image
+```
+
+``` json
+-----------------------------845247425332
+
+Content-Disposition: form-data; name="token"
+
+
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzAwNzQ0NjA2MiwiaWF0IjoxNTY3MDA3NDQ2fQ.DTgLQeHdrkZYS1Z-8Pdg3FVk9PjZ-6OfENrgSF2I-JI
+
+-----------------------------845247425332
+
+Content-Disposition: form-data; name="itemid"
+
+
+
+1
+
+-----------------------------845247425332
+
+Content-Disposition: form-data; name="file0"; filename="error.jpg"
+
+Content-Type: image/jpeg
+
+
+
+ÿØÿá
+```
+
+```json
+{"status":"success"}
 ```

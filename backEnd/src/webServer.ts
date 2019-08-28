@@ -149,7 +149,7 @@ function webServer()
 		router.post('/item/image', async (ctx, next) =>
 		{
 			const verify: any = verifyToken(ctx.request.body.token);
-			if (!verify || ctx.request.body.uuid != verify.uuid)
+			if (!verify)
 			{
 				ctx.response.status = 403;
 				return;

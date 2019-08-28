@@ -1,4 +1,5 @@
 # Interface to frond end.
+
 ## Test page
 [inari.ml:8080](http://inari.ml:8080)
 
@@ -14,7 +15,20 @@ None
 ```
 
 ``` json
-
+//success
+{
+  "uuid": 2,
+  "password": "2322dbbdcaa610d99a2ee9d0154294a4e41c279c",
+  "username": "WakamiyaEve",
+  "phonenumber": null,
+  "idcard": null,
+  "studentid": null,
+  "address": null,
+  "avatarurl": "image\\avatar\\2.jpg",
+  "verified": 0,
+  "score": 10,
+  "status": "success"
+}
 ```
 ### login
 ```
@@ -25,7 +39,7 @@ POST /user/login
 ```
 
 ``` json
-\\success
+//success
 {
   "status": "success",
   "info": {
@@ -42,7 +56,7 @@ POST /user/login
   },
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoyLCJnZW5lcmF0ZSI6MTU2Njk4OTc3MDk4OSwiaWF0IjoxNTY2OTg5NzcwfQ.s5o0Vn8TN-EyWEz-dwwlUfz7CwXnbj5yynwiUO5rjho"
 }
-\\ password incorrect
+// password incorrect
 {
   "status": "failure",
   "info": "password incorrect",
@@ -54,24 +68,191 @@ POST /user/login
 POST /user/register
 ```
 ``` json
-\\ success
+{"username":"王胜男","phonenumber":"2333","password":"2333","idcard":"234234","studentid":"slfdf","address":"m2c"}
+```
+
+``` json
+// success
 {"status":"success"}
-\\ phone number already token
+// phone number already token
 {"status":"failure","info":"phone number already token"}
-\\ invaild request
+// invaild request
 {"status":"failure","info":"invaild request"}
 ```
-## Goods
+### upload avatar
+
+```
+POST /user/avatar
+```
+
+``` json
+-----------------------------697348710942
+Content-Disposition: form-data; name="token"
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjo4LCJnZW5lcmF0ZSI6MTU2NzAwNTkxMzk0MSwiaWF0IjoxNTY3MDA1OTEzfQ.p9VEup6vB3VVkR-o6PfexryAuGCndAyywJvbpdgtvx8
+-----------------------------697348710942
+Content-Disposition: form-data; name="uuid"
+
+8
+-----------------------------697348710942
+Content-Disposition: form-data; name="file"; filename="error.jpg"
+Content-Type: image/jpeg
+
+ÿØÿá
+```
+
+``` json
+{"status":"success"}
+```
+
+### me
+
+```
+POST \user\me
+```
+
+```json
+{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzAwNzQ0NjA2MiwiaWF0IjoxNTY3MDA3NDQ2fQ.DTgLQeHdrkZYS1Z-8Pdg3FVk9PjZ-6OfENrgSF2I-JI","uuid":"1"}
+```
+
+```json
+{
+  "uuid": 1,
+  "password": null,
+  "username": "slkdjflk",
+  "phonenumber": "12345678901",
+  "idcard": "2341234",
+  "studentid": "21341234",
+  "address": "T1C",
+  "avatarurl": "e79ce7ff03c1245a15b566515a",
+  "verified": 0,
+  "score": 10,
+  "status": "success"
+}
+```
+
+### published
+
+```
+POST \user\published
+```
+
+``` json
+{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzAwNzQ0NjA2MiwiaWF0IjoxNTY3MDA3NDQ2fQ.DTgLQeHdrkZYS1Z-8Pdg3FVk9PjZ-6OfENrgSF2I-JI","uuid":"1"}
+```
+
+``` json
+[
+  {
+    "itemid": 1,
+    "uuid": 1,
+    "title": "窝窝头",
+    "type": 1,
+    "price": 0.25,
+    "imgurl": "[\"image\\\\item\\\\1_0.jpg\",\"image\\\\item\\\\1_1.jpg\",\"image\\\\item\\\\1_2.jpg\",\"image\\\\item\\\\1_3.jpg\"]",
+    "depreciatione": 1,
+    "note": "嘿嘿！",
+    "sold": 0
+  },
+  {
+    "itemid": 2,
+    "uuid": 1,
+    "title": "两个窝窝头",
+    "type": 1,
+    "price": 0.5,
+    "imgurl": "https://www.meishij.net/zuofa/wowotou_2.html",
+    "depreciatione": 1,
+    "note": "嘿嘿！",
+    "sold": 0
+  }
+]
+```
+
+
+
+
+
+
+
+
+
+## Items
+
 * query
 ```
 GET /item/[itemid]
 ```
+```json
+None
+```
+
 ``` json
-\\success
-\\no item
+//success
+{"status":"success"}
+//no item
 {"status":"none"}
 ```
 * add
 ```
 POST \item\add
 ```
+
+``` json
+{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjo4LCJnZW5lcmF0ZSI6MTU2NzAwNTkxMzk0MSwiaWF0IjoxNTY3MDA1OTEzfQ.p9VEup6vB3VVkR-o6PfexryAuGCndAyywJvbpdgtvx8","uuid":"8","title":"散装纯净水","type":"3","price":"234.6","imgurl":"86358268","depreciatione":"100","note":"jsdfjsdsf"}
+```
+
+``` json
+//success
+{"status":"success"}
+//no item
+{"status":"none"}
+```
+
+*  upload avatar
+
+```
+POST \item\image
+```
+
+``` json
+-----------------------------845247425332
+
+Content-Disposition: form-data; name="token"
+
+
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzAwNzQ0NjA2MiwiaWF0IjoxNTY3MDA3NDQ2fQ.DTgLQeHdrkZYS1Z-8Pdg3FVk9PjZ-6OfENrgSF2I-JI
+
+-----------------------------845247425332
+
+Content-Disposition: form-data; name="itemid"
+
+
+
+1
+
+-----------------------------845247425332
+
+Content-Disposition: form-data; name="file0"; filename="error.jpg"
+
+Content-Type: image/jpeg
+
+
+
+ÿØÿá
+```
+
+```json
+{"status":"success"}
+```
+
+
+
+
+
+
+
+
+
+
+
