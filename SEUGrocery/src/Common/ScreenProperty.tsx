@@ -4,7 +4,7 @@
   @date: 2019-8-22
 */
 
-import {Dimensions, PixelRatio} from 'react-native';
+import {Dimensions, PixelRatio, Platform} from 'react-native';
 
 export const windowWidth = Dimensions.get('window').width;
 export const windowHeight = Dimensions.get('window').height;
@@ -52,4 +52,8 @@ export function HB(length) {
 
 export function WB(length) {
   return Math.round(windowWidth * (length / 100));
+}
+
+export function isiOS(): boolean {
+  return Platform.OS === 'ios';
 }
