@@ -10,10 +10,13 @@ import {
     Button,
     Image,
     StyleSheet,
+    Text,
+    TouchableOpacity,
 
 } from 'react-native'
 import ImagePicker from 'react-native-image-picker'
 import * as SP from '../Common/ScreenProperty'
+import {Icon} from "react-native-elements";
 
 
 
@@ -32,33 +35,54 @@ var photoOptions = {
     }
 }
 
+let imgurl='';
+export function getImgUrl() {
+    return imgurl;
+}
 
 export default class PostPhotos extends Component{
     private state: any;
+    private props: any;
     constructor(props) {
         super(props);
         this.state = {
             imgURL:''
         }
     }
+
+    renderImg=()=>{
+        if(this.state.imgURL!=''){
+            return(
+                this.state.imgURL.split('++').map((i) =>
+                    (<Image
+                        source={{uri: i}}
+                        style={styles.img}/>)
+                )
+            )
+        }
+    }
     render=()=>{
         return (
             <View >
                 <View style={styles.container}>
-                    {
-                        this.state.imgURL.split('++').map((i) =>
-                            (<Image
-                                source={{uri: i}}
-                                style={styles.img}/>)
-                        )
-                    }
+                    {this.renderImg()}
+                    <TouchableOpacity onPress={this.cameraAction}>
+                    <View style={[styles.img,styles.button]}>
+                        <Icon
+                            name={'md-add'}
+                            color={'#cc6699'}
+                            type='ionicon'
+                            size={60}
+                        />
+                    </View>
+                    </TouchableOpacity>
                 </View>
-                <Button
-                    title="上传照片"
-                    onPress={this.cameraAction}
-                    color={'#cc6699'}
-                    style={styles.button}
-                />
+                {/*<Button*/}
+                {/*    title="上传照片"*/}
+                {/*    onPress={this.cameraAction}*/}
+                {/*    color={'#cc6699'}*/}
+                {/*    style={styles.button}*/}
+                {/*/>*/}
             </View>
 
     );
@@ -68,7 +92,7 @@ export default class PostPhotos extends Component{
         ImagePicker.showImagePicker(photoOptions, (response) => {
             console.log('response' + response);
             if (response.didCancel) {
-                return
+                return;
             }
             let url=this.state.imgURL;
             if(url==''){
@@ -77,11 +101,12 @@ export default class PostPhotos extends Component{
             else{
                 url=url+'++'+response.uri;
             }
-
-                this.setState({
-                    imgURL:url,
-                });
+            imgurl=url;
+            this.setState({
+                imgURL:url,
+            });
         })
+
     }
 }
 const imgSize=SP.WB(30);
@@ -98,7 +123,15 @@ const styles=StyleSheet.create({
         margin:SP.WB(2),
     },
     button:{
-        height: SP.HB(10),
+        backgroundColor:'grey',
+        opacity:0.3,
+        justifyContent: 'center',
+        alignItems:'center',
+
+    },
+    add:{
+        fontSize:40,
+        fontWeight:'bold',
     }
 
 

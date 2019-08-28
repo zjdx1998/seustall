@@ -15,17 +15,20 @@ import {
     TextInput,
     Text
 } from 'react-native';
-import {
-    Divider
-} from 'react-native-elements';
 import LocalBackHeader from '../Components/LocalBackHeader';
-import PostPhoto from '../Components/PostPhotos'
+import PostPhoto from '../Components/PostPhotos';
+import {postData} from '../Common/FetchHelper';
+import {getImgUrl} from "../Components/PostPhotos";
+
 
 var {height, width} = Dimensions.get('window');
 const classes=['电子产品','服饰鞋包','交通工具','美妆个护','日常用品','图书文具','运动健身','其他'];
+// const addItemURL = 'http://inari.ml:8080/user/additem';
+const addItemURL = 'http://10.203.252.131/item/add';
+
 export default class DetailPage extends Component {
     private state: any;
-    constructor(props: string) {
+    constructor(props) {
         super(props);
         this.state = {
             title: '' ,
@@ -35,14 +38,16 @@ export default class DetailPage extends Component {
             firstValue:'',
             secondValue:'',
             classes:'电子产品',
-
         };
 
     }
 
-    checkNewDegree=(newText)=>{
-        this.setState({newDegree:newText});
-        let value=Number(newText);
+    updateState= (data)=> {
+        this.setState(data);
+    }
+
+    checkNewDegree=()=>{
+        let value=Number(this.state.newDegree);
         if(isNaN(value)){
             alert('请输入新旧程度');
         }
@@ -59,6 +64,28 @@ export default class DetailPage extends Component {
     updateSecondValue=(value)=>{
         this.setState({secondValue:value});
     }
+    computeValue=()=>{
+        return this.state.firstValue+this.state.secondValue/100;
+    }
+    confirm=()=>{
+        // this.checkNewDegree();
+        let data={
+            devtoken:'412458ea93597da7a7f9e72a9469bc86c49c4bfb',
+            uuid:'6',
+            title:'...',
+            type:'1',
+            price:'87',
+            imgurl:'url',
+            depreciatione:'6',
+            note:'dsfasdg',
+            token:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjo2LCJnZW5lcmF0ZSI6MTU2Njk5NDIzNzY2NCwiaWF0IjoxNTY2OTk0MjM3fQ.Gb7DxXIRGpqwAoC-QoSJLpXCUfdGWh0ZWZGII4rEuv4'
+        }
+        console.log(getImgUrl());
+        postData(addItemURL,data)
+            .then(res=>console.log(res))
+            .catch(err=>console.error(err))
+
+    }
     render() {
         return (
             <ScrollView style={styles.test}>
@@ -70,6 +97,7 @@ export default class DetailPage extends Component {
                             title="确认"
                             type="clear"
                             color={'#cc6699'}
+                            onPress={this.confirm}
                         />
                     </View>
                 </View>
@@ -91,7 +119,7 @@ export default class DetailPage extends Component {
                         editable = {true}
                         onChangeText={(newDegree)=>this.setState({newDegree})}
                         keyboardType={'numeric'}
-                        maxLength={4}
+                        maxLength={3}
                         style={styles.h4}
                     />
                     <Text style={styles.h4}>%</Text>
@@ -101,7 +129,9 @@ export default class DetailPage extends Component {
                     <Picker
                         selectedValue={this.state.campus}
                         style={{ width: width*0.3 ,fontSize:20}}
-                        onValueChange={(itemValue, itemIndex) => this.setState({campus: itemValue})}>
+                        onValueChange={(itemValue, itemIndex) => {
+                            this.setState({campus: itemValue});
+                        }}>
                         <Picker.Item label="九龙湖校区" value="九龙湖" />
                         <Picker.Item label="四牌楼校区" value="四牌楼" />
                         <Picker.Item label="丁家桥校区" value="丁家桥" />
