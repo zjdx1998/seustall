@@ -50,6 +50,7 @@ const Goods = [
 ];
 
 export default class GoodsPanel extends Component {
+  private props: any;
   render() {
     return (
       <View style={styles.goodsList}>

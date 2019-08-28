@@ -41,9 +41,9 @@ export default class SlideShow extends Component {
           style={styles.wrapper}
           height={240}
           autoplay
-          onMomentumScrollEnd={(e, state, context) =>
-            console.log('--------------index:----------------', state.index)
-          }
+          // onMomentumScrollEnd={(e, state, context) =>
+          //   console.log('--------------index:----------------', state.index)
+          // }
           dot={
             <View
               style={{

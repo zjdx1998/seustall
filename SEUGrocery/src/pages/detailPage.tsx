@@ -20,6 +20,7 @@ import {
   Avatar,
 } from 'react-native-elements';
 import LocalBackHeader from '../Components/LocalBackHeader';
+import * as SP from '../Common/ScreenProperty'
 const itemURL = 'http://inari.ml:8080/item/';
 
 var {height, width} = Dimensions.get('window');
@@ -81,7 +82,7 @@ export default class DetailPage extends Component {
   render() {
     return (
       <ScrollView style={styles.test}>
-        <View style={{height: 50}}>
+        <View style={{height: SP.HB(15)}}>
           <LocalBackHeader navigation={this.props.navigation}/>
         </View>
         <Image

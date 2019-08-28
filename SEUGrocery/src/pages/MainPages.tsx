@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
   },
   slideshowContainer: {
     flex: 5,
+    marginHorizontal: 10,
   },
   ClassificationContainer: {
     flex: 3,

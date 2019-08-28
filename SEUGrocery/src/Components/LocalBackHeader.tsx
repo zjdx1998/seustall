@@ -7,6 +7,7 @@ import React, {Component} from 'react';
 import {Header} from 'react-native-elements';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 export default class extends Component {
+  private props: any;
   constructor(props) {
     super(props);
   }
@@ -15,11 +16,10 @@ export default class extends Component {
       <Header
         statusBarProps={{
           barStyle: 'light-content',
-          backgroundColor: '#EED2EE',
+          backgroundColor: '#CC6699',
         }}
-        containerStyle={{marginTop: -25}}
         placement="center"
-        backgroundColor="#EED2EE"
+        backgroundColor="#CC6699"
         leftComponent={
           <AntDesign
             name="left"

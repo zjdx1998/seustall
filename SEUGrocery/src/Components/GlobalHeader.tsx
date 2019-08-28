@@ -21,7 +21,7 @@ export default class extends Component {
           barStyle: 'light-content',
           backgroundColor: '#CC6699',
         }}
-        containerStyle={{marginTop: -25}}
+        containerStyle={{marginTop: 0}}
         placement="center"
         backgroundColor="#CC6699"
         leftComponent={{
@@ -37,7 +37,8 @@ export default class extends Component {
               backgroundColor: '#CC6699',
               flex: 1,
               flexDirection: 'row',
-              marginBottom: -1.1,
+              borderTopWidth: 0,
+              borderBottomWidth: 0,
             }}
             inputContainerStyle={{
               backgroundColor: '#FFFFFF',
@@ -46,12 +47,12 @@ export default class extends Component {
             placeholder="请输入您要购买的商品"
             inputStyle={{fontSize: 16}}
             onChangeText={this.updateSearch}
-            lightTheme="default"
+            lightTheme="Default"
             value={search}
             showLoading={true}
           />
         }
-        centerContainerStyle={{flex: 9, marginTop: -2}}
+        centerContainerStyle={{flex: 9, marginTop: -8}}
         rightComponent={{
           icon: 'camera',
           color: '#030303',
