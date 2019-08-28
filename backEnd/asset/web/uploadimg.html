@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,14 +8,24 @@
 	<title>upload img</title>
 	<link rel="stylesheet" type="text/css" href="/demo.css">
 </head>
+
 <body>
-		<form action="/item/image" method="POST" enctype="multipart/form-data">
-			<h1>upload</h1>
-			itemid<br>
-			<input type="text" name="itemid"><br>
-			avatar<br>
-			<input type="file" name="file" accept="image/* multiple"><br>
-			<input type="submit" value="commit">
-		</form>
+	<form action="/item/image" method="POST" enctype="multipart/form-data">
+		<h1>upload</h1>
+		token<br>
+		<input type="text" name="token"><br>
+		itemid<br>
+		<input type="text" name="itemid"><br>
+		image0<br>
+		<input type="file" name="file0" accept="image/* multiple"><br>
+		image1<br>
+		<input type="file" name="file1" accept="image/* multiple"><br>
+		image2<br>
+		<input type="file" name="file2" accept="image/* multiple"><br>
+		image3<br>
+		<input type="file" name="file3" accept="image/* multiple"><br>
+		<input type="submit" value="commit">
+	</form>
 </body>
+
 </html>

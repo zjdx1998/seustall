@@ -7,6 +7,7 @@ let mysql2 = require('mysql2');
 import conf from './conf';
 import { UserInterface, ItemInterface, User } from './role';
 import { ResolvePlugin } from 'webpack';
+import { JsonWebTokenError } from 'jsonwebtoken';
 
 export default class data
 {
@@ -228,6 +229,23 @@ export default class data
 				}
 			})
 			const userRes = new User(res);
+			return this.requestFix(userRes.public());
+		} catch (error)
+		{
+			throw new Error("[ERROR] Database connect failed.\n" + error);
+		}
+	}
+	public async queryUserSelf(uuid: number)
+	{
+		try
+		{
+			const res = await this.users.findOne({
+				where:
+				{
+					uuid
+				}
+			})
+			const userRes = new User(res);
 			return this.requestFix(userRes.protect());
 		} catch (error)
 		{
@@ -291,7 +309,7 @@ export default class data
 	{
 		try
 		{
-			const queryres:any = await this.queryUser(uuid)
+			const queryres: any = await this.queryUser(uuid)
 			if (queryres.status == "none")
 			{
 				return false;
@@ -321,7 +339,7 @@ export default class data
 			{
 				return false;
 			}
-			const res = await this.users.update(
+			const res = await this.items.update(
 				{
 					imgurl
 				}, {
@@ -335,6 +353,25 @@ export default class data
 		} catch (error)
 		{
 			return false;
+		}
+	}
+	public async queryPublished(uuid: string)
+	{
+		try
+		{
+			const res = await this.items.findAll(
+				{
+					where:
+					{
+						uuid
+					}
+				}
+			)
+			return res;
+		} catch (error)
+		{
+			console.error(`[ERROR] ${error}`);
+			return { status: "failure" };
 		}
 	}
 	private requestFix(res: any): string

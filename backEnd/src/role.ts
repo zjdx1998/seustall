@@ -16,21 +16,18 @@ export class User
 	public public(): UserInterface
 	{
 		var temp: any = this.data;
-		delete temp.password;
-		delete temp.idcard;
-		delete temp.studentid;
-		delete temp.address;
-		return this.data;
+		temp.idcard = null;
+		temp.studentid = null;
+		temp.address = null;
+		temp.phonenumber = null;
+		return temp;
 	}
 
 	public protect(): UserInterface
 	{
 		var temp: any = this.data;
-		delete temp.password;
-		// delete temp.idcard;
-		// delete temp.studentid;
-		// delete temp.address;
-		return this.data;
+		temp.password = null;
+		return temp;
 	}
 
 	modify(requests: UserInterface): string

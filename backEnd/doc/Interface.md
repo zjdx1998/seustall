@@ -1,42 +1,58 @@
 # Interface to frond end.
 ## Test page
 [inari.ml:8080](http://inari.ml:8080)
+
 ## Users
+
 ### public query
+
 ```
 GET /user/[uuid]
 ```
-e.g.
-[inari.ml:8080/user/2](http://inari.ml:8080/user/2)
-- return
+```
+None
+```
+
 ``` json
-\\success
-{"uuid":2,"password":"412458ea93597da7a7f9e72a9469bc86c49c4bfb","username":"WakamiyaEve","idcard":"213182873","studentid":"71117503","address":"M1A","avatarurl":"https://avatars2.githubusercontent.com/u/45632558?s=400&v=4","verified":1,"score":10,"status":"success"}
-\\no user
-{"status":"none"}
+
 ```
 ### login
 ```
 POST /user/login
 ```
-e.g.
-[inari.ml:8080/login.html](http://inari.ml:8080/login.html)
-- return
+```json
+{"表单数据":{"phonenumber":"0101234567","password":"2322dbbdcaa610d99a2ee9d0154294a4e41c279c"}}
+```
+
 ``` json
-\\ success
-{"status":"success","info":{"uuid":2,"password":"2322dbbdcaa610d99a2ee9d0154294a4e41c279c","username":"WakamiyaEve","phonenumber":"0101234567","idcard":"21341","studentid":"213413","address":"M2C","avatarurl":"https://avatars2.githubusercontent.com/u/45632558?s=400&v=4","verified":0,"score":10}}
+\\success
+{
+  "status": "success",
+  "info": {
+    "uuid": 2,
+    "password": "2322dbbdcaa610d99a2ee9d0154294a4e41c279c",
+    "username": "WakamiyaEve",
+    "phonenumber": "0101234567",
+    "idcard": "21341",
+    "studentid": "213413",
+    "address": "M2C",
+    "avatarurl": "image\\avatar\\2.jpg",
+    "verified": 0,
+    "score": 10
+  },
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoyLCJnZW5lcmF0ZSI6MTU2Njk4OTc3MDk4OSwiaWF0IjoxNTY2OTg5NzcwfQ.s5o0Vn8TN-EyWEz-dwwlUfz7CwXnbj5yynwiUO5rjho"
+}
 \\ password incorrect
-{"status":"failure","info":"password incorrect"}
-\\ invaild request
-{"status":"failure","info":"invaild request"}
+{
+  "status": "failure",
+  "info": "password incorrect",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJnZW5lcmF0ZSI6MTU2Njk4OTcxMjAyMywiaWF0IjoxNTY2OTg5NzEyfQ.cLwu0_TK_Z4mYI3xDp3RJQ9NJoa4R1Pc-tX8E4xFUWY"
+}
 ```
 ### register
 ```
 POST /user/register
 ```
-e.g.
-[inari.ml:8080/regimester.html](http://inari.ml:8080/register.html)
--return
 ``` json
 \\ success
 {"status":"success"}
@@ -48,12 +64,14 @@ e.g.
 ## Goods
 * query
 ```
-inari:ml:8080/item/[itemid]
+GET /item/[itemid]
 ```
-e.g.
-[inari.ml:8080/item/3](http://inari.ml:8080/item/3)
 ``` json
 \\success
 \\no item
 {"status":"none"}
+```
+* add
+```
+POST \item\add
 ```

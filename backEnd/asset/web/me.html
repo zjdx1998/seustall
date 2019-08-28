@@ -5,21 +5,18 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>upload avatar</title>
+	<title>me</title>
 	<link rel="stylesheet" type="text/css" href="/demo.css">
 </head>
 
 <body>
-	<form action="/user/avatar" method="POST" enctype="multipart/form-data">
-		<h1>upload avatar</h1>
+	<form action="/user/me" method="POST">
+		<h1>me</h1>
 		token<br>
 		<input type="text" name="token"><br>
 		uuid<br>
 		<input type="text" name="uuid"><br>
-		avatar<br>
-		<input type="file" name="file" accept="image/* multiple"><br>
-		<input type="submit" value="commit">
+		<input type="submit" value="comment">
 	</form>
 </body>
-
 </html>
