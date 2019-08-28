@@ -7,7 +7,7 @@ export default {
 	"username":"app",
 	"password": "foof",
 	"avatar": "./image/avatar",
-	"itempic":"./image/item",
+	"imgurl":"./image/item",
 	"avatarfs": "./asset/image/avatar",
-	"itempicfs":"./asset/image/item",
+	"imgurlfs":"./asset/image/item",
 }

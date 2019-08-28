@@ -10,7 +10,7 @@ import koaRouter from 'koa-router';
 // import koaStatic from 'koa-static';
 import fs from 'fs';
 import data from "./database";
-import { User, Good, UserInterface, GoodInterface } from './role';
+import { User, Item, UserInterface, ItemInterface } from './role';
 import conf from './conf';
 import mkdirp from 'mkdirp';
 import koaBody from 'koa-body';
@@ -32,7 +32,7 @@ function webServer()
 		app.use(router.routes());
 		router.get('/item/:itemid', async (ctx, next) =>
 		{
-			const res = await database.queryGood(ctx.params.itemid);
+			const res = await database.queryItem(ctx.params.itemid);
 			ctx.response.body = JSON.stringify(res);
 			ctx.response.type = 'application/json';
 		})
@@ -79,10 +79,10 @@ function webServer()
 				return;
 			};
 			//ON DEV ONLY!!!
-			var newGood = new Object() as GoodInterface;
+			var newGood = new Object() as ItemInterface;
 			newGood = ctx.request.body;
 			newGood.sold = 0;
-			const res = await database.writeGood(newGood);
+			const res = await database.writeItem(newGood);
 			ctx.response.body = JSON.stringify(res);
 			ctx.response.type = 'application/json';
 		})
@@ -121,7 +121,42 @@ function webServer()
 				ctx.response.type = "application/json";
 			}
 
-		})
+		});
+		router.post('/item/image', async (ctx, next) =>
+		{
+			var response = new Object() as any;
+			try
+			{
+				const itemid = ctx.request.body.itemid;
+				const files: any = ctx.request.files;
+				const file = files.file;
+				const url = path.join(conf.imgurlfs, `${itemid}.jpg`);
+				const exist = await database.updateImageURL(itemid, path.join(conf.imgurl, `${itemid}.jpg`));
+				if (exist)
+				{
+					const reader = fs.createReadStream(file.path);
+					const stream = fs.createWriteStream(url);
+					reader.pipe(stream);
+					console.log(`${file.name} -> ${url}`);
+					response.status = "success"
+					ctx.response.body = JSON.stringify(response);
+					ctx.response.type = "application/json";
+				} else
+				{
+					response.status = "failure";
+					response.info = "invaild request";
+					ctx.response.body = JSON.stringify(response);
+					ctx.response.type = "application/json";
+				}
+			} catch (error)
+			{
+				console.error(`[ERROR] ${error}`);
+				response.status = "failure";
+				response.info = "server failed";
+				ctx.response.body = JSON.stringify(response);
+				ctx.response.type = "application/json";
+			}
+		});
 		app.listen(4000);
 	} catch (error)
 	{

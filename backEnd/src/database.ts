@@ -5,14 +5,14 @@ import sequelize, { Sequelize, ConnectionRefusedError, JSON, where } from 'seque
 // The bug of sequelize https://github.com/sequelize/sequelize/issues/9489
 let mysql2 = require('mysql2');
 import conf from './conf';
-import { UserInterface, GoodInterface, User } from './role';
+import { UserInterface, ItemInterface, User } from './role';
 import { ResolvePlugin } from 'webpack';
 
 export default class data
 {
 	database: Sequelize;
 	users: any;
-	goods: any;
+	items: any;
 	isConnected: boolean
 
 	constructor()
@@ -102,7 +102,7 @@ export default class data
 					charset: "utf8",
 				}
 			);
-			this.goods = this.database.define(
+			this.items = this.database.define(
 				'goods',
 				{
 					itemid: {
@@ -160,17 +160,17 @@ export default class data
 		console.log("[info] database connect success")
 		return true;
 	}
-	public async writeGood(good: GoodInterface)
+	public async writeItem(item: ItemInterface)
 	{
 		var response = new Object() as any;
 		try
 		{
-			await this.goods.create(good);
+			await this.items.create(item);
 			response.status = "success";
 			return response;
 		} catch (error)
 		{
-			console.error(`[ERROR] failed while writing good\n${error}`);
+			console.error(`[ERROR] failed while writing item\n${error}`);
 			response.status = "faliure";
 			response.info = "invaild request";
 			return response;
@@ -200,12 +200,12 @@ export default class data
 			return response;
 		}
 	}
-	public async queryGood(itemid: number)
+	public async queryItem(itemid: number)
 	{
 		try
 		{
 
-			const res = await this.goods.findOne({
+			const res = await this.items.findOne({
 				where:
 				{
 					itemid
@@ -303,6 +303,31 @@ export default class data
 					where:
 					{
 						uuid
+					}
+				}
+			);
+			return true;
+		} catch (error)
+		{
+			return false;
+		}
+	}
+	public async updateImageURL(itemid: number, imgurl: string)
+	{
+		try
+		{
+			const queryres: any = await this.queryItem(itemid)
+			if (queryres.status == "none")
+			{
+				return false;
+			}
+			const res = await this.users.update(
+				{
+					imgurl
+				}, {
+					where:
+					{
+						itemid
 					}
 				}
 			);

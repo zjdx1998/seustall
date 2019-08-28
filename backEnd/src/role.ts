@@ -68,10 +68,10 @@ export class User
 }
 
 
-export class Good
+export class Item
 {
-	data: GoodInterface;
-	constructor(data: GoodInterface)
+	data: ItemInterface;
+	constructor(data: ItemInterface)
 	{
 		this.data = data as any;
 		for (var key in data)
@@ -79,7 +79,7 @@ export class Good
 			console.log(key);
 		}
 	}
-	json(): GoodInterface
+	json(): ItemInterface
 	{
 		return this.data;
 	}
@@ -97,7 +97,7 @@ export interface UserInterface
 	verified?: boolean,
 	score?: number,
 }
-export interface GoodInterface
+export interface ItemInterface
 {
 	itemid?: number,
 	uuid: number,
