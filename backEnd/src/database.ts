@@ -8,6 +8,9 @@ import conf from './conf';
 import { UserInterface, ItemInterface, User } from './role';
 import { ResolvePlugin } from 'webpack';
 import { JsonWebTokenError } from 'jsonwebtoken';
+import users from './users';
+import items from './items';
+
 
 export default class data
 {
@@ -39,64 +42,20 @@ export default class data
 
 	connect()
 	{
+		this.database.authenticate()
+		.then(function (err: any)
+		{
+			console.log(conf.except.dbConnT);
+		}).catch(function (err: any)
+		{
+			console.log(err);
+			throw Error(conf.except.dbConnF);
+		});
 		try
 		{
-			this.database.authenticate()
-				.then(function (err: any)
-				{
-					console.log("[info] connect had been established successfully.")
-				}).catch(function (err: any)
-				{
-					console.log(err);
-				});
 
 			this.users = this.database.define(
-				'users',
-				{
-					uuid:
-					{
-						type: sequelize.INTEGER,
-						primaryKey: true,
-						autoIncrement: true,
-						allowNull: false,
-					},
-					password: {
-						type: sequelize.STRING,
-						allowNull: false,
-					},
-					username: {
-						type: sequelize.STRING,
-						allowNull: false,
-					},
-					phonenumber: {
-						type: sequelize.STRING,
-						allowNull: false,
-					},
-					idcard: {
-						type: sequelize.STRING,
-						allowNull: false,
-					},
-					studentid: {
-						type: sequelize.STRING,
-						allowNull: false,
-					},
-					address: {
-						type: sequelize.STRING,
-						allowNull: false,
-					},
-					avatarurl: {
-						type: sequelize.STRING,
-						allowNull: false,
-					},
-					verified: {
-						type: sequelize.INTEGER,
-						allowNull: false,
-					},
-					score: {
-						type: sequelize.INTEGER,
-						allowNull: false,
-					},
-				},
+				conf.userTableName,users,
 				{
 					timestamps: false,
 					engine: "Innodb",
@@ -104,48 +63,8 @@ export default class data
 				}
 			);
 			this.items = this.database.define(
-				'goods',
-				{
-					itemid: {
-						type: sequelize.INTEGER,
-						primaryKey: true,
-						autoIncrement: true,
-						allowNull: false,
-					},
-					uuid:
-					{
-						type: sequelize.INTEGER,
-						allowNull: false,
-					},
-					title: {
-						type: sequelize.STRING,
-						allowNull: false,
-					},
-					type: {
-						type: sequelize.INTEGER,
-						allowNull: false,
-					},
-					price: {
-						type: sequelize.DOUBLE,
-						allowNull: false,
-					},
-					imgurl: {
-						type: sequelize.STRING,
-						allowNull: false,
-					},
-					depreciatione: {
-						type: sequelize.INTEGER,
-						allowNull: false,
-					},
-					note: {
-						type: sequelize.STRING,
-						allowNull: false
-					},
-					sold: {
-						type: sequelize.INTEGER,
-						allowNull: false,
-					}
-				},
+				conf.itemTableName,
+				items,
 				{
 					timestamps: false,
 					engine: "Innodb",
@@ -270,12 +189,11 @@ export default class data
 			return { status: "failure" };
 		}
 	}
-	public async loginByPhonenumber(body: any)
+	public async loginByPhonenumber(phonenumber:string,password:string)
 	{
 		var response = new Object() as any;
 		try
 		{
-			const phonenumber = body.phonenumber
 			const res: UserInterface = await this.users.findOne({
 				where:
 				{
@@ -284,7 +202,7 @@ export default class data
 			})
 			if (res)
 			{
-				if (res.password === body.password)
+				if (res.password === password)
 				{
 					response.status = "success";
 					response.info = new User(res).protect();

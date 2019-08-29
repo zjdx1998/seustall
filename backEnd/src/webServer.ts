@@ -20,64 +20,82 @@ const router = new koaRouter();
 // const staticPath = '../src/asset';
 function webServer()
 {
+	//尝试连接数据库，若失败则抛出异常重新尝试连接
+	const database = new data();;
 	try
 	{
-		const database = new data();;
 		const app = new Koa();
 		app.use(logger());
 		app.use(koaBody({ multipart: true }));
 		// app.use(parser());
 		app.use(router.routes());
+		/**
+		 * @description public 根据itemid查询商品信息
+		 */
 		router.get('/item/:itemid', async (ctx, next) =>
 		{
 			const res = await database.queryItem(ctx.params.itemid);
 			ctx.response.body = JSON.stringify(res);
 			ctx.response.type = 'application/json';
 		})
+		/**
+		 * @description public 根据uuid查询用户脱敏信息
+		 */
 		router.get('/user/:uuid', async (ctx, next) =>
 		{
-			// const res = await getUser(ctx.params.uuid);
 			const res = await database.queryUser(ctx.params.uuid);
 			ctx.response.body = JSON.stringify(res);
 			ctx.response.type = 'application/json';
 		})
+		/**
+		 * @description token 用户查询自身非脱敏信息
+		 */
 		router.post('/user/me', async (ctx, next) =>
 		{
 			const verify: any = verifyToken(ctx.request.body.token);
-			if (!verify || ctx.request.body.uuid != verify.uuid)
+			if (!verify)
 			{
 				ctx.response.status = 403;
 				return;
 			}
-			const res = await database.queryUserSelf(ctx.request.body.uuid);
+			const res = await database.queryUserSelf(verify.uuid);
 			ctx.response.body = JSON.stringify(res);
 			ctx.response.type = 'application/json';
 		})
+		/**
+		 * @description public 查看用户发布的商品
+		 */
 		router.post('/user/published', async (ctx, next) =>
 		{
-			const verify: any = verifyToken(ctx.request.body.token);
-			if (!verify || ctx.request.body.uuid != verify.uuid)
-			{
-				ctx.response.status = 403;
-				return;
-			}
 			const res = await database.queryPublished(ctx.request.body.uuid);
 			ctx.response.body = JSON.stringify(res);
 			ctx.response.type = 'application/json';
 		})
+		/**
+		 * @description public->token 用户登录
+		 */
 		router.post('/user/login', async (ctx, next) =>
 		{
-			console.log(ctx.request.body);
-			const res = await database.loginByPhonenumber(ctx.request.body);
-			const payload = {
-				uuid: res.info.uuid,
-				generate: (new Date()).valueOf()
-			}
-			const token = jwt.sign(payload, conf.secretkey);
+			const res = await database.loginByPhonenumber(ctx.request.body.phonenumber,ctx.request.body.password);
+			if (res.status==="success")
+			{
+
+				//签发token
+				const payload = {
+					uuid: res.info.uuid,
+					generate: (new Date()).valueOf()
+				}
+				const token = jwt.sign(payload, conf.secretkey);
 			res.token = token;
+			}
 			ctx.response.body = JSON.stringify(res);
 			ctx.response.type = 'application/json';
+			
 		})
+		/**
+		 * @description public 用户注册
+		 * @todo 前端完成后添加短信验证码验证
+		 */
 		router.post('/user/register', async (ctx, next) =>
 		{
 			var newUser = new Object() as UserInterface;
@@ -89,17 +107,20 @@ function webServer()
 			ctx.response.body = JSON.stringify(res);
 			ctx.response.type = 'application/json';
 		})
+		/**
+		 * @description token 用户添加求购/商品
+		 */
 		router.post('/item/add', async (ctx, next) =>
 		{
 			const verify: any = verifyToken(ctx.request.body.token);
-			if (!verify || ctx.request.body.uuid != verify.uuid)
+			if (!verify)
 			{
 				ctx.response.status = 403;
 				return;
 			}
 			var newGood = new Object() as ItemInterface;
 			newGood = ctx.request.body;
-			newGood.sold = 0;
+			newGood.uuid = verify.uuid;
 			const res = await database.writeItem(newGood);
 			ctx.response.body = JSON.stringify(res);
 			ctx.response.type = 'application/json';
@@ -192,12 +213,16 @@ function webServer()
 				ctx.response.type = "application/json";
 			}
 		});
-		app.listen(4000);
+		app.listen(conf.port);
 	} catch (error)
 	{
 		console.error(error);
 	}
 }
+/**
+ * @description 验证token，验证正确返回对应uuid，失败返回null
+ * @returns uuid:string | null
+ */
 function verifyToken(token: string)
 {
 	var response = new Object() as any;

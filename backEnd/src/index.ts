@@ -3,8 +3,11 @@
  */
 import Server from "./webServer";
 
-try {
-	Server();
-} catch (error) {
-	console.error(error);
+while (true)
+{
+	try {
+		Server();
+	} catch (error) {
+		console.error(`[error] fetal error ${error},\n restarting`)
+	}
 }

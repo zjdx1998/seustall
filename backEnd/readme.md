@@ -307,3 +307,11 @@ Content-Type: image/jpeg
 ```json
 {"status":"success"}
 ```
+
+### About sold
+* sold
+-1. not sold
+* want
+-2. not bought
+* finished
+[uuid]. the uuid of the other member
