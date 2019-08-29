@@ -1,0 +1,33 @@
+{
+    "settings": {
+        "index.number_of_shards": 5,
+        "index.number_of_replicas": 0,
+        "index.refresh_interval": "-1"
+    },
+    "mappings": {
+        "users": {
+            "properties": {
+                "username": {
+                    "analyzer": "ik_smart",
+                    "search_analyzer": "ik_smart",
+                    "type": "text"
+                },
+                "idcard": {
+                    "type": "integer"
+                },
+                "studentid": {
+                    "type": "text"
+                },
+                "address": {
+                    "type": "text",
+                    "index": false
+                },
+                "score": {
+                    "type": "scaled_float",
+                    "index": false,
+                    "scaling_factor": 100
+                }
+            }
+        }
+    }
+}
