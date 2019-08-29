@@ -36,11 +36,12 @@ docker run --network host -d -v /home/admin/avatar:/foof/avatar hanyuufurude/foo
 | username    | varchar(255) | NO   |     | NULL    |                |
 | phonenumber | varchar(255) | NO   |     | NULL    |                |
 | idcard      | varchar(255) | NO   |     | NULL    |                |
-| studentid   | varchar(255) | NO   |     | NULL    |                |
+| studentid   | int(11)      | NO   |     | NULL    |                |
 | address     | varchar(255) | NO   |     | NULL    |                |
 | avatarurl   | varchar(255) | NO   |     | NULL    |                |
 | verified    | int(11)      | NO   |     | NULL    |                |
 | score       | int(11)      | NO   |     | NULL    |                |
+| info        | varchar(255) | NO   |     | NULL    |                |
 +-------------+--------------+------+-----+---------+----------------+
 ```
 #### goods

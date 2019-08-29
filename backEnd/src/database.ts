@@ -6,8 +6,6 @@ import sequelize, { Sequelize, ConnectionRefusedError, JSON, where } from 'seque
 let mysql2 = require('mysql2');
 import conf from './conf';
 import { UserInterface, ItemInterface, User } from './role';
-import { ResolvePlugin } from 'webpack';
-import { JsonWebTokenError } from 'jsonwebtoken';
 
 export default class data
 {
@@ -77,7 +75,7 @@ export default class data
 						allowNull: false,
 					},
 					studentid: {
-						type: sequelize.STRING,
+						type: sequelize.INTEGER,
 						allowNull: false,
 					},
 					address: {
@@ -96,6 +94,10 @@ export default class data
 						type: sequelize.INTEGER,
 						allowNull: false,
 					},
+					info: {
+						type: sequelize.STRING,
+						allowNull: false,
+					}
 				},
 				{
 					timestamps: false,
