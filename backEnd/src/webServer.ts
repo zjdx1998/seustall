@@ -157,39 +157,32 @@ function webServer()
 			var response = new Object() as any;
 			try
 			{
-				const itemid = ctx.request.body.itemid;
 				const files: any = ctx.request.files;
 				var count = 0;
 				var imgList = new Array();
+				var imgListfs = new Array();
 				for (var file in files)
 				{
-					const urlfs = path.join(conf.imgurlfs, `${itemid}_${count}.jpg`);
-					const url = path.join(conf.imgurl, `${itemid}_${count}.jpg`);
+					const filename = `${Math.random()}.jpg`
+					const urlfs = path.join(conf.imgurlfs, filename);
+					const url = path.join(conf.imgurl, filename);
+					imgListfs.push(urlfs);
 					imgList.push(url);
 					++count;
 				}
-				const exist = await database.updateImageURL(itemid, JSON.stringify(imgList));
-				if (exist)
+				count = 0
+				for (var file in files)
 				{
-					var count = 0;
-					for (var file in files)
-					{
-						const urlfs = path.join(conf.imgurlfs, `${itemid}_${count}.jpg`);
-						const reader = fs.createReadStream(files[file].path);
-						const stream = fs.createWriteStream(urlfs);
-						reader.pipe(stream);
-						response.status = "success"
-						ctx.response.body = JSON.stringify(response);
-						ctx.response.type = "application/json";
-						++count;
-					}
-				} else
-				{
-					response.status = "failure";
-					response.info = "bad request";
-					ctx.response.body = JSON.stringify(response);
-					ctx.response.type = "application/json";
+					const reader = fs.createReadStream(files[file].path);
+					const stream = fs.createWriteStream(imgListfs[count]);
+					reader.pipe(stream);
+					++count;
 				}
+				response.status = "success"
+				response.imgurl = imgList;
+					ctx.response.body = JSON.stringify(response);
+				ctx.response.type = "application/json";
+
 			} catch (error)
 			{
 				console.error(`[ERROR] ${error}`);
