@@ -125,10 +125,13 @@ function webServer()
 			ctx.response.body = JSON.stringify(res);
 			ctx.response.type = 'application/json';
 		})
+		/**
+		 * @description 更改用户头像
+		 */
 		router.post('/user/avatar', async (ctx, next) =>
 		{
 			const verify: any = verifyToken(ctx.request.body.token);
-			if (!verify || ctx.request.body.uuid != verify.uuid)
+			if (!verify)
 			{
 				ctx.response.status = 403;
 				return;
@@ -136,7 +139,7 @@ function webServer()
 			var response = new Object() as any;
 			try
 			{
-				const uuid = ctx.request.body.uuid;
+				const uuid = verify.uuid;
 				const files: any = ctx.request.files;
 				const file = files.file;
 				const url = path.join(conf.avatarfs, `${uuid}.jpg`)
@@ -166,7 +169,10 @@ function webServer()
 				ctx.response.type = "application/json";
 			}
 
-		});
+		}); 
+		/**
+		 * @description 商品添加图片
+		 */
 		router.post('/item/image', async (ctx, next) =>
 		{
 			const verify: any = verifyToken(ctx.request.body.token);
@@ -208,7 +214,7 @@ function webServer()
 			{
 				console.error(`[ERROR] ${error}`);
 				response.status = "failure";
-				response.info = "invaild request";
+				response.info = conf.except.invaildReq;
 				ctx.response.body = JSON.stringify(response);
 				ctx.response.type = "application/json";
 			}

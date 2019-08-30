@@ -19,6 +19,7 @@ export default {
 		"dbConnT":"[info] database connect success",
 		"dbConnF":"[error] database connect failed",
 		"database exception":"database exception",
+		"invaildReq":"invaild request"
 
 	}
 }

@@ -83,7 +83,7 @@ export class Item
 }
 export interface UserInterface
 {
-	uuid: string,
+	uuid: number,
 	password?: string,
 	username?: string,
 	phonenumber?:number,
@@ -93,6 +93,7 @@ export interface UserInterface
 	avatarurl?: string,
 	verified?: boolean,
 	score?: number,
+	note?:string
 }
 export interface ItemInterface
 {

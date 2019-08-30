@@ -64,7 +64,7 @@ docker run --network host -d -v /home/admin/avatar:/foof/avatar hanyuufurude/foo
 # Interface to frond end.
 
 ## Test page
-[inari.ml:8080](http://inari.ml:8080)
+[hanyuu.top:8080](http://hanyuu.top:8080)
 
 ## Users
 

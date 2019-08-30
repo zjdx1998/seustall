@@ -44,4 +44,8 @@ export default {
 		type: sequelize.INTEGER,
 		allowNull: false,
 	},
+	info:{
+		type:sequelize.STRING,
+		allowNull:true,
+	}
 }

@@ -10,6 +10,7 @@ import { ResolvePlugin } from 'webpack';
 import { JsonWebTokenError } from 'jsonwebtoken';
 import users from './users';
 import items from './items';
+import { stack } from 'sequelize/types/lib/utils';
 
 
 export default class data
@@ -80,6 +81,9 @@ export default class data
 		console.log("[info] database connect success")
 		return true;
 	}
+	/**
+	 * @description 写入物品信息
+	 */
 	public async writeItem(item: ItemInterface)
 	{
 		var response = new Object() as any;
@@ -95,8 +99,10 @@ export default class data
 			response.info = "invaild request";
 			return response;
 		}
-
 	}
+	/**
+	 * @description 写入用户信息
+	 */
 	public async writeUser(user: UserInterface)
 	{
 		var response = new Object() as any;
@@ -120,6 +126,9 @@ export default class data
 			return response;
 		}
 	}
+	/**
+	 * @description 写入物品信息
+	 */
 	public async queryItem(itemid: number)
 	{
 		try
@@ -131,12 +140,15 @@ export default class data
 					itemid
 				}
 			})
-			return this.requestFix(res);
+			return this.responseFix(res);
 		} catch (error)
 		{
 			throw new Error("[ERROR] Database connect failed.\n" + error);
 		}
 	}
+	/**
+	 * @description 查询用户
+	 */
 	public async queryUser(uuid: number)
 	{
 		try
@@ -148,12 +160,15 @@ export default class data
 				}
 			})
 			const userRes = new User(res);
-			return this.requestFix(userRes.public());
+			return this.responseFix(userRes.public());
 		} catch (error)
 		{
 			throw new Error("[ERROR] Database connect failed.\n" + error);
 		}
 	}
+	/**
+	 * @description 查询用户自身信息
+	 */
 	public async queryUserSelf(uuid: number)
 	{
 		try
@@ -165,12 +180,15 @@ export default class data
 				}
 			})
 			const userRes = new User(res);
-			return this.requestFix(userRes.protect());
+			return this.responseFix(userRes.protect());
 		} catch (error)
 		{
 			throw new Error("[ERROR] Database connect failed.\n" + error);
 		}
 	}
+	/**
+	 * @description 查询电话号码
+	 */
 	private async queryPhoneNumber(phonenumber: number)
 	{
 		try
@@ -189,6 +207,9 @@ export default class data
 			return { status: "failure" };
 		}
 	}
+	/**
+	 * @description 电话号码登录
+	 */
 	public async loginByPhonenumber(phonenumber:string,password:string)
 	{
 		var response = new Object() as any;
@@ -223,18 +244,21 @@ export default class data
 			return response;
 		}
 	}
-	public async updateAvatorURL(uuid: number, avator: string)
+	/**
+	 * @description 更新头像url
+	 */
+	public async updateAvatorURL(uuid: number, avatar: string)
 	{
 		try
 		{
 			const queryres: any = await this.queryUser(uuid)
-			if (queryres.status == "none")
+			if (queryres.status === "none")
 			{
 				return false;
 			}
 			const res = await this.users.update(
 				{
-					avatarurl: avator
+					avatarurl: avatar
 				}, {
 					where:
 					{
@@ -248,6 +272,98 @@ export default class data
 			return false;
 		}
 	}
+	/**
+	 * @description 更新用户信息
+	 */
+	public async updateUser(src:UserInterface)
+	{
+		try {
+			const queryres:any = await this.queryUser(src.uuid)
+			if (queryres.status ==="none")
+			{
+				return false;
+			}
+			const res = await this.users.update(
+				{
+					password:src.password,
+					username:src.username,
+					idcard:src.idcard,
+					studentid:src.studentid,
+					address:src.address,
+					avatarurl:src.avatarurl,
+					note:src.note
+				},
+				{
+					where:
+					{
+						uuid:src.uuid
+					}
+				}
+			)
+			return true;
+		} catch (error) {
+		}
+	}
+	/**
+	 * @description 更新物品信息
+	 */
+	public async updateItem(src:ItemInterface)
+	{
+		try {
+			const queryres:any = await this.queryItem(src.itemid as number)
+			if (queryres.status ==="none")
+			{
+				return false;
+			}
+			const res = await this.items.update(
+				{
+					title:src.title,
+					type:src.type,
+					price:src.price,
+					imgurl:src.imgurl,
+					depreciatione:src.depreciatione,
+					note:src.note,
+				},
+				{
+					where:
+					{
+						itemid:src.itemid
+					}
+				}
+			)
+			return true;
+		} catch (error) {
+		}
+	}
+	/**
+	 * @description 发起交易
+	 */
+	public async tradeItem(itemid:number,uuid:number)
+	{
+		try {
+			const queryres:any = await this.queryItem(itemid as number)
+			if (queryres.status ==="none")
+			{
+				return false;
+			}
+			const res = await this.items.update(
+				{
+					sold:uuid
+				},
+				{
+					where:
+					{
+						itemid:itemid
+					}
+				}
+			)
+			return true;
+		} catch (error) {
+		}
+	}
+	/**
+	 * @description 更新图像URL
+	 */
 	public async updateImageURL(itemid: number, imgurl: string)
 	{
 		try
@@ -273,6 +389,9 @@ export default class data
 			return false;
 		}
 	}
+	/**
+	 * @description 查询用户已发布信息
+	 */
 	public async queryPublished(uuid: string)
 	{
 		try
@@ -292,7 +411,10 @@ export default class data
 			return { status: "failure" };
 		}
 	}
-	private requestFix(res: any): string
+	/**
+	 * @description 响应修饰器
+	 */
+	private responseFix(res: any): string
 	{
 		if (res && res.dataValues)
 		{
