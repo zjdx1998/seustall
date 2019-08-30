@@ -66,9 +66,9 @@ export default class MyGroceryPage extends Component {
           </TouchableOpacity>
         </View>
         <View style={styles.GoodsAreaContainer}>
-          <GoodsPanel 
+          <GoodsPanel
           navigation={this.props.navigation}
-          ref = {(goodsPanel)=>this.goodsPanel = goodsPanel} 
+          ref = {(goodsPanel)=>this.goodsPanel = goodsPanel}
           />
         </View>
       </ScrollView>
