@@ -16,32 +16,34 @@ import React, {Component} from 'react';
 const {width} = Dimensions.get('window');
 
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import UserInfo from '../Common/UserInfo';
+
 
 const Goods = [
   {
-    name: '米色针织开衫+牛仔裤带吊牌',
-    imag_source: 'https://avatars2.githubusercontent.com/u/45632558?s=400&v=4',
-    isSold: true,
-    howNew: '10',
+    title: '米色针织开衫+牛仔裤带吊牌',
+    imgurl: 'https://avatars2.githubusercontent.com/u/45632558?s=400&v=4',
+    sold: 1,
+    depreciatione: '10',
     price: '100',
     campus: '九龙湖校区',
     classify: '服饰鞋包',
     //info: '这还是一本书，一本很好的书，是一本非常好的书',
   },
   {
-    name: 'MAC口红diva有小票仅手臂试色',
-    imag_source: 'https://avatars2.githubusercontent.com/u/45632558?s=400&v=4',
-    isSold: false,
-    howNew: '9.5',
+    title: 'MAC口红diva有小票仅手臂试色',
+    imgurl: 'https://avatars2.githubusercontent.com/u/45632558?s=400&v=4',
+    sold: 0,
+    depreciatione: '9.5',
     price: '150',
     campus: '九龙湖校区',
     classify: '服饰鞋子包',
   },
   {
-    name: 'MAC口红diva有小票仅手臂试色',
-    imag_source: 'https://avatars2.githubusercontent.com/u/45632558?s=400&v=4',
-    isSold: false,
-    howNew: '9.5',
+    title: 'MAC口红diva有小票仅手臂试色',
+    imgurl: 'https://avatars2.githubusercontent.com/u/45632558?s=400&v=4',
+    sold: 0,
+    depreciatione: '9.5',
     price: '150',
     campus: '九龙湖校区',
     classify: '美妆护肤',
@@ -51,17 +53,27 @@ const Goods = [
 
 export default class GoodsPanel extends Component {
   private props: any;
+  state:{
+    goodsList:any,
+  }
+  constructor(){
+    super();
+    this.state={
+      goodsList:Goods,
+    }
+  }
   render() {
     return (
       <View style={styles.goodsList}>
-        {Goods.map(i => (
+        {this.state.goodsList.map(i => (
           <Good
-            image={{uri: i.imag_source}}
-            name={i.name}
+            itemid={i.itemid}
+            image={{uri: i.imgurl}}
+            name={i.title}
             price={i.price}
-            howNew={i.howNew}
+            howNew={i.depreciatione}
             campus={i.campus}
-            isSold={i.isSold}
+            isSold={i.sold}
             navigation={this.props.navigation}
           />
         ))}
@@ -75,7 +87,9 @@ class Good extends Component {
   render() {
     return (
       <TouchableOpacity
-        onPress={() => this.props.navigation.navigate('detailPage')}>
+        onPress={() => this.props.navigation.navigate('detailPage',{
+          itemid:this.props.itemid
+        })}>
         <View style={styles.block}>
           <ImageBackground
             style={{flex: 1, height: 150, flexDirection: 'row'}}

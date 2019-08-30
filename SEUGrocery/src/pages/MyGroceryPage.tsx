@@ -17,6 +17,8 @@ import {Text, ThemeProvider, Image, Avatar} from 'react-native-elements';
 import GoodsPanel from '../Components/GoodsPanel';
 import LocalBackHeader from '../Components/LocalBackHeader';
 import MyGroceryHeader from '../Components/MyGroceryHeader';
+import UserInfo from '../Common/UserInfo';
+import ItemList from '../Common/ItemList';
 
 export default class MyGroceryPage extends Component {
   private props: any;
@@ -27,7 +29,8 @@ export default class MyGroceryPage extends Component {
           <LocalBackHeader navigation={this.props.navigation} />
         </View>
         <View style={styles.headerContainer}>
-          <MyGroceryHeader />
+          <MyGroceryHeader ref={(myGroceryHeader)=>this.myGroceryHeader=myGroceryHeader}>
+          </MyGroceryHeader>
         </View>
         <View style={styles.headerContainer} />
         <View style={styles.selectContainer}>
@@ -63,12 +66,25 @@ export default class MyGroceryPage extends Component {
           </TouchableOpacity>
         </View>
         <View style={styles.GoodsAreaContainer}>
-          <GoodsPanel navigation={this.props.navigation} />
+          <GoodsPanel 
+          navigation={this.props.navigation}
+          ref = {(goodsPanel)=>this.goodsPanel = goodsPanel} 
+          />
         </View>
       </ScrollView>
     );
   }
+  componentDidMount(){
+    // alert('rua12421312');
+    ItemList.getItemList()
+    .then((list)=>{
+    this.myGroceryHeader.getPublishedNum(list);
+    this.goodsPanel.setState({goodsList:list});
+    })
+  }
 }
+
+
 
 const styles = StyleSheet.create({
   baseContainer: {

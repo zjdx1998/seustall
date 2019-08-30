@@ -1,4 +1,13 @@
+/*
+  @version: 0.2
+  @author: 71117124湛钊
+  @date: 2019-8-30
+*/
+
+
+
 import AsyncStorage from '@react-native-community/async-storage';
+import {postData} from './FetchHelper';
 
 const keys = [
   'uuid',
@@ -11,9 +20,26 @@ const keys = [
   'avatarurl',
   'verified',
   'score',
+  'token',
+  'itemList',
 ];
 
+const publisherdUrl = 'http://inari.ml:8080/user/published'
+
 class UserInfo {
+  uuid = ''
+  password =''
+  username =''
+  phonenumber=''
+  idcard=''
+  studentid=''
+  address=''
+  avatarurl=''
+  verified=''
+  score=''
+  token=''
+  itemList = ''
+
   /**
    * 获取
    * @param key
@@ -48,6 +74,7 @@ class UserInfo {
     this.save('avatarurl', userInfo.info.avatarurl);
     this.save('verified', userInfo.info.verified);
     this.save('score', userInfo.info.score);
+    this.save('token',userInfo.token);
   }
 
   /**
@@ -72,6 +99,7 @@ class UserInfo {
   static delete(key) {
     return AsyncStorage.removeItem(key);
   }
+  
 }
 
 export default UserInfo;

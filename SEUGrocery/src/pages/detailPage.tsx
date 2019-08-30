@@ -22,6 +22,7 @@ import {
 import LocalBackHeader from '../Components/LocalBackHeader';
 import * as SP from '../Common/ScreenProperty'
 const itemURL = 'http://inari.ml:8080/item/';
+const userURL = 'http://inari.ml:8080/user/';
 
 var {height, width} = Dimensions.get('window');
 export default class DetailPage extends Component {
@@ -36,22 +37,43 @@ export default class DetailPage extends Component {
     fetch(itemURL + this.props.navigation.state.params.itemid)
       .then(response => response.json())
       .then(rT => {
-        this.setState({
-          itemid: rT.itemid,
-          username: itemURL + this.props.navigation.state.params.itemid,
-          uuid: rT.uuid,
-          title: rT.title,
-          type: rT.type,
-          price: parseFloat(rT.price),
-          imgurl: rT.imgurl,
-          note: rT.note,
-          depreciatione: rT.depreciatione,
+        // this.setState({
+        //   itemid: rT.itemid,
+        //   // username: itemURL + this.props.navigation.state.params.itemid,
+        //   uuid: rT.uuid,
+        //   title: rT.title,
+        //   type: rT.type,
+        //   price: parseFloat(rT.price),
+        //   imgurl: rT.imgurl,
+        //   note: rT.note,
+        //   depreciatione: rT.depreciatione,
+        // });
+        fetch(userURL+rT.uuid)
+        .then(res=>res.json())
+        .then(user=>{
+          this.setState({
+            username:user.username,
+            avatorurl:user.avatarurl,
+            itemid: rT.itemid,
+            // username: itemURL + this.props.navigation.state.params.itemid,
+            uuid: rT.uuid,
+            title: rT.title,
+            type: rT.type,
+            price: parseFloat(rT.price),
+            imgurl: rT.imgurl,
+            note: rT.note,
+            depreciatione: rT.depreciatione,
+          })
+        }).catch(e => {
+          console.log('Oops, error');
+          // Alert.alert('cnm');
         });
+
         console.log(rT);
       })
       .catch(e => {
         console.log('Oops, error');
-        Alert.alert('cnm');
+        // Alert.alert('cnm');
       });
   };
 

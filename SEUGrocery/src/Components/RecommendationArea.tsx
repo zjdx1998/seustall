@@ -47,6 +47,15 @@ const Goods = [
 ];
 
 export default class RecommendationArea extends Component {
+  state:{
+    goodsList:any,
+  }
+  constructor(){
+    super();
+    this.state={
+      goodsList:Goods,
+    }
+  }
   private props: any;
   render() {
     return (
