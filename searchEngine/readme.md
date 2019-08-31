@@ -83,7 +83,7 @@ The usage:
                 "from": 20,
                 "to": 25,
                 "include_lower": true,
-                "include_upper": false
+                "include_upper": false // represents the range 
             }
         }
     }
