@@ -258,7 +258,7 @@ export default class data
 			}
 			const res = await this.users.update(
 				{
-					avatarurl: avatar
+					"avatarurl": avatar
 				}, {
 					where:
 					{
@@ -275,7 +275,7 @@ export default class data
 	/**
 	 * @description 更新用户信息
 	 */
-	public async updateUser(src:UserInterface)
+	public async updateUser(src:ItemInterface)
 	{
 		try {
 			const queryres:any = await this.queryUser(src.uuid)
@@ -285,23 +285,25 @@ export default class data
 			}
 			const res = await this.users.update(
 				{
-					password:src.password,
-					username:src.username,
-					idcard:src.idcard,
-					studentid:src.studentid,
-					address:src.address,
-					avatarurl:src.avatarurl,
-					note:src.note
+					"title": src.title,
+					"type": src.type,
+					"price": src.price,
+					"imgurl": src.imgurl,
+					"depreciatione": src.depreciatione,
+					"note": src.note,
+					"sold": src.sold
 				},
 				{
 					where:
 					{
-						uuid:src.uuid
+						"itemid": src.itemid
 					}
 				}
-			)
+			);
 			return true;
-		} catch (error) {
+		} catch (error)
+		{
+			console.error(error)
 		}
 	}
 	/**
@@ -317,17 +319,17 @@ export default class data
 			}
 			const res = await this.items.update(
 				{
-					title:src.title,
-					type:src.type,
-					price:src.price,
-					imgurl:src.imgurl,
-					depreciatione:src.depreciatione,
-					note:src.note,
+					"title":src.title,
+					"type":src.type,
+					"price":src.price,
+					"imgurl":src.imgurl,
+					"depreciatione":src.depreciatione,
+					"note":src.note,
 				},
 				{
 					where:
 					{
-						itemid:src.itemid
+						"itemid":src.itemid
 					}
 				}
 			)

@@ -3,11 +3,15 @@
  */
 import Server from "./webServer";
 
-while (true)
+var flag = true;
+while (flag)
 {
 	try {
 		Server();
-	} catch (error) {
+		flag = false;
+	} catch (error)
+	{
+		flag = true;
 		console.error(`[error] fetal error ${error},\n restarting`)
 	}
 }

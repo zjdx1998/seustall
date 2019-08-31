@@ -88,12 +88,13 @@ export interface UserInterface
 	username?: string,
 	phonenumber?:number,
 	idcard?: string,
-	studentid?: string,
+	studentid?: number,
 	address?: string,
 	avatarurl?: string,
 	verified?: boolean,
 	score?: number,
-	note?:string
+	note?: string,
+	info?:string
 }
 export interface ItemInterface
 {

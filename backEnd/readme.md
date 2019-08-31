@@ -8,7 +8,9 @@
 - WebPack
 - koa
 - Sequelize
+
 ## Run docker
+
 ``` docker
 docker run --network host -d -v [locationOfAvatarOnPhysicsMachine]:[locationOfAvatarOnContainer] hanyuufurude/foofserver:v[x]
 ```
@@ -60,7 +62,6 @@ docker run --network host -d -v /home/admin/avatar:/foof/avatar hanyuufurude/foo
 | sold          | int(11)      | NO   |     | NULL    |                |
 +---------------+--------------+------+-----+---------+----------------+
 ```
-## Interface to frond end.
 # Interface to frond end.
 
 ## Test page
@@ -77,6 +78,10 @@ GET /user/[uuid]
 None
 ```
 
+```
+None
+```
+
 ``` json
 //success
 {
@@ -89,7 +94,8 @@ None
   "address": null,
   "avatarurl": "image\\avatar\\2.jpg",
   "verified": 0,
-  "score": 10,
+  "score": 10,  
+  "info": "lsakfdjlk",
   "status": "success"
 }
 ```
@@ -97,8 +103,12 @@ None
 ```
 POST /user/login
 ```
+```
+Content-Type:application/x-www-form-urlencoded
+```
+
 ```json
-{"表单数据":{"phonenumber":"0101234567","password":"2322dbbdcaa610d99a2ee9d0154294a4e41c279c"}}
+{"表单数据":{"phonenumber":"1111","password":"1111"}}
 ```
 
 ``` json
@@ -106,18 +116,19 @@ POST /user/login
 {
   "status": "success",
   "info": {
-    "uuid": 2,
-    "password": "2322dbbdcaa610d99a2ee9d0154294a4e41c279c",
+    "uuid": 1,
+    "password": null,
     "username": "WakamiyaEve",
-    "phonenumber": "0101234567",
-    "idcard": "21341",
-    "studentid": "213413",
-    "address": "M2C",
-    "avatarurl": "image\\avatar\\2.jpg",
+    "phonenumber": "1111",
+    "idcard": "1111",
+    "studentid": 1111,
+    "address": "address",
+    "avatarurl": "image\\avatar\\default.jpg",
     "verified": 0,
-    "score": 10
+    "score": 10,
+    "info": "info"
   },
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoyLCJnZW5lcmF0ZSI6MTU2Njk4OTc3MDk4OSwiaWF0IjoxNTY2OTg5NzcwfQ.s5o0Vn8TN-EyWEz-dwwlUfz7CwXnbj5yynwiUO5rjho"
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzI0Mzk5MzU3NywiaWF0IjoxNTY3MjQzOTkzfQ.EcKlNs69v11mF2glsAAQsQz0MLep2KPDSugf_AwBPo0"
 }
 // password incorrect
 {
@@ -130,8 +141,12 @@ POST /user/login
 ```
 POST /user/register
 ```
+```
+Content-Type:application/x-www-form-urlencoded
+```
+
 ``` json
-{"username":"王胜男","phonenumber":"2333","password":"2333","idcard":"234234","studentid":"slfdf","address":"m2c"}
+{"表单数据":{"phonenumber":"2222","verifiycode":"2222","password":"2222"}}
 ```
 
 ``` json
@@ -145,27 +160,45 @@ POST /user/register
 ### upload avatar
 
 ```
-POST /user/avatar
+POST /user/avatar	(avatar's max size: 1mb)
+```
+
+```
+Content-Type:multipart/form-data
 ```
 
 ``` json
------------------------------697348710942
+-----------------------------644897516845
+
 Content-Disposition: form-data; name="token"
 
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjo4LCJnZW5lcmF0ZSI6MTU2NzAwNTkxMzk0MSwiaWF0IjoxNTY3MDA1OTEzfQ.p9VEup6vB3VVkR-o6PfexryAuGCndAyywJvbpdgtvx8
------------------------------697348710942
-Content-Disposition: form-data; name="uuid"
 
-8
------------------------------697348710942
-Content-Disposition: form-data; name="file"; filename="error.jpg"
-Content-Type: image/jpeg
 
-ÿØÿá
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzI0NzkzMDk3MywiaWF0IjoxNTY3MjQ3OTMwfQ.cQxtqPF7OkYPUOvElEl15udolCS54F6yOZxCbcc3mUM
+
+-----------------------------644897516845
+
+Content-Disposition: form-data; name="file"; filename="800px-%E5%8D%83%E6%81%8B%E4%B8%87%E8%8A%B1_%E8%8A%B3%E4%B9%83A10_%E5%BE%AE%E7%AC%91.jpg"
+
+Content-Type: image/jpg
+
+【文件载荷内容】
+-----------------------------644897516845--
 ```
 
 ``` json
-{"status":"success"}
+//success
+{
+  "status": "success",
+  "imgurl": [
+    "image\\item\\0.37298177116166853.jpg",
+    "image\\item\\0.8804691995112837.jpg",
+    "image\\item\\0.1519560908440687.jpg",
+    "image\\item\\0.18944967144424818.jpg"
+  ]
+}
+//wrong token
+403 Forbidden
 ```
 
 ### me
@@ -174,25 +207,64 @@ Content-Type: image/jpeg
 POST \user\me
 ```
 
-```json
-{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzAwNzQ0NjA2MiwiaWF0IjoxNTY3MDA3NDQ2fQ.DTgLQeHdrkZYS1Z-8Pdg3FVk9PjZ-6OfENrgSF2I-JI","uuid":"1"}
+```
+Content-Type:application/x-www-form-urlencoded
 ```
 
 ```json
+{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzI0ODU5OTI4OSwiaWF0IjoxNTY3MjQ4NTk5fQ.ezvX48rpjAAzd6Bwr3eFrSCnrQT_3SGoXID1NSWAa_8"}}
+```
+
+```json
+//success
 {
   "uuid": 1,
   "password": null,
-  "username": "slkdjflk",
-  "phonenumber": "12345678901",
-  "idcard": "2341234",
-  "studentid": "21341234",
-  "address": "T1C",
-  "avatarurl": "e79ce7ff03c1245a15b566515a",
+  "username": "WakamiyaEve",
+  "phonenumber": "1111",
+  "idcard": "1111",
+  "studentid": 1111,
+  "address": "address",
+  "avatarurl": "image\\avatar\\1.jpg",
   "verified": 0,
   "score": 10,
+  "info": "info",
   "status": "success"
 }
+//wrong token
+403 Forbidden
 ```
+
+### modify
+
+```
+POST \user\modify
+```
+
+```
+Const-Type:application/x-www-form-urlencoded
+```
+
+``` json
+{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzI1NTA2MDEzNiwiaWF0IjoxNTY3MjU1MDYwfQ.-1oWPBl4QFyw9idh9QAAtjIITTOehPB9iSdgDZ183kI","username":"WakamiyaEve","password":"1111","idcard":"1","studentid":"2","address":"M3c","info":"no"}}
+```
+
+``` json
+// success
+{
+  "status": "success"
+}
+//wrong token
+403 Forbidden
+```
+
+
+
+
+
+
+
+
 
 ### published
 
@@ -200,8 +272,12 @@ POST \user\me
 POST \user\published
 ```
 
+```
+Content-Type:application/x-www-form-urlencoded
+```
+
 ``` json
-{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzAwNzQ0NjA2MiwiaWF0IjoxNTY3MDA3NDQ2fQ.DTgLQeHdrkZYS1Z-8Pdg3FVk9PjZ-6OfENrgSF2I-JI","uuid":"1"}
+{"表单数据":{"uuid":"1"}}
 ```
 
 ``` json
@@ -260,8 +336,12 @@ None
 POST \item\add
 ```
 
+```
+Content-Type:application/x-www-form-urlencoded
+```
+
 ``` json
-{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjo4LCJnZW5lcmF0ZSI6MTU2NzAwNTkxMzk0MSwiaWF0IjoxNTY3MDA1OTEzfQ.p9VEup6vB3VVkR-o6PfexryAuGCndAyywJvbpdgtvx8","uuid":"8","title":"散装纯净水","type":"3","price":"234.6","imgurl":"86358268","depreciatione":"100","note":"jsdfjsdsf"}
+{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzI0ODU5OTI4OSwiaWF0IjoxNTY3MjQ4NTk5fQ.ezvX48rpjAAzd6Bwr3eFrSCnrQT_3SGoXID1NSWAa_8","title":"屏幕清洁剂","type":"3","price":"3.55","imgurl":"{+++\"imgurl\":+[+++++\"image\\\\item\\\\0.21266930758871538.jpg\",+++++\"image\\\\item\\\\0.4408016895777478.jpg\",+++++\"image\\\\item\\\\0.7268863338186755.jpg\",+++++\"image\\\\item\\\\0.7410747437739387.jpg\"+++]+}","depreciatione":"50","note":"清洁剂","sold":"-1"}}
 ```
 
 ``` json
@@ -269,47 +349,93 @@ POST \item\add
 {"status":"success"}
 //no item
 {"status":"none"}
+//wrong token
+403 Forbidden
 ```
 
-*  upload avatar
+*  upload image
 
 ```
 POST \item\image
 ```
 
+```
+Content-Type:multipart/form-data
+```
+
+> 文件的name属性任意，请求尺寸不大于2mb
+
 ``` json
------------------------------845247425332
+	
+请求载荷（payload）	
+
+-----------------------------5005412110300
 
 Content-Disposition: form-data; name="token"
 
 
 
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzAwNzQ0NjA2MiwiaWF0IjoxNTY3MDA3NDQ2fQ.DTgLQeHdrkZYS1Z-8Pdg3FVk9PjZ-6OfENrgSF2I-JI
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzI0ODU5OTI4OSwiaWF0IjoxNTY3MjQ4NTk5fQ.ezvX48rpjAAzd6Bwr3eFrSCnrQT_3SGoXID1NSWAa_8
 
------------------------------845247425332
+-----------------------------5005412110300
 
-Content-Disposition: form-data; name="itemid"
+Content-Disposition: form-data; name="file0"; filename="Hoshikawa_Hotaru.png"
 
+Content-Type: image/png
+【文件载荷】
+-----------------------------5005412110300
 
+Content-Disposition: form-data; name="file1"; filename="23984.png"
 
-1
+Content-Type: image/png
+【文件载荷】
+-----------------------------5005412110300
 
------------------------------845247425332
+Content-Disposition: form-data; name="file2"; filename="24370.png"
 
-Content-Disposition: form-data; name="file0"; filename="error.jpg"
+Content-Type: image/png
+【文件载荷】
+-----------------------------5005412110300
 
-Content-Type: image/jpeg
+Content-Disposition: form-data; name="file3"; filename="53-098.png"
 
-
-
-ÿØÿá
+Content-Type: image/png
+【文件载荷】
+-----------------------------5005412110300
 ```
 
 ```json
+// success
 {"status":"success"}
+// file too large 
+413 Request Entity Too Large
+//wrong token
+403 Forbidden
+```
+
+### modify
+
+```
+POST /item/modify
+```
+
+```
+Content-Type:multipart/form-data
+```
+
+```json
+{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzI1NTA2MDEzNiwiaWF0IjoxNTY3MjU1MDYwfQ.-1oWPBl4QFyw9idh9QAAtjIITTOehPB9iSdgDZ183kI","itemid":"1","title":"小米充电宝","type":"2","price":"299.9","imgurl":"{+++\"imgurl\":+[+++++\"image\\\\item\\\\0.21266930758871538.jpg\",+++++\"image\\\\item\\\\0.4408016895777478.jpg\",+++++\"image\\\\item\\\\0.7268863338186755.jpg\",+++++\"image\\\\item\\\\0.7410747437739387.jpg\"+++]+}","depreciatione":"98","note":"一块钱四个","sold":"-1"}}
+```
+
+```json
+// success
+{"status":"success"}
+//wrong token
+403 Forbidden
 ```
 
 ### About sold
+
 * sold
 -1. not sold
 * want

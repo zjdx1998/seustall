@@ -1,5 +1,7 @@
 /**
  * @author Hanyuu
+ * @version 1.0.0
+ * @date 2019/08/31
  */
 console.log("[info] in dex loaded.");
 import Koa from 'koa';
@@ -29,15 +31,6 @@ function webServer()
 		app.use(koaBody({ multipart: true }));
 		// app.use(parser());
 		app.use(router.routes());
-		/**
-		 * @description public 根据itemid查询商品信息
-		 */
-		router.get('/item/:itemid', async (ctx, next) =>
-		{
-			const res = await database.queryItem(ctx.params.itemid);
-			ctx.response.body = JSON.stringify(res);
-			ctx.response.type = 'application/json';
-		})
 		/**
 		 * @description public 根据uuid查询用户脱敏信息
 		 */
@@ -76,8 +69,8 @@ function webServer()
 		 */
 		router.post('/user/login', async (ctx, next) =>
 		{
-			const res = await database.loginByPhonenumber(ctx.request.body.phonenumber,ctx.request.body.password);
-			if (res.status==="success")
+			const res = await database.loginByPhonenumber(ctx.request.body.phonenumber, ctx.request.body.password);
+			if (res.status === "success")
 			{
 
 				//签发token
@@ -86,11 +79,11 @@ function webServer()
 					generate: (new Date()).valueOf()
 				}
 				const token = jwt.sign(payload, conf.secretkey);
-			res.token = token;
+				res.token = token;
 			}
 			ctx.response.body = JSON.stringify(res);
 			ctx.response.type = 'application/json';
-			
+
 		})
 		/**
 		 * @description public 用户注册
@@ -100,28 +93,15 @@ function webServer()
 		{
 			var newUser = new Object() as UserInterface;
 			newUser = ctx.request.body;
+			newUser.username = "新手咸鱼人员";
+			newUser.idcard = "";
+			newUser.studentid = 0;
+			newUser.address = "";
 			newUser.score = 10;
+			newUser.info = "这家伙很懒，什么都没有写＞︿＜"
 			newUser.verified = false;
 			newUser.avatarurl = path.join(conf.avatar, "default.jpg")
 			const res = await database.writeUser(newUser);
-			ctx.response.body = JSON.stringify(res);
-			ctx.response.type = 'application/json';
-		})
-		/**
-		 * @description token 用户添加求购/商品
-		 */
-		router.post('/item/add', async (ctx, next) =>
-		{
-			const verify: any = verifyToken(ctx.request.body.token);
-			if (!verify)
-			{
-				ctx.response.status = 403;
-				return;
-			}
-			var newGood = new Object() as ItemInterface;
-			newGood = ctx.request.body;
-			newGood.uuid = verify.uuid;
-			const res = await database.writeItem(newGood);
 			ctx.response.body = JSON.stringify(res);
 			ctx.response.type = 'application/json';
 		})
@@ -168,8 +148,58 @@ function webServer()
 				ctx.response.body = JSON.stringify(response);
 				ctx.response.type = "application/json";
 			}
+		});
+		/**
+		 * @description 修改用户信息
+		 */
+		router.post('/user/modify', async (ctx, next) =>
+		{
+			var res = new Object() as any;
+			try
+			{
+				const verifyres = verifyToken(ctx.request.body.token)
+				if (!verifyres)
+				{
+					ctx.response.status = 403;
+					return;
+				}
+				ctx.request.body.uuid = verifyres.uuid;
+				const databaseres = await database.updateUser(ctx.request.body)
+				if (!databaseres)
+				{
+					ctx.response.status = 403
+					return;
+				}
+				res.status = "success";
+				ctx.response.type = "application/json";
+				ctx.response.body = JSON.stringify(res)
 
-		}); 
+			} catch (error)
+			{
+				console.error(error)
+				res.status = "false"
+				ctx.response.type = "application/json";
+				ctx.response.body = JSON.stringify(res)
+			}
+		})
+		/**
+		 * @description token 用户添加求购/商品
+		 */
+		router.post('/item/add', async (ctx, next) =>
+		{
+			const verify: any = verifyToken(ctx.request.body.token);
+			if (!verify)
+			{
+				ctx.response.status = 403;
+				return;
+			}
+			var newGood = new Object() as ItemInterface;
+			newGood = ctx.request.body;
+			newGood.uuid = verify.uuid;
+			const res = await database.writeItem(newGood);
+			ctx.response.body = JSON.stringify(res);
+			ctx.response.type = 'application/json';
+		})
 		/**
 		 * @description 商品添加图片
 		 */
@@ -207,7 +237,7 @@ function webServer()
 				}
 				response.status = "success"
 				response.imgurl = imgList;
-					ctx.response.body = JSON.stringify(response);
+				ctx.response.body = JSON.stringify(response);
 				ctx.response.type = "application/json";
 
 			} catch (error)
@@ -219,6 +249,49 @@ function webServer()
 				ctx.response.type = "application/json";
 			}
 		});
+		/**
+		 * @description public 根据itemid查询商品信息
+		 */
+		router.get('/item/:itemid', async (ctx, next) =>
+		{
+			const res = await database.queryItem(ctx.params.itemid);
+			ctx.response.body = JSON.stringify(res);
+			ctx.response.type = 'application/json';
+		})
+		/**
+		 * @description 修改商品信息
+		 */
+		router.post('/item/modify', async (ctx, next) =>
+		{
+			var res = new Object() as any;
+			try
+			{
+				const verifyres = verifyToken(ctx.request.body.token)
+				var uuid:any = await database.queryItem(ctx.request.body.itemid)
+				uuid = uuid.uuid; 
+				if (!verifyres || uuid != verifyres.uuid)
+				{
+					ctx.response.status = 403;
+					return;
+				}
+				const databaseres = await database.updateItem(ctx.request.body)
+				if (!databaseres)
+				{
+					ctx.response.status = 403
+					return;
+				}
+				res.status = "success";
+				ctx.response.type = "application/json";
+				ctx.response.body = JSON.stringify(res)
+
+			} catch (error)
+			{
+				console.error(error)
+				res.status = "false"
+				ctx.response.type = "application/json";
+				ctx.response.body = JSON.stringify(res)
+			}
+		})
 		app.listen(conf.port);
 	} catch (error)
 	{
@@ -229,7 +302,7 @@ function webServer()
  * @description 验证token，验证正确返回对应uuid，失败返回null
  * @returns uuid:string | null
  */
-function verifyToken(token: string)
+function verifyToken(token: string): any
 {
 	var response = new Object() as any;
 	return jwt.verify(token, conf.secretkey, (error, decoded) =>
