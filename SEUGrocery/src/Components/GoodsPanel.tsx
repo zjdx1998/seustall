@@ -9,6 +9,7 @@ import {
   View,
   Dimensions,
   Image,
+  Alert,
   Text,
   ImageBackground,
 } from 'react-native';
@@ -17,7 +18,6 @@ const {width} = Dimensions.get('window');
 
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import UserInfo from '../Common/UserInfo';
-
 
 const Goods = [
   {
@@ -53,14 +53,14 @@ const Goods = [
 
 export default class GoodsPanel extends Component {
   private props: any;
-  state:{
-    goodsList:any,
-  }
-  constructor(){
+  state: {
+    goodsList: any;
+  };
+  constructor() {
     super();
-    this.state={
-      goodsList:Goods,
-    }
+    this.state = {
+      goodsList: Goods,
+    };
   }
   render() {
     return (
@@ -87,9 +87,13 @@ class Good extends Component {
   render() {
     return (
       <TouchableOpacity
-        onPress={() => this.props.navigation.navigate('detailPage',{
-          itemid:this.props.itemid
-        })}>
+        onPress={() => {
+          this.props.navigation.navigate('detailPage', {
+            itemid: this.props.itemid,
+            go_back_key: this.props.navigation.state.key,
+          });
+          Alert.alert('cnm' + this.props.navigation.state.key);
+        }}>
         <View style={styles.block}>
           <ImageBackground
             style={{flex: 1, height: 150, flexDirection: 'row'}}
