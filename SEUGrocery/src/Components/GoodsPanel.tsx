@@ -21,6 +21,7 @@ import UserInfo from '../Common/UserInfo';
 
 const Goods = [
   {
+    itemid:'1',
     title: '米色针织开衫+牛仔裤带吊牌',
     imgurl: 'https://avatars2.githubusercontent.com/u/45632558?s=400&v=4',
     sold: 1,
@@ -31,6 +32,7 @@ const Goods = [
     //info: '这还是一本书，一本很好的书，是一本非常好的书',
   },
   {
+    itemid:'2',
     title: 'MAC口红diva有小票仅手臂试色',
     imgurl: 'https://avatars2.githubusercontent.com/u/45632558?s=400&v=4',
     sold: 0,
@@ -40,6 +42,7 @@ const Goods = [
     classify: '服饰鞋子包',
   },
   {
+    itemid:'3',
     title: 'MAC口红diva有小票仅手臂试色',
     imgurl: 'https://avatars2.githubusercontent.com/u/45632558?s=400&v=4',
     sold: 0,
@@ -54,18 +57,64 @@ const Goods = [
 export default class GoodsPanel extends Component {
   private props: any;
   state:{
+    CurrentGoods: any,
     goodsList:any,
+    showGoodsWay:any,
   }
-  constructor(){
-    super();
+  constructor(props){
+    super(props);
     this.state={
+      CurrentGoods:Goods,
       goodsList:Goods,
+      showGoodsWay:this.props.showGoodsWay
     }
   }
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      //...this.state, nextProps
+      showGoodsWay: nextProps.showGoodsWay,
+    });
+
+  }
+  getOnSaleList(){
+
+    var list = this.state.goodsList.filter(function (e) { return e.sold == 0; });
+
+    // var allList = JSON.stringify(this.state.goodsList);
+    // for(i = 0;i<num;i++){
+    //   if(this.state.goodsList[i].sold==0){
+    //     list = list+JSON.parse(allList[i]);
+    //   }
+    // }
+    // alert(JSON.stringify(list));
+    
+    return list;
+  }
+  getSoldList(){
+    var list = this.state.goodsList.filter(function (e) { return e.sold == 2; });
+
+    return list;
+  }
+
+
+
   render() {
+    if(this.state.showGoodsWay=='0'){
+      this.state.CurrentGoods=this.state.goodsList;
+    }
+    else if(this.state.showGoodsWay=='1'){
+      this.state.CurrentGoods=this.getOnSaleList();
+      // alert(JSON.stringify(this.getOnSaleList()));
+      // this.getOnSaleList();
+    }
+    else {
+      this.state.CurrentGoods=this.getSoldList();
+      // alert(this.getSoldList());
+      // this.getSoldList();
+    }
     return (
       <View style={styles.goodsList}>
-        {this.state.goodsList.map(i => (
+        {this.state.CurrentGoods.map(i => (
           <Good
             itemid={i.itemid}
             image={{uri: i.imgurl}}
@@ -81,6 +130,7 @@ export default class GoodsPanel extends Component {
     );
   }
 }
+
 
 class Good extends Component {
   private props: any;
