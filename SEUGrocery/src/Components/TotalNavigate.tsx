@@ -209,6 +209,7 @@ const TotalNav = createDrawerNavigator(
     drawerWidth: SP.WB(70),
     drawerPosition: 'left',
     drawerBackgroundColor: 'transparent',
+    overlayColor: 'transparent',
     contentComponent: customComponents,
   },
 );
