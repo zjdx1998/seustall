@@ -4,12 +4,12 @@
 ### Common API
 1. create index: `curl -H "Content-Type: application/json" -XPUT "host/$indexName" -d $index-info.json`
 2. delete index: `curl -XDELETE "host/$indexName" `
-3. Add User: `curl -H "Content-Type: application/json" -XPOST "localhost:9200/index-users/users -d @addUser.json`
-4. Get All Users: `curl -XGET "localhost:9200/_search?pretty` 
-5. Get someone: `curl -XGET "localhost:9200/index-users/users/1`
+3. Add User: `curl -H "Content-Type: application/json" -XPOST "localhost:9200/index-users/users" -d @addUser.json`
+4. Get All Users: `curl -XGET "localhost:9200/_search?pretty"` 
+5. Get someone: `curl -XGET "localhost:9200/index-users/users/1"`
 6. Delete someone: 
 ```js
-curl -H "Content-Type: application/json" -XPOST 'http://localhost:9200/index-users/_delete_by_query?pretty' -d '
+curl -H "Content-Type: application/json" -XPOST "http://localhost:9200/index-users/_delete_by_query?pretty" -d '
 {
     "query": {
         "match": {
@@ -18,8 +18,8 @@ curl -H "Content-Type: application/json" -XPOST 'http://localhost:9200/index-use
     }
 }'
 ```
-7. Simple query: `curl -XGET "localhost:9200/index-users/_search?q=key:value&pretty`
-8. Complex query: `curl -XPOST "localhost:9200/index-users/_search?pretty` -d @queryjson
+7. Simple query: `curl -XGET "localhost:9200/index-users/_search?q=key:value&pretty"`
+8. Complex query: `curl -XPOST "localhost:9200/index-users/_search?pretty"` -d @queryjson
 And the queryjson usually has the structure like above.
 ### Parameters in Query
 #### Term&Terms
@@ -83,7 +83,7 @@ The usage:
                 "from": 20,
                 "to": 25,
                 "include_lower": true,
-                "include_upper": false
+                "include_upper": false // represents the range 
             }
         }
     }

@@ -4,6 +4,15 @@
   @date: 2019-8-22
 */
 import React, {Component} from 'react';
+import {
+  StyleSheet,
+  View,
+  Dimensions,
+  Image,
+  Alert,
+  Text,
+  ImageBackground,
+} from 'react-native';
 import {Header} from 'react-native-elements';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 export default class extends Component {
@@ -12,6 +21,7 @@ export default class extends Component {
     super(props);
   }
   render() {
+    const params = this.props.navigation.state.params || {};
     return (
       <Header
         statusBarProps={{
@@ -25,7 +35,13 @@ export default class extends Component {
             name="left"
             size={36}
             color="#030303"
-            onPress={() => this.props.navigation.goBack()}
+            onPress={() => {
+              if (params.go_back_key == null) {
+                this.props.navigation.navigate('home');
+              } else {
+                this.props.navigation.navigate(params.go_back_key);
+              }
+            }}
           />
         }
       />

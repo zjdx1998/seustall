@@ -8,7 +8,7 @@ import MainPages from '../pages/MainPages';
 import {
   createAppContainer,
   createDrawerNavigator,
-  DrawerItems,
+  DrawerItems, DrawerNavigator,
 } from 'react-navigation';
 import FirstPage from '../pages/FirstPage';
 import {Text} from 'react-native-elements';
@@ -24,9 +24,9 @@ import detailPage from '../pages/detailPage';
 import StartPage from '../pages/StartPage';
 import * as SP from '../Common/ScreenProperty';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import SignInUI from "../pages/SignInUI";
-import MyGroceryPage from "../pages/MyGroceryPage";
-import WhatIBoughtPage from "../pages/WhatIBoughtPage";
+import SignInUI from '../pages/SignInUI';
+import MyGroceryPage from '../pages/MyGroceryPage';
+import WhatIBoughtPage from '../pages/WhatIBoughtPage';
 // const customComponent = props => (
 //   <ScrollView style={{backgroundColor: '#FFE4E1', flex: 1}}>
 //     <SafeAreaView forceInset={{top: 'always', horizontal: 'never'}}>
@@ -68,11 +68,16 @@ const customComponents = props => (
           },
         ]}
         onPress={() => {
-          if (that.state.currentIndex === 1) {
-            props.navigation.closeDrawer();
-          } else {
-            props.navigation.navigate('home');
-          }
+          // if (that.state.currentIndex === 1) {
+          //   props.navigation.closeDrawer();
+          // } else {
+          //   props.navigation.navigate('home');
+          // }
+
+          props.navigation.closeDrawer();
+          props.navigation.navigate('home', {
+            go_back_key: props.navigation.state.key,
+          });
           that.setState({currentIndex: 1});
         }}>
         <Text style={styles.menuTitleStyle}>首页</Text>
@@ -86,11 +91,15 @@ const customComponents = props => (
           },
         ]}
         onPress={() => {
-          if (that.state.currentIndex === 2) {
-            props.navigation.closeDrawer();
-          } else {
-            props.navigation.navigate('page1');
-          }
+          // if (that.state.currentIndex === 2) {
+          //   props.navigation.closeDrawer();
+          // } else {
+          //   props.navigation.navigate('page1');
+          // }
+          props.navigation.closeDrawer();
+          props.navigation.navigate('page1', {
+            go_back_key: props.navigation.state.key,
+          });
           that.setState({currentIndex: 2});
         }}>
         <Text style={styles.menuTitleStyle}>我的铺子</Text>
@@ -104,11 +113,15 @@ const customComponents = props => (
           },
         ]}
         onPress={() => {
-          if (that.state.currentIndex === 3) {
-            props.navigation.closeDrawer();
-          } else {
-            props.navigation.navigate('page2');
-          }
+          // if (that.state.currentIndex === 3) {
+          //   props.navigation.closeDrawer();
+          // } else {
+          //   props.navigation.navigate('page2');
+          // }
+          props.navigation.closeDrawer();
+          props.navigation.navigate('page2', {
+            go_back_key: props.navigation.state.key,
+          });
           that.setState({currentIndex: 3});
           // props.navigation.navigate('firstPage', {
           //   title: 'Home',
@@ -186,6 +199,7 @@ const TotalNav = createDrawerNavigator(
       'startP',
     ],
     initialRouteName: 'home',
+    backBehavior: 'initialRoute',
     // initialRouteParams: {
     //   jumpHomeCallBack: index => {
     //     this.setState({currentIndex: index});
@@ -194,6 +208,7 @@ const TotalNav = createDrawerNavigator(
     drawerLockMode: 'unlocked',
     drawerWidth: SP.WB(70),
     drawerPosition: 'left',
+    drawerBackgroundColor: 'transparent',
     contentComponent: customComponents,
   },
 );
@@ -226,7 +241,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     paddingTop: SP.HB(5),
-    backgroundColor: '#e76482',
+    backgroundColor: '#cc6699',
   },
   roleAvatorContainer: {
     flex: 1,
@@ -241,27 +256,27 @@ const styles = StyleSheet.create({
   },
   roleInfoNameText: {
     fontSize: 30,
-    color: '#000',
+    color: '#fff',
     marginBottom: SP.HB(2),
   },
   roleInfoText: {
     fontSize: 18,
-    color: '#d4d2d9',
+    color: '#fff',
     fontStyle: 'italic',
     paddingRight: SP.WB(2),
   },
   menuBaseContainer: {
     flex: 3,
     flexDirection: 'column',
-    backgroundColor: '#249aa3',
+    backgroundColor: '#CC6699',
   },
   menuSingleContainer: {
-    borderBottomWidth: SP.HB(1),
+    borderBottomWidth: SP.HB(0.1),
     borderBottomColor: '#fff',
-    //backgroundColor: this.state.currentIndex === 1 ? '#a52a7c' : '#249aa3',
   },
   menuTitleStyle: {
     fontSize: 24,
+    color: '#fff',
     marginLeft: SP.WB(3),
   },
 });

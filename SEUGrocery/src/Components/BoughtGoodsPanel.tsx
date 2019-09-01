@@ -66,7 +66,11 @@ class Good extends Component {
   render() {
     return (
       <TouchableOpacity
-        onPress={() => this.props.navigation.navigate('detailPage')}>
+        onPress={() =>
+          this.props.navigation.navigate('detailPage', {
+            go_back_key: this.props.navigation.state.key,
+          })
+        }>
         <View style={styles.block}>
           <Image source={this.props.image} style={{width: 150, height: 150}} />
           <View style={styles.textBlock}>

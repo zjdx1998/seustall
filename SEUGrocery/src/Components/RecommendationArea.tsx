@@ -83,6 +83,7 @@ class Good extends Component {
         onPress={() =>
           this.props.navigation.navigate('detailPage', {
             itemid: this.props.itemid,
+            go_back_key: this.props.navigation.state.key,
           })
         }>
         <View style={styles.block}>
