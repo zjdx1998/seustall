@@ -20,7 +20,7 @@ import {
   Avatar,
 } from 'react-native-elements';
 import LocalBackHeader from '../Components/LocalBackHeader';
-import * as SP from '../Common/ScreenProperty'
+import * as SP from '../Common/ScreenProperty';
 const itemURL = 'http://inari.ml:8080/item/';
 const userURL = 'http://inari.ml:8080/user/';
 
@@ -48,26 +48,27 @@ export default class DetailPage extends Component {
         //   note: rT.note,
         //   depreciatione: rT.depreciatione,
         // });
-        fetch(userURL+rT.uuid)
-        .then(res=>res.json())
-        .then(user=>{
-          this.setState({
-            username:user.username,
-            avatorurl:user.avatarurl,
-            itemid: rT.itemid,
-            // username: itemURL + this.props.navigation.state.params.itemid,
-            uuid: rT.uuid,
-            title: rT.title,
-            type: rT.type,
-            price: parseFloat(rT.price),
-            imgurl: rT.imgurl,
-            note: rT.note,
-            depreciatione: rT.depreciatione,
+        fetch(userURL + rT.uuid)
+          .then(res => res.json())
+          .then(user => {
+            this.setState({
+              username: user.username,
+              avatorurl: user.avatarurl,
+              itemid: rT.itemid,
+              // username: itemURL + this.props.navigation.state.params.itemid,
+              uuid: rT.uuid,
+              title: rT.title,
+              type: rT.type,
+              price: parseFloat(rT.price),
+              imgurl: rT.imgurl,
+              note: rT.note,
+              depreciatione: rT.depreciatione,
+            });
           })
-        }).catch(e => {
-          console.log('Oops, error');
-          // Alert.alert('cnm');
-        });
+          .catch(e => {
+            console.log('Oops, error');
+            // Alert.alert('cnm');
+          });
 
         console.log(rT);
       })
@@ -105,12 +106,12 @@ export default class DetailPage extends Component {
     return (
       <ScrollView style={styles.test}>
         <View style={{height: SP.HB(15)}}>
-          <LocalBackHeader navigation={this.props.navigation}/>
+          <LocalBackHeader navigation={this.props.navigation} />
         </View>
         <Image
           source={{uri: this.state.imgurl}}
           style={styles.img}
-          PlaceholderContent={<ActivityIndicator/>}
+          PlaceholderContent={<ActivityIndicator />}
         />
         <Text style={styles.priceTag}>￥{this.state.price.toFixed(2)}</Text>
         <Text style={styles.title}>{this.state.title}</Text>
@@ -129,10 +130,10 @@ export default class DetailPage extends Component {
         <Text style={styles.note}>{this.state.note}</Text>
         <View style={styles.contractButton}>
           <ThemeProvider>
-            <Button title="立即购买"/>
+            <Button title="立即购买" />
           </ThemeProvider>
           <ThemeProvider>
-            <Button title="给我留言"/>
+            <Button title="给我留言" />
           </ThemeProvider>
         </View>
       </ScrollView>

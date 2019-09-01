@@ -15,6 +15,10 @@ import {
   LayoutAnimation,
   TouchableOpacity,
 } from 'react-native';
+import {postData} from '../Common/FetchHelper';
+import {sha1} from '../Common/SHA-1Encryptor';
+import UserInfo from '../Common/UserInfo';
+const loginURL = 'http://inari.ml:8080/user/login';
 import {Icon} from 'react-native-elements';
 const {UIManager} = NativeModules;
 
@@ -82,11 +86,24 @@ export default class SignInUI extends Component {
     });
   }
   buttonPressed() {
-    this.setState(state => {
-      return {
-        inputedPW: '',
-      };
-    });
+    postData(loginURL, {
+      phonenumber: '17551046561', //this.state.inputedNum,
+      password: sha1('13315585158zz'), //this.state.inputedPW),
+    })
+      .then(data => {
+        UserInfo.saveUserInfo(data);
+        this.props.navigation.navigate('home');
+        // alert(data.info.username+'\n'+UserInfo.get('username'));
+        // UserInfo.get('idcard').then(name => {
+        //   alert(name);
+        // });
+      }) // JSON from `response.json()` call
+      .catch(error => console.error(error));
+    // this.setState(state => {
+    //   return {
+    //     inputedPW: '',
+    //   };
+    // });
   }
   identifyingCodeLoginButton = () => {
     LayoutAnimation.spring();

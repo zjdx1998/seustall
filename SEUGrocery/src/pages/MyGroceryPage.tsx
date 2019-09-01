@@ -22,6 +22,12 @@ import ItemList from '../Common/ItemList';
 
 export default class MyGroceryPage extends Component {
   private props: any;
+  constructor(props) {
+    super(props);
+    this.state = {
+      showGoodsWay: '0',
+    };
+  }
   render() {
     return (
       <ScrollView style={styles.baseContainer}>
@@ -29,12 +35,18 @@ export default class MyGroceryPage extends Component {
           <LocalBackHeader navigation={this.props.navigation} />
         </View>
         <View style={styles.headerContainer}>
-          <MyGroceryHeader ref={(myGroceryHeader)=>this.myGroceryHeader=myGroceryHeader}>
-          </MyGroceryHeader>
+          <MyGroceryHeader
+            ref={myGroceryHeader => (this.myGroceryHeader = myGroceryHeader)}
+          />
         </View>
         <View style={styles.headerContainer} />
         <View style={styles.selectContainer}>
-          <TouchableOpacity activeOpacity={0.2} focusedOpacity={0.5}>
+          <TouchableOpacity
+            onPress={() => {
+              this.setState({showGoodsWay: '0'});
+            }}
+            activeOpacity={0.2}
+            focusedOpacity={0.5}>
             <View
               style={{
                 justifyContent: 'center',
@@ -44,7 +56,12 @@ export default class MyGroceryPage extends Component {
               <Text style={{color: '#cc6699'}}>全部</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.2} focusedOpacity={0.5}>
+          <TouchableOpacity
+            onPress={() => {
+              this.setState({showGoodsWay: '1'});
+            }}
+            activeOpacity={0.2}
+            focusedOpacity={0.5}>
             <View
               style={{
                 justifyContent: 'center',
@@ -54,7 +71,12 @@ export default class MyGroceryPage extends Component {
               <Text style={{color: '#cc6699'}}>未卖出</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.2} focusedOpacity={0.5}>
+          <TouchableOpacity
+            onPress={() => {
+              this.setState({showGoodsWay: '2'});
+            }}
+            activeOpacity={0.2}
+            focusedOpacity={0.5}>
             <View
               style={{
                 justifyContent: 'center',
@@ -67,24 +89,22 @@ export default class MyGroceryPage extends Component {
         </View>
         <View style={styles.GoodsAreaContainer}>
           <GoodsPanel
-          navigation={this.props.navigation}
-          ref = {(goodsPanel)=>this.goodsPanel = goodsPanel}
+            showGoodsWay={this.state.showGoodsWay}
+            navigation={this.props.navigation}
+            ref={goodsPanel => (this.goodsPanel = goodsPanel)}
           />
         </View>
       </ScrollView>
     );
   }
-  componentDidMount(){
+  componentDidMount() {
     // alert('rua12421312');
-    ItemList.getItemList()
-    .then((list)=>{
-    this.myGroceryHeader.getPublishedNum(list);
-    this.goodsPanel.setState({goodsList:list});
-    })
+    ItemList.getItemList().then(list => {
+      this.myGroceryHeader.getPublishedNum(list);
+      this.goodsPanel.setState({goodsList: list});
+    });
   }
 }
-
-
 
 const styles = StyleSheet.create({
   baseContainer: {

@@ -8,18 +8,11 @@ import MainPages from '../pages/MainPages';
 import {
   createAppContainer,
   createDrawerNavigator,
-  DrawerItems, DrawerNavigator,
+  DrawerItems,
+  DrawerNavigator,
 } from 'react-navigation';
-import FirstPage from '../pages/FirstPage';
 import {Text} from 'react-native-elements';
-import {
-  ScrollView,
-  SafeAreaView,
-  StyleSheet,
-  Image,
-  View,
-  Alert,
-} from 'react-native';
+import {ScrollView, SafeAreaView, StyleSheet, Image, View} from 'react-native';
 import detailPage from '../pages/detailPage';
 import StartPage from '../pages/StartPage';
 import * as SP from '../Common/ScreenProperty';
@@ -27,6 +20,11 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import SignInUI from '../pages/SignInUI';
 import MyGroceryPage from '../pages/MyGroceryPage';
 import WhatIBoughtPage from '../pages/WhatIBoughtPage';
+import WhatIWantPage from '../pages/WhatIWantPage';
+import ReleaseGoodInformation from '../pages/ReleaseGoodInformation';
+import ReleaseIWantPage from '../pages/ReleaseIWantPage';
+import ReleaseUserInformationPage from "../pages/ReleaseUserInformationPage";
+import PostPhotos from "./PostPhotos";
 // const customComponent = props => (
 //   <ScrollView style={{backgroundColor: '#FFE4E1', flex: 1}}>
 //     <SafeAreaView forceInset={{top: 'always', horizontal: 'never'}}>
@@ -52,10 +50,11 @@ const customComponents = props => (
         />
       </View>
       <View style={styles.roleInfoContainer}>
-        <Text style={styles.roleInfoNameText}>韩愈</Text>
-        <Text style={styles.roleInfoText}>
-          "我是韩愈，我最牛皮，球衣有我牛皮吗？"
-        </Text>
+        <TouchableOpacity
+          onPress={() => props.navigation.navigate('release_info')}>
+          <Text style={styles.roleInfoNameText}>韩愈</Text>
+          <Text style={styles.roleInfoText}>"我是韩愈。"</Text>
+        </TouchableOpacity>
       </View>
     </View>
     <View style={styles.menuBaseContainer}>
@@ -132,6 +131,41 @@ const customComponents = props => (
         }}>
         <Text style={styles.menuTitleStyle}>我买到的</Text>
       </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[
+          styles.menuSingleContainer,
+          {
+            backgroundColor:
+              that.state.currentIndex === 4 ? '#a52a7c' : '#249aa3',
+          },
+        ]}
+        onPress={() => {
+          props.navigation.closeDrawer();
+          props.navigation.navigate('page3', {
+            go_back_key: props.navigation.state.key,
+          });
+          that.setState({currentIndex: 4});
+        }}>
+        <Text style={styles.menuTitleStyle}>我想买的</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[
+          styles.menuSingleContainer,
+          {
+            backgroundColor:
+              that.state.currentIndex === 5 ? '#a52a7c' : '#249aa3',
+          },
+        ]}
+        onPress={() => {
+          props.navigation.closeDrawer();
+          props.navigation.navigate('page4', {
+            go_back_key: props.navigation.state.key,
+          });
+          that.setState({currentIndex: 3});
+        }}>
+        <Text style={styles.menuTitleStyle}>收藏夹</Text>
+      </TouchableOpacity>
     </View>
   </View>
 );
@@ -163,15 +197,33 @@ const TotalNav = createDrawerNavigator(
       },
     },
     page3: {
-      screen: FirstPage,
+      screen: WhatIBoughtPage,
       navigationOptions: {
         drawerLabel: '我想买的',
       },
     },
     page4: {
-      screen: FirstPage,
+      screen: WhatIWantPage,
       navigationOptions: {
         drawerLabel: '收藏夹',
+      },
+    },
+    release_good: {
+      screen: ReleaseGoodInformation,
+      navigationOptions: {
+        drawerLabel: () => null,
+      },
+    },
+    release_want: {
+      screen: ReleaseIWantPage,
+      navigationOptions: {
+        drawerLabel: () => null,
+      },
+    },
+    release_info: {
+      screen: ReleaseUserInformationPage,
+      navigationOptions: {
+        drawerLabel: () => null,
       },
     },
     detailPage: {
@@ -186,6 +238,18 @@ const TotalNav = createDrawerNavigator(
         drawerLabel: () => null,
       },
     },
+    loginP: {
+      screen: SignInUI,
+      navigationOptions: {
+        drawerLabel: () => null,
+      },
+    },
+    postPhoto: {
+      screen: PostPhotos,
+      navigationOptions: {
+        drawerlabel: () => null,
+      },
+    },
   },
   {
     order: [
@@ -197,8 +261,13 @@ const TotalNav = createDrawerNavigator(
       'page3',
       'page4',
       'startP',
+      'loginP',
+      'release_good',
+      'release_want',
+      'release_info',
+      'postPhoto',
     ],
-    initialRouteName: 'home',
+    initialRouteName: 'startP',
     backBehavior: 'initialRoute',
     // initialRouteParams: {
     //   jumpHomeCallBack: index => {

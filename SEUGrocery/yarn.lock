@@ -5328,6 +5328,11 @@ react-native-gesture-handler@^1.4.1:
     invariant "^2.2.4"
     prop-types "^15.7.2"
 
+react-native-image-picker@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npm.taobao.org/react-native-image-picker/download/react-native-image-picker-1.1.0.tgz#c2a0523886edb4cf2cdc008ad0a71433142a4d53"
+  integrity sha1-wqBSOIbttM8s3ACK0KcUMxQqTVM=
+
 react-native-ratings@^6.3.0:
   version "6.3.1"
   resolved "https://registry.npm.taobao.org/react-native-ratings/download/react-native-ratings-6.3.1.tgz#4e4bd87f376423dc62c933f570fc1932c78adaa4"
