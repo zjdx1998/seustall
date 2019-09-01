@@ -1,5 +1,7 @@
 /**
  * @author Hanyuu
+ * @version 1.0.0
+ * @description config
  */
 export default {
 	"userTableName":"users",
@@ -20,6 +22,12 @@ export default {
 		"dbConnF":"[error] database connect failed",
 		"database exception":"database exception",
 		"invaildReq":"invaild request"
+	},
+	"mailConfig":
+	{
+		serivce: "qq",
+		user: "wakamiyaeve@qq.com",
+		pass: "azffygurwzxfdhgf",
 
 	}
 }

@@ -14,6 +14,8 @@ import conf from './conf';
 import data from "./database";
 import { User, Item, UserInterface, ItemInterface } from './role';
 import jwt, { decode } from 'jsonwebtoken';
+import mail from './mailpush';
+import { any } from 'bluebird';
 
 console.log(conf);
 console.log(conf.avatar);
@@ -51,7 +53,7 @@ function webServer()
 				ctx.response.status = 403;
 				return;
 			}
-			const res = await database.queryUserSelf(verify.uuid);
+			const res = await database.queryUserS(verify.uuid);
 			ctx.response.body = JSON.stringify(res);
 			ctx.response.type = 'application/json';
 		})
@@ -183,6 +185,34 @@ function webServer()
 			}
 		})
 		/**
+		 * @description 邮箱验证
+		 */
+		router.get('/user/verify/:token', async (ctx, next) =>
+		{
+
+		})
+		/**
+		 * @description 邮箱验证请求
+		 */
+		router.post('/user/verify', async (ctx, next) =>
+		{
+			var res: any = new Object() as any;
+			const verify: any = verifyToken(ctx.request.body.token);
+			if (!verify)
+			{
+				ctx.response.status = 403;
+				return;
+			}
+			const queryres:any = await database.queryUserS(verify.uuid);
+			if (mail(queryres as UserInterface))
+			{
+				res.status = "success";
+			}
+			res.status = "failure";
+			ctx.response.body = JSON.stringify(res);
+			ctx.response.type = 'application/json';
+		})
+		/**
 		 * @description token 用户添加求购/商品
 		 */
 		router.post('/item/add', async (ctx, next) =>
@@ -268,7 +298,7 @@ function webServer()
 			{
 				const verifyres = verifyToken(ctx.request.body.token)
 				var uuid:any = await database.queryItem(ctx.request.body.itemid)
-				uuid = uuid.uuid; 
+				uuid = uuid.uuid;
 				if (!verifyres || uuid != verifyres.uuid)
 				{
 					ctx.response.status = 403;

@@ -169,7 +169,7 @@ export default class data
 	/**
 	 * @description 查询用户自身信息
 	 */
-	public async queryUserSelf(uuid: number)
+	public async queryUserS(uuid: number)
 	{
 		try
 		{
@@ -275,7 +275,7 @@ export default class data
 	/**
 	 * @description 更新用户信息
 	 */
-	public async updateUser(src:ItemInterface)
+	public async updateUser(src:UserInterface)
 	{
 		try {
 			const queryres:any = await this.queryUser(src.uuid)
@@ -285,18 +285,18 @@ export default class data
 			}
 			const res = await this.users.update(
 				{
-					"title": src.title,
-					"type": src.type,
-					"price": src.price,
-					"imgurl": src.imgurl,
-					"depreciatione": src.depreciatione,
-					"note": src.note,
-					"sold": src.sold
+					"password": src.password,
+					"username": src.username,
+					"idcard": src.idcard,
+					"studentid": src.studentid,
+					"address": src.address,
+					"avatarurl": src.avatarurl,
+					"info":src.info,
 				},
 				{
 					where:
 					{
-						"itemid": src.itemid
+						"uuid":src.uuid
 					}
 				}
 			);

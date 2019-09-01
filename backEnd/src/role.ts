@@ -16,17 +16,18 @@ export class User
 	public public(): UserInterface
 	{
 		var temp: any = this.data;
-		temp.idcard = null;
-		temp.studentid = null;
-		temp.address = null;
-		temp.phonenumber = null;
+		temp.password = undefined;
+		temp.idcard = undefined;
+		temp.studentid = undefined;
+		temp.address = undefined;
+		temp.phonenumber = undefined;
 		return temp;
 	}
 
 	public protect(): UserInterface
 	{
 		var temp: any = this.data;
-		temp.password = null;
+		temp.password = undefined;
 		return temp;
 	}
 
