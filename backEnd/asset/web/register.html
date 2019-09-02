@@ -5,26 +5,19 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>Document</title>
+	<title>register</title>
+	<link rel="stylesheet" type="text/css" href="/demo.css">
 </head>
 
 <body>
 	<form action="/user/register" method="POST">
 		<h1>Register user</h1>
-		username<br>
-		<input type="text" name="username"><br>
 		phonenumber<br>
-		<input type="text" name="phonenumber"><br>
-		password<br>
+		<input type="tel" name="phonenumber"><br>
+		verifiy code<br>
+		<input type="text" name = "verifiycode"><br>
+		password（这里请输入SHA-1 40bit计算之后的值）<br>
 		<input type="password" name="password"><br>
-		idcard<br>
-		<input type="text" name="idcard"><br>
-		studentid<br>
-		<input type="text" name="studentid"><br>
-		address<br>
-		<input type="text" name="address"><br>
-		avatarurl<br>
-		<input type="text" name="avatarurl"><br>
 		<input type="submit" value="Register">
 	</form>
 </body>

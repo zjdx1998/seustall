@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>register</title>
+	<link rel="stylesheet" type="text/css" href="/demo.css">
+</head>
+
+<body>
+	<form action="/user/modify" method="POST">
+		<h1>modify user info</h1>
+		token<br>
+		<input type ="text" name ="token"><br>
+		username<br>
+		<input type="text" name="username"><br>
+		password（这里请输入SHA-1 40bit计算之后的值）<br>
+		<input type="password" name="password"><br>
+		idcard<br>
+		<input type="number" name="idcard"><br>
+		studentid<br>
+		<input type="text" name="studentid"><br>
+		address<br>
+		<input type="text" name="address"><br>
+		avatarurl<br>
+		<input type = "text" name = "avatarurl"><br>
+		info<br>
+		<input type="text" name="info"><br>
+		<input type="submit" value="modify">
+	</form>
+</body>
+
+</html>

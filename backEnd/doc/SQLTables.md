@@ -10,7 +10,7 @@
 | idcard    | char(20)     | NO   |     | NULL    |                |
 | studentid | char(20)     | NO   |     | NULL    |                |
 | address   | varchar(100) | NO   |     | NULL    |                |
-| avatorurl | varchar(100) | NO   |     | NULL    |                |
+| avatarurl | varchar(100) | NO   |     | NULL    |                |
 | verified  | tinyint(1)   | YES  |     | NULL    |                |
 | score     | tinyint(4)   | YES  |     | NULL    |                |
 +-----------+--------------+------+-----+---------+----------------+

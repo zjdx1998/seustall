@@ -1,5 +1,7 @@
 /**
  * @author Hanyuu
+ * @version 1.0.3
+ * @date 2019/09/02
  */
 export class User
 {
@@ -16,21 +18,19 @@ export class User
 	public public(): UserInterface
 	{
 		var temp: any = this.data;
-		delete temp.password;
-		delete temp.idcard;
-		delete temp.studentid;
-		delete temp.address;
-		return this.data;
+		temp.password = undefined;
+		temp.idcard = undefined;
+		temp.studentid = undefined;
+		temp.address = undefined;
+		temp.phonenumber = undefined;
+		return temp;
 	}
 
 	public protect(): UserInterface
 	{
 		var temp: any = this.data;
-		delete temp.password;
-		// delete temp.idcard;
-		// delete temp.studentid;
-		// delete temp.address;
-		return this.data;
+		temp.password = undefined;
+		return temp;
 	}
 
 	modify(requests: UserInterface): string
@@ -68,10 +68,10 @@ export class User
 }
 
 
-export class Good
+export class Item
 {
-	data: GoodInterface;
-	constructor(data: GoodInterface)
+	data: ItemInterface;
+	constructor(data: ItemInterface)
 	{
 		this.data = data as any;
 		for (var key in data)
@@ -79,25 +79,27 @@ export class Good
 			console.log(key);
 		}
 	}
-	json(): GoodInterface
+	json(): ItemInterface
 	{
 		return this.data;
 	}
 }
 export interface UserInterface
 {
-	uuid: string,
+	uuid: number,
 	password?: string,
 	username?: string,
 	phonenumber?:number,
 	idcard?: string,
-	studentid?: string,
+	studentid?: number,
 	address?: string,
 	avatarurl?: string,
 	verified?: boolean,
 	score?: number,
+	note?: string,
+	info?:string
 }
-export interface GoodInterface
+export interface ItemInterface
 {
 	itemid?: number,
 	uuid: number,
