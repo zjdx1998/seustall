@@ -8,7 +8,7 @@ var nodemailer = require('nodemailer');
 import conf from './conf';
 import jwt from 'jsonwebtoken';
 import { UserInterface } from './role';
-export default function (src: UserInterface)
+export default async function (src: UserInterface)
 {
 
 
@@ -27,7 +27,7 @@ export default function (src: UserInterface)
 	//签发token
 	const payload = {
 		uuid: src.uuid,
-		sign: "mail",
+		useage: "mail",
 		generate: (new Date()).valueOf()
 	}
 	const timeout = {
@@ -46,15 +46,18 @@ export default function (src: UserInterface)
 		text: token,
 	};
 
-	const res = transporter.sendMail(mailOptions, function (error: any, info: any)
+	var res = false;
+	res = await transporter.sendMail(mailOptions, function (error: any, info: any)
 	{
 		if (error)
 		{
 			console.log(error);
-			return false;
+			res = false;
+		} else
+		{
+			console.log('Message sent: ' + info.response);
+			res = true;
 		}
-		console.log('Message sent: ' + info.response);
-		return true;
 	});
 	if (res)
 	{

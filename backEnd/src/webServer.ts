@@ -189,28 +189,57 @@ function webServer()
 		 */
 		router.get('/user/verify/:token', async (ctx, next) =>
 		{
-
+			const res = new Object() as any;
+			const userInfo = verifyToken(ctx.params.token);
+			if (userInfo.useage === "mail")
+			{
+				const verifyRes = database.verifyUser(userInfo.uuid);
+				if (verifyRes)
+				{
+					res.status = "success";
+					ctx.response.body = JSON.stringify(res);
+					ctx.response.type = "application/json";
+					return;
+				}
+			}
+			res.status = "failure";
+			res.info = "invaild request"
+			ctx.response.body = JSON.stringify(res);
+			ctx.response.type = "application/json";
+			return;
 		})
 		/**
 		 * @description 邮箱验证请求
 		 */
 		router.post('/user/verify', async (ctx, next) =>
 		{
-			var res: any = new Object() as any;
-			const verify: any = verifyToken(ctx.request.body.token);
-			if (!verify)
+			try
 			{
-				ctx.response.status = 403;
-				return;
-			}
-			const queryres:any = await database.queryUserS(verify.uuid);
-			if (mail(queryres as UserInterface))
+				var res: any = new Object() as any;
+				const verify: any = verifyToken(ctx.request.body.token);
+				if (!verify)
+				{
+					ctx.response.status = 403;
+					return;
+				}
+				const queryres: any = await database.queryUserS(verify.uuid);
+				if (await mail(queryres as UserInterface))
+				{
+					res.status = "success";
+				} else
+				{
+					res.status = "failure";
+				}
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = 'application/json';
+
+			} catch (error)
 			{
-				res.status = "success";
+				console.error(error);
+				res.status = "server error";
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = 'application/json';
 			}
-			res.status = "failure";
-			ctx.response.body = JSON.stringify(res);
-			ctx.response.type = 'application/json';
 		})
 		/**
 		 * @description token 用户添加求购/商品
@@ -297,7 +326,7 @@ function webServer()
 			try
 			{
 				const verifyres = verifyToken(ctx.request.body.token)
-				var uuid:any = await database.queryItem(ctx.request.body.itemid)
+				var uuid: any = await database.queryItem(ctx.request.body.itemid)
 				uuid = uuid.uuid;
 				if (!verifyres || uuid != verifyres.uuid)
 				{

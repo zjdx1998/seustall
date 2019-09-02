@@ -36,6 +36,7 @@
         color: azure;
         border-radius: 30px;
         padding: 2px 5px 2px 5px;
+        margin: auto;
         font-size: 12pt;
         width: 100px;
         box-shadow: #00000033 5px 5px;
@@ -52,4 +53,16 @@
         width: 60%;
         margin-left: auto;
         margin-right: auto;
+    }
+
+    .card {
+        text-shadow: #00000033 3px 3px 5px;
+        color: #000000aa;
+        padding: 2px 5px 2px 5px;
+        font-size: 16pt;
+    }
+
+    #license
+    {
+        margin-top:20px;
     }

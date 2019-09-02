@@ -1,5 +1,7 @@
 /**
  * @author Hanyuu
+ * @version 1.0.0
+ * @date 2019/09/02
  */
 import Server from "./webServer";
 

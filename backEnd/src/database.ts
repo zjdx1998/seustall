@@ -1,5 +1,7 @@
 /**
  * @author Hanyuu
+ * @version 1.0.6
+ * @date 2019/09/02
  */
 import sequelize, { Sequelize, ConnectionRefusedError, JSON, where } from 'sequelize';
 // The bug of sequelize https://github.com/sequelize/sequelize/issues/9489
@@ -44,19 +46,19 @@ export default class data
 	connect()
 	{
 		this.database.authenticate()
-		.then(function (err: any)
-		{
-			console.log(conf.except.dbConnT);
-		}).catch(function (err: any)
-		{
-			console.log(err);
-			throw Error(conf.except.dbConnF);
-		});
+			.then(function (err: any)
+			{
+				console.log(conf.except.dbConnT);
+			}).catch(function (err: any)
+			{
+				console.log(err);
+				throw Error(conf.except.dbConnF);
+			});
 		try
 		{
 
 			this.users = this.database.define(
-				conf.userTableName,users,
+				conf.userTableName, users,
 				{
 					timestamps: false,
 					engine: "Innodb",
@@ -127,7 +129,7 @@ export default class data
 		}
 	}
 	/**
-	 * @description 写入物品信息
+	 * @description 查询物品信息
 	 */
 	public async queryItem(itemid: number)
 	{
@@ -210,7 +212,7 @@ export default class data
 	/**
 	 * @description 电话号码登录
 	 */
-	public async loginByPhonenumber(phonenumber:string,password:string)
+	public async loginByPhonenumber(phonenumber: string, password: string)
 	{
 		var response = new Object() as any;
 		try
@@ -275,11 +277,12 @@ export default class data
 	/**
 	 * @description 更新用户信息
 	 */
-	public async updateUser(src:UserInterface)
+	public async updateUser(src: UserInterface)
 	{
-		try {
-			const queryres:any = await this.queryUser(src.uuid)
-			if (queryres.status ==="none")
+		try
+		{
+			const queryres: any = await this.queryUser(src.uuid)
+			if (queryres.status === "none")
 			{
 				return false;
 			}
@@ -291,12 +294,12 @@ export default class data
 					"studentid": src.studentid,
 					"address": src.address,
 					"avatarurl": src.avatarurl,
-					"info":src.info,
+					"info": src.info,
 				},
 				{
 					where:
 					{
-						"uuid":src.uuid
+						"uuid": src.uuid
 					}
 				}
 			);
@@ -309,58 +312,62 @@ export default class data
 	/**
 	 * @description 更新物品信息
 	 */
-	public async updateItem(src:ItemInterface)
+	public async updateItem(src: ItemInterface)
 	{
-		try {
-			const queryres:any = await this.queryItem(src.itemid as number)
-			if (queryres.status ==="none")
+		try
+		{
+			const queryres: any = await this.queryItem(src.itemid as number)
+			if (queryres.status === "none")
 			{
 				return false;
 			}
 			const res = await this.items.update(
 				{
-					"title":src.title,
-					"type":src.type,
-					"price":src.price,
-					"imgurl":src.imgurl,
-					"depreciatione":src.depreciatione,
-					"note":src.note,
+					"title": src.title,
+					"type": src.type,
+					"price": src.price,
+					"imgurl": src.imgurl,
+					"depreciatione": src.depreciatione,
+					"note": src.note,
 				},
 				{
 					where:
 					{
-						"itemid":src.itemid
+						"itemid": src.itemid
 					}
 				}
 			)
 			return true;
-		} catch (error) {
+		} catch (error)
+		{
 		}
 	}
 	/**
 	 * @description 发起交易
 	 */
-	public async tradeItem(itemid:number,uuid:number)
+	public async tradeItem(itemid: number, uuid: number)
 	{
-		try {
-			const queryres:any = await this.queryItem(itemid as number)
-			if (queryres.status ==="none")
+		try
+		{
+			const queryres: any = await this.queryItem(itemid as number)
+			if (queryres.status === "none")
 			{
 				return false;
 			}
 			const res = await this.items.update(
 				{
-					sold:uuid
+					sold: uuid
 				},
 				{
 					where:
 					{
-						itemid:itemid
+						itemid: itemid
 					}
 				}
 			)
 			return true;
-		} catch (error) {
+		} catch (error)
+		{
 		}
 	}
 	/**
@@ -412,6 +419,34 @@ export default class data
 			console.error(`[ERROR] ${error}`);
 			return { status: "failure" };
 		}
+	}
+	/**
+	 * @description 验证用户身份
+	 */
+	public async verifyUser(uuid: number)
+	{
+		const res = await this.queryUserS(uuid);
+		if (res)
+		{
+			const temp = await this.users.update(
+				{
+					"verified": 1
+				},
+				{
+					where:
+					{
+						uuid
+					}
+				}
+			).catch((err: any) =>
+			{
+				console.error(err)
+			}
+			)
+			return true;
+		}
+		return false;
+
 	}
 	/**
 	 * @description 响应修饰器

@@ -1,3 +1,8 @@
+/**
+ * @author Hanyuu
+ * @version 1.0.3
+ * @date 2019/09/02
+ */
 import sequelize from 'sequelize';
 export default {
 	itemid: {
