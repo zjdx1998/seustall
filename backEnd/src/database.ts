@@ -350,7 +350,7 @@ export default class data
 		try
 		{
 			const queryres: any = await this.queryItem(itemid as number)
-			if (queryres.status === "none")
+			if (queryres.status === "none" || queryres.sold > 0)
 			{
 				return false;
 			}
@@ -368,6 +368,8 @@ export default class data
 			return true;
 		} catch (error)
 		{
+			console.error(error)
+			return false;
 		}
 	}
 	/**

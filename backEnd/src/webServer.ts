@@ -351,6 +351,36 @@ function webServer()
 				ctx.response.body = JSON.stringify(res)
 			}
 		})
+		/**
+		 * @description 物品交易
+		 */
+		router.post('/item/trade', async (ctx, next) =>
+		{
+			try
+			{
+				var res = new Object() as any;
+				const verifyres = verifyToken(ctx.request.body.token)
+				if (!verifyres)
+				{
+					ctx.response.status = 403;
+					return;
+				}
+				const restrade = await database.tradeItem(ctx.body.itemid, verifyres.uuid);
+				if (restrade)
+				{
+					res.status = "success";
+				} else
+				{
+					res.status = "failure";
+					res.info = "item not availabe for trade"
+				}
+
+			} catch (error)
+			{
+				res.status = "filure";
+				res.info = "invaild requests";
+			}
+		});
 		app.listen(conf.port);
 	} catch (error)
 	{
