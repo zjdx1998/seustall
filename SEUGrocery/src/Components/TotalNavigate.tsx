@@ -9,25 +9,175 @@ import {
   createAppContainer,
   createDrawerNavigator,
   DrawerItems,
+  DrawerNavigator,
 } from 'react-navigation';
-import FirstPage from '../pages/FirstPage';
 import {Text} from 'react-native-elements';
-import {ScrollView, SafeAreaView, StyleSheet, Image} from 'react-native';
+import {ScrollView, SafeAreaView, StyleSheet, Image, View} from 'react-native';
 import detailPage from '../pages/detailPage';
 import StartPage from '../pages/StartPage';
 import * as SP from '../Common/ScreenProperty';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import SignInUI from '../pages/SignInUI';
+import MyGroceryPage from '../pages/MyGroceryPage';
+import WhatIBoughtPage from '../pages/WhatIBoughtPage';
+import WhatIWantPage from '../pages/WhatIWantPage';
+import ReleaseGoodInformation from '../pages/ReleaseGoodInformation';
+import ReleaseIWantPage from '../pages/ReleaseIWantPage';
+import ReleaseUserInformationPage from "../pages/ReleaseUserInformationPage";
+import PostPhotos from "./PostPhotos";
+// const customComponent = props => (
+//   <ScrollView style={{backgroundColor: '#FFE4E1', flex: 1}}>
+//     <SafeAreaView forceInset={{top: 'always', horizontal: 'never'}}>
+//       <DrawerItems {...props} />
+//     </SafeAreaView>
+//   </ScrollView>
+// );
 
-const customComponent = props => (
-  <ScrollView style={{backgroundColor: '#FFE4E1', flex: 1}}>
-    <SafeAreaView forceInset={{top: 'always', horizontal: 'never'}}>
-      <DrawerItems {...props} />
-    </SafeAreaView>
-  </ScrollView>
+const customComponents = props => (
+  <View style={styles.baseContainer}>
+    <View style={styles.roleBaseContainer}>
+      <View style={styles.roleAvatorContainer}>
+        <Image
+          style={{
+            width: SP.WB(23),
+            height: SP.WB(23),
+            borderRadius: SP.WB(26),
+          }}
+          source={{
+            uri:
+              'http://img5.duitang.com/uploads/item/201512/18/20151218165511_AQW4B.jpeg',
+          }}
+        />
+      </View>
+      <View style={styles.roleInfoContainer}>
+        <TouchableOpacity
+          onPress={() => props.navigation.navigate('release_info')}>
+          <Text style={styles.roleInfoNameText}>韩愈</Text>
+          <Text style={styles.roleInfoText}>"我是韩愈。"</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+    <View style={styles.menuBaseContainer}>
+      <TouchableOpacity
+        style={[
+          styles.menuSingleContainer,
+          {
+            backgroundColor:
+              that.state.currentIndex === 1 ? '#a52a7c' : '#249aa3',
+          },
+        ]}
+        onPress={() => {
+          // if (that.state.currentIndex === 1) {
+          //   props.navigation.closeDrawer();
+          // } else {
+          //   props.navigation.navigate('home');
+          // }
+
+          props.navigation.closeDrawer();
+          props.navigation.navigate('home', {
+            go_back_key: props.navigation.state.key,
+          });
+          that.setState({currentIndex: 1});
+        }}>
+        <Text style={styles.menuTitleStyle}>首页</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[
+          styles.menuSingleContainer,
+          {
+            backgroundColor:
+              that.state.currentIndex === 2 ? '#a52a7c' : '#249aa3',
+          },
+        ]}
+        onPress={() => {
+          // if (that.state.currentIndex === 2) {
+          //   props.navigation.closeDrawer();
+          // } else {
+          //   props.navigation.navigate('page1');
+          // }
+          props.navigation.closeDrawer();
+          props.navigation.navigate('page1', {
+            go_back_key: props.navigation.state.key,
+          });
+          that.setState({currentIndex: 2});
+        }}>
+        <Text style={styles.menuTitleStyle}>我的铺子</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[
+          styles.menuSingleContainer,
+          {
+            backgroundColor:
+              that.state.currentIndex === 3 ? '#a52a7c' : '#249aa3',
+          },
+        ]}
+        onPress={() => {
+          // if (that.state.currentIndex === 3) {
+          //   props.navigation.closeDrawer();
+          // } else {
+          //   props.navigation.navigate('page2');
+          // }
+          props.navigation.closeDrawer();
+          props.navigation.navigate('page2', {
+            go_back_key: props.navigation.state.key,
+          });
+          that.setState({currentIndex: 3});
+          // props.navigation.navigate('firstPage', {
+          //   title: 'Home',
+          //   jumpHomeCallBack: index => {
+          //     this.setState({currentIndex: index});
+          //   },
+          // });
+        }}>
+        <Text style={styles.menuTitleStyle}>我买到的</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[
+          styles.menuSingleContainer,
+          {
+            backgroundColor:
+              that.state.currentIndex === 4 ? '#a52a7c' : '#249aa3',
+          },
+        ]}
+        onPress={() => {
+          props.navigation.closeDrawer();
+          props.navigation.navigate('page3', {
+            go_back_key: props.navigation.state.key,
+          });
+          that.setState({currentIndex: 4});
+        }}>
+        <Text style={styles.menuTitleStyle}>我想买的</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[
+          styles.menuSingleContainer,
+          {
+            backgroundColor:
+              that.state.currentIndex === 5 ? '#a52a7c' : '#249aa3',
+          },
+        ]}
+        onPress={() => {
+          props.navigation.closeDrawer();
+          props.navigation.navigate('page4', {
+            go_back_key: props.navigation.state.key,
+          });
+          that.setState({currentIndex: 3});
+        }}>
+        <Text style={styles.menuTitleStyle}>收藏夹</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
 );
 
 const TotalNav = createDrawerNavigator(
   {
+    signin: {
+      screen: SignInUI,
+      navigationOptions: {
+        drawerLabel: () => null,
+      },
+    },
     home: {
       screen: MainPages,
       navigationOptions: {
@@ -35,27 +185,45 @@ const TotalNav = createDrawerNavigator(
       },
     },
     page1: {
-      screen: FirstPage,
+      screen: MyGroceryPage,
       navigationOptions: {
         drawerLabel: '我的铺子',
       },
     },
     page2: {
-      screen: FirstPage,
+      screen: WhatIBoughtPage,
       navigationOptions: {
         drawerLabel: '我买到的',
       },
     },
     page3: {
-      screen: FirstPage,
+      screen: WhatIBoughtPage,
       navigationOptions: {
         drawerLabel: '我想买的',
       },
     },
     page4: {
-      screen: FirstPage,
+      screen: WhatIWantPage,
       navigationOptions: {
         drawerLabel: '收藏夹',
+      },
+    },
+    release_good: {
+      screen: ReleaseGoodInformation,
+      navigationOptions: {
+        drawerLabel: () => null,
+      },
+    },
+    release_want: {
+      screen: ReleaseIWantPage,
+      navigationOptions: {
+        drawerLabel: () => null,
+      },
+    },
+    release_info: {
+      screen: ReleaseUserInformationPage,
+      navigationOptions: {
+        drawerLabel: () => null,
       },
     },
     detailPage: {
@@ -70,26 +238,62 @@ const TotalNav = createDrawerNavigator(
         drawerLabel: () => null,
       },
     },
-  },
-  {
-    order: ['home', 'detailPage', 'page1', 'page2', 'page3', 'page4', 'startP'],
-    initialRouteName: 'startP',
-    initialRouteParams: {
-      jumpHomeCallBack: index => {
-        this.setState({currentIndex: index});
+    loginP: {
+      screen: SignInUI,
+      navigationOptions: {
+        drawerLabel: () => null,
       },
     },
+    postPhoto: {
+      screen: PostPhotos,
+      navigationOptions: {
+        drawerlabel: () => null,
+      },
+    },
+  },
+  {
+    order: [
+      'home',
+      'signin',
+      'detailPage',
+      'page1',
+      'page2',
+      'page3',
+      'page4',
+      'startP',
+      'loginP',
+      'release_good',
+      'release_want',
+      'release_info',
+      'postPhoto',
+    ],
+    initialRouteName: 'startP',
+    backBehavior: 'initialRoute',
+    // initialRouteParams: {
+    //   jumpHomeCallBack: index => {
+    //     this.setState({currentIndex: index});
+    //   },
+    // },
     drawerLockMode: 'unlocked',
+    drawerWidth: SP.WB(70),
     drawerPosition: 'left',
-    contentComponent: customComponent,
+    drawerBackgroundColor: 'transparent',
+    overlayColor: 'transparent',
+    contentComponent: customComponents,
   },
 );
 
 const AppNavigation = createAppContainer(TotalNav);
-
+let that;
 export default class AppTotalNavigation extends Component {
+  public state: {currentIndex: number};
   constructor(props) {
     super(props);
+
+    this.state = {
+      currentIndex: 1,
+    };
+    that = this;
   }
 
   render() {
@@ -97,85 +301,52 @@ export default class AppTotalNavigation extends Component {
   }
 }
 
-// const customComponents = props => (
-//   <View style={styles.baseContainer}>
-//     <View style={styles.roleBaseContainer}>
-//       <View style={styles.roleAvatorContainer}>
-//         <Image
-//           style={{width: SP.WB(1), height: SP.WB(1), borderRadius: SP.WB(1.5)}}
-//         />
-//         source=
-//         {{
-//           uri:
-//             'http://img5.duitang.com/uploads/item/201512/18/20151218165511_AQW4B.jpeg',
-//         }}
-//         />
-//       </View>
-//       <View style={styles.roleInfoContainer}>
-//         <Text style={styles.roleInfoNameText}>SEU</Text>
-//         <Text style={styles.roleInfoText}>"测试成功"</Text>
-//       </View>
-//     </View>
-//     <View style={styles.menuBaseContainer}>
-//       <TouchableOpacity
-//         style={styles.menuSingleContainer}
-//         onPress={() => {
-//           this.setState({currentIndex: 1});
-//           props.navigation.navigate('home', {
-//             title: '跳转首页',
-//             jumpHomeCallBack: index => {
-//               this.setState({currentIndex: index});
-//             },
-//           });
-//         }}>
-//         <View>
-//           <Text style={styles.roleInfoText}>首页</Text>
-//         </View>
-//       </TouchableOpacity>
-//     </View>
-//   </View>
-// );
-
-// const styles = StyleSheet.create({
-//   baseContainer: {
-//     flex: 1,
-//     flexDirection: 'column',
-//     justifyContent: 'space-between',
-//   },
-//   roleBaseContainer: {
-//     flex: 1,
-//     flexDirection: 'row',
-//     paddingTop: SP.HB(5),
-//   },
-//   roleAvatorContainer: {
-//     flex: 1,
-//     marginHorizontal: SP.WB(5),
-//   },
-//   roleInfoContainer: {
-//     flex: 2,
-//     flexDirection: 'column',
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   roleInfoNameText: {
-//     fontSize: 18,
-//     color: '#ffffff',
-//     marginBottom: SP.HB(2),
-//   },
-//   roleInfoText: {
-//     fontSize: 12,
-//     color: '#d4d2d9',
-//     fontStyle: 'italic',
-//     paddingRight: SP.WB(2),
-//   },
-//   menuBaseContainer: {
-//     flex: 3,
-//     flexDirection: 'column',
-//     backgroundColor: '#249aa3',
-//   },
-//   menuSingleContainer: {
-//     borderBottomWidth: SP.WB(5),
-//     borderBottomColor: '#fff',
-//     backgroundColor: this.state.currentIndex === 1 ? '#a52a7c' : '#249aa3',
-//   },
-// });
+const styles = StyleSheet.create({
+  baseContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+  },
+  roleBaseContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    paddingTop: SP.HB(5),
+    backgroundColor: '#cc6699',
+  },
+  roleAvatorContainer: {
+    flex: 1,
+    marginHorizontal: SP.WB(5),
+  },
+  roleInfoContainer: {
+    flex: 2,
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    marginTop: SP.HB(1),
+  },
+  roleInfoNameText: {
+    fontSize: 30,
+    color: '#fff',
+    marginBottom: SP.HB(2),
+  },
+  roleInfoText: {
+    fontSize: 18,
+    color: '#fff',
+    fontStyle: 'italic',
+    paddingRight: SP.WB(2),
+  },
+  menuBaseContainer: {
+    flex: 3,
+    flexDirection: 'column',
+    backgroundColor: '#CC6699',
+  },
+  menuSingleContainer: {
+    borderBottomWidth: SP.HB(0.1),
+    borderBottomColor: '#fff',
+  },
+  menuTitleStyle: {
+    fontSize: 24,
+    color: '#fff',
+    marginLeft: SP.WB(3),
+  },
+});

@@ -1,6 +1,6 @@
 /*
   @version: 0.0.0
-  @author: 71117417 卢立强
+  @author: 71117417 卢立强 71117123 张建东
   @date: 2019-8-22
 */
 import React, {Component} from 'react';
@@ -10,6 +10,7 @@ import {
   ScrollView,
   StyleSheet,
   Dimensions,
+  Alert,
 } from 'react-native';
 import {
   Text,
@@ -19,13 +20,72 @@ import {
   Avatar,
 } from 'react-native-elements';
 import LocalBackHeader from '../Components/LocalBackHeader';
+import * as SP from '../Common/ScreenProperty';
+const itemURL = 'http://inari.ml:8080/item/';
+const userURL = 'http://inari.ml:8080/user/';
 
 var {height, width} = Dimensions.get('window');
 export default class DetailPage extends Component {
-  constructor(props: string) {
+  private props: any;
+
+  constructor(props) {
     super(props);
     this.state.uuid = props;
   }
+
+  fetchData = () => {
+    fetch(itemURL + this.props.navigation.state.params.itemid)
+      .then(response => response.json())
+      .then(rT => {
+        // this.setState({
+        //   itemid: rT.itemid,
+        //   // username: itemURL + this.props.navigation.state.params.itemid,
+        //   uuid: rT.uuid,
+        //   title: rT.title,
+        //   type: rT.type,
+        //   price: parseFloat(rT.price),
+        //   imgurl: rT.imgurl,
+        //   note: rT.note,
+        //   depreciatione: rT.depreciatione,
+        // });
+        fetch(userURL + rT.uuid)
+          .then(res => res.json())
+          .then(user => {
+            this.setState({
+              username: user.username,
+              avatorurl: user.avatarurl,
+              itemid: rT.itemid,
+              // username: itemURL + this.props.navigation.state.params.itemid,
+              uuid: rT.uuid,
+              title: rT.title,
+              type: rT.type,
+              price: parseFloat(rT.price),
+              imgurl: rT.imgurl,
+              note: rT.note,
+              depreciatione: rT.depreciatione,
+            });
+          })
+          .catch(e => {
+            console.log('Oops, error');
+            // Alert.alert('cnm');
+          });
+
+        console.log(rT);
+      })
+      .catch(e => {
+        console.log('Oops, error');
+        // Alert.alert('cnm');
+      });
+  };
+
+  componentDidMount() {
+    this.fetchData();
+  }
+
+  componentDidUpdate() {
+    this.fetchData();
+  }
+
   state = {
     itemid: '',
     uuid: '',
@@ -41,10 +101,11 @@ export default class DetailPage extends Component {
     username: 'WakamiyaEve',
     avatorurl: 'https://avatars2.githubusercontent.com/u/45632558?s=400&v=4',
   };
+
   render() {
     return (
       <ScrollView style={styles.test}>
-        <View style={{height: 50}}>
+        <View style={{height: SP.HB(15)}}>
           <LocalBackHeader navigation={this.props.navigation} />
         </View>
         <Image
@@ -79,6 +140,7 @@ export default class DetailPage extends Component {
     );
   }
 }
+
 const styles = StyleSheet.create({
   test: {
     backgroundColor: 'white',

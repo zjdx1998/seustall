@@ -36,7 +36,7 @@ export default class StartPage extends Component {
         duration: 2000,
         easing: Easing.linear,
       }),
-    ]).start(() => this.props.navigation.navigate('home'));
+    ]).start(() => this.props.navigation.navigate('loginP'));
   }
 
   render() {

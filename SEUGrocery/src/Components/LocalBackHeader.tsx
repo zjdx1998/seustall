@@ -4,28 +4,44 @@
   @date: 2019-8-22
 */
 import React, {Component} from 'react';
+import {
+  StyleSheet,
+  View,
+  Dimensions,
+  Image,
+  Alert,
+  Text,
+  ImageBackground,
+} from 'react-native';
 import {Header} from 'react-native-elements';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 export default class extends Component {
+  private props: any;
   constructor(props) {
     super(props);
   }
   render() {
+    const params = this.props.navigation.state.params || {};
     return (
       <Header
         statusBarProps={{
           barStyle: 'light-content',
-          backgroundColor: '#EED2EE',
+          backgroundColor: '#CC6699',
         }}
-        containerStyle={{marginTop: -25}}
         placement="center"
-        backgroundColor="#EED2EE"
+        backgroundColor="#CC6699"
         leftComponent={
           <AntDesign
             name="left"
-            size={30}
+            size={36}
             color="#030303"
-            onPress={() => this.props.navigation.navigate('home')}
+            onPress={() => {
+              if (params.go_back_key == null) {
+                this.props.navigation.navigate('home');
+              } else {
+                this.props.navigation.navigate(params.go_back_key);
+              }
+            }}
           />
         }
       />
