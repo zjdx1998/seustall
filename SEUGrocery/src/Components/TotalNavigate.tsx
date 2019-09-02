@@ -23,8 +23,8 @@ import WhatIBoughtPage from '../pages/WhatIBoughtPage';
 import WhatIWantPage from '../pages/WhatIWantPage';
 import ReleaseGoodInformation from '../pages/ReleaseGoodInformation';
 import ReleaseIWantPage from '../pages/ReleaseIWantPage';
-import ReleaseUserInformationPage from "../pages/ReleaseUserInformationPage";
-import PostPhotos from "./PostPhotos";
+import ReleaseUserInformationPage from '../pages/ReleaseUserInformationPage';
+import PostPhotos from './PostPhotos';
 // const customComponent = props => (
 //   <ScrollView style={{backgroundColor: '#FFE4E1', flex: 1}}>
 //     <SafeAreaView forceInset={{top: 'always', horizontal: 'never'}}>
@@ -62,8 +62,7 @@ const customComponents = props => (
         style={[
           styles.menuSingleContainer,
           {
-            backgroundColor:
-              that.state.currentIndex === 1 ? '#a52a7c' : '#249aa3',
+            backgroundColor: that.state.currentIndex === 1 ? '#fff' : '#CC6699',
           },
         ]}
         onPress={() => {
@@ -79,14 +78,19 @@ const customComponents = props => (
           });
           that.setState({currentIndex: 1});
         }}>
-        <Text style={styles.menuTitleStyle}>首页</Text>
+        <Text
+          style={[
+            styles.menuTitleStyle,
+            {color: that.state.currentIndex === 1 ? '#CC6699' : '#fff'},
+          ]}>
+          首页
+        </Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[
           styles.menuSingleContainer,
           {
-            backgroundColor:
-              that.state.currentIndex === 2 ? '#a52a7c' : '#249aa3',
+            backgroundColor: that.state.currentIndex === 2 ? '#fff' : '#CC6699',
           },
         ]}
         onPress={() => {
@@ -101,14 +105,19 @@ const customComponents = props => (
           });
           that.setState({currentIndex: 2});
         }}>
-        <Text style={styles.menuTitleStyle}>我的铺子</Text>
+        <Text
+          style={[
+            styles.menuTitleStyle,
+            {color: that.state.currentIndex === 2 ? '#CC6699' : '#fff'},
+          ]}>
+          我的铺子
+        </Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[
           styles.menuSingleContainer,
           {
-            backgroundColor:
-              that.state.currentIndex === 3 ? '#a52a7c' : '#249aa3',
+            backgroundColor: that.state.currentIndex === 3 ? '#fff' : '#CC6699',
           },
         ]}
         onPress={() => {
@@ -129,15 +138,20 @@ const customComponents = props => (
           //   },
           // });
         }}>
-        <Text style={styles.menuTitleStyle}>我买到的</Text>
+        <Text
+          style={[
+            styles.menuTitleStyle,
+            {color: that.state.currentIndex === 3 ? '#CC6699' : '#fff'},
+          ]}>
+          我买到的
+        </Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={[
           styles.menuSingleContainer,
           {
-            backgroundColor:
-              that.state.currentIndex === 4 ? '#a52a7c' : '#249aa3',
+            backgroundColor: that.state.currentIndex === 4 ? '#fff' : '#CC6699',
           },
         ]}
         onPress={() => {
@@ -147,14 +161,19 @@ const customComponents = props => (
           });
           that.setState({currentIndex: 4});
         }}>
-        <Text style={styles.menuTitleStyle}>我想买的</Text>
+        <Text
+          style={[
+            styles.menuTitleStyle,
+            {color: that.state.currentIndex === 4 ? '#CC6699' : '#fff'},
+          ]}>
+          我想买的
+        </Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[
           styles.menuSingleContainer,
           {
-            backgroundColor:
-              that.state.currentIndex === 5 ? '#a52a7c' : '#249aa3',
+            backgroundColor: that.state.currentIndex === 5 ? '#fff' : '#CC6699',
           },
         ]}
         onPress={() => {
@@ -164,7 +183,13 @@ const customComponents = props => (
           });
           that.setState({currentIndex: 3});
         }}>
-        <Text style={styles.menuTitleStyle}>收藏夹</Text>
+        <Text
+          style={[
+            styles.menuTitleStyle,
+            {color: that.state.currentIndex === 5 ? '#CC6699' : '#fff'},
+          ]}>
+          收藏夹
+        </Text>
       </TouchableOpacity>
     </View>
   </View>
@@ -306,12 +331,14 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'space-between',
+    backgroundColor: 'white',
   },
   roleBaseContainer: {
     flex: 1,
     flexDirection: 'row',
     paddingTop: SP.HB(5),
     backgroundColor: '#cc6699',
+    marginBottom: SP.HB(0.5),
   },
   roleAvatorContainer: {
     flex: 1,
@@ -341,12 +368,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#CC6699',
   },
   menuSingleContainer: {
-    borderBottomWidth: SP.HB(0.1),
-    borderBottomColor: '#fff',
+    marginVertical: SP.HB(1),
+    // borderTopWidth: SP.HB(1),
+    // borderBottomWidth: SP.HB(1),
+    // borderBottomColor: '#CC6699',
+    // borderTopColor: '#CC6699',
   },
   menuTitleStyle: {
     fontSize: 24,
-    color: '#fff',
     marginLeft: SP.WB(3),
   },
 });
