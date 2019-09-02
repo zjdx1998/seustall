@@ -82,6 +82,10 @@ const customComponents = props => (
           style={[
             styles.menuTitleStyle,
             {color: that.state.currentIndex === 1 ? '#CC6699' : '#fff'},
+            {
+              marginHorizontal:
+                that.state.currentIndex === 1 ? SP.WB(10) : SP.WB(3),
+            },
           ]}>
           首页
         </Text>
@@ -109,6 +113,10 @@ const customComponents = props => (
           style={[
             styles.menuTitleStyle,
             {color: that.state.currentIndex === 2 ? '#CC6699' : '#fff'},
+            {
+              marginHorizontal:
+                that.state.currentIndex === 2 ? SP.WB(10) : SP.WB(3),
+            },
           ]}>
           我的铺子
         </Text>
@@ -142,6 +150,10 @@ const customComponents = props => (
           style={[
             styles.menuTitleStyle,
             {color: that.state.currentIndex === 3 ? '#CC6699' : '#fff'},
+            {
+              marginHorizontal:
+                that.state.currentIndex === 3 ? SP.WB(10) : SP.WB(3),
+            },
           ]}>
           我买到的
         </Text>
@@ -165,6 +177,10 @@ const customComponents = props => (
           style={[
             styles.menuTitleStyle,
             {color: that.state.currentIndex === 4 ? '#CC6699' : '#fff'},
+            {
+              marginHorizontal:
+                that.state.currentIndex === 4 ? SP.WB(10) : SP.WB(3),
+            },
           ]}>
           我想买的
         </Text>
@@ -181,12 +197,16 @@ const customComponents = props => (
           props.navigation.navigate('page4', {
             go_back_key: props.navigation.state.key,
           });
-          that.setState({currentIndex: 3});
+          that.setState({currentIndex: 5});
         }}>
         <Text
           style={[
             styles.menuTitleStyle,
             {color: that.state.currentIndex === 5 ? '#CC6699' : '#fff'},
+            {
+              marginHorizontal:
+                that.state.currentIndex === 5 ? SP.WB(10) : SP.WB(3),
+            },
           ]}>
           收藏夹
         </Text>
@@ -368,6 +388,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#CC6699',
   },
   menuSingleContainer: {
+    borderRadius: SP.HB(1),
     marginVertical: SP.HB(1),
     // borderTopWidth: SP.HB(1),
     // borderBottomWidth: SP.HB(1),
@@ -376,6 +397,6 @@ const styles = StyleSheet.create({
   },
   menuTitleStyle: {
     fontSize: 24,
-    marginLeft: SP.WB(3),
+    margin: SP.WB(3),
   },
 });
