@@ -7,12 +7,10 @@ import sequelize, { Sequelize, ConnectionRefusedError, JSON, where } from 'seque
 // The bug of sequelize https://github.com/sequelize/sequelize/issues/9489
 let mysql2 = require('mysql2');
 import conf from './conf';
-import { UserInterface, ItemInterface, User } from './role';
-import { ResolvePlugin } from 'webpack';
-import { JsonWebTokenError } from 'jsonwebtoken';
+import { UserInterface, ItemInterface, favouritesInterface, User } from './role';
 import users from './users';
 import items from './items';
-import { stack } from 'sequelize/types/lib/utils';
+import favourites, { favouritesInedxes } from './favourites';
 
 
 export default class data
@@ -20,6 +18,7 @@ export default class data
 	database: Sequelize;
 	users: any;
 	items: any;
+	favourites: any;
 	isConnected: boolean
 
 	constructor()
@@ -48,17 +47,18 @@ export default class data
 		this.database.authenticate()
 			.then(function (err: any)
 			{
-				console.log(conf.except.dbConnT);
+				// console.log(conf.except.dbConnT);
 			}).catch(function (err: any)
 			{
-				console.log(err);
+				console.error(err);
 				throw Error(conf.except.dbConnF);
 			});
 		try
 		{
 
 			this.users = this.database.define(
-				conf.userTableName, users,
+				conf.table.users,
+				users,
 				{
 					timestamps: false,
 					engine: "Innodb",
@@ -66,7 +66,7 @@ export default class data
 				}
 			);
 			this.items = this.database.define(
-				conf.itemTableName,
+				conf.table.items,
 				items,
 				{
 					timestamps: false,
@@ -74,6 +74,15 @@ export default class data
 					charset: "utf8",
 				}
 			);
+			this.favourites = this.database.define(
+				conf.table.favourites,
+				favourites,
+				{
+					timestamps: false,
+					engine: "Innodb",
+					charset: "utf8",
+				}
+			)
 			this.database.sync();
 		} catch (error)
 		{
@@ -92,12 +101,12 @@ export default class data
 		try
 		{
 			await this.items.create(item);
-			response.status = "success";
+			response.status = conf.res.success;
 			return response;
 		} catch (error)
 		{
 			console.error(`[ERROR] failed while writing item\n${error}`);
-			response.status = "faliure";
+			response.status = conf.res.failure;
 			response.info = "invaild request";
 			return response;
 		}
@@ -113,17 +122,17 @@ export default class data
 			const res = await this.queryPhoneNumber(user.phonenumber as number);
 			if (res)
 			{
-				response.status = "failure";
+				response.status = conf.res.failure;
 				response.info = "phone number already token"
 				return response;
 			}
 			await this.users.create(user);
-			response.status = "success";
+			response.status = conf.res.success;
 			return response;
 		} catch (error)
 		{
 			console.error("[ERROR] Database connect failed.\n" + error);
-			response.status = "failure";
+			response.status = conf.res.failure;
 			response.info = "invaild request";
 			return response;
 		}
@@ -227,21 +236,21 @@ export default class data
 			{
 				if (res.password === password)
 				{
-					response.status = "success";
+					response.status = conf.res.success;
 					response.info = new User(res).protect();
 					return response;
 				}
-				response.status = "failure";
+				response.status = conf.res.failure;
 				response.info = "password incorrect";
 				return response;
 			}
-			response.status = "failure";
+			response.status = conf.res.failure;
 			response.info = "user not found";
 			return response;
 		} catch (error)
 		{
 			console.error("[ERROR] Database connect failed.\n" + error);
-			response.status = "failure";
+			response.status = conf.res.failure;
 			response.info = "bad request";
 			return response;
 		}
@@ -340,6 +349,7 @@ export default class data
 			return true;
 		} catch (error)
 		{
+			console.error(error)
 		}
 	}
 	/**
@@ -448,7 +458,88 @@ export default class data
 			return true;
 		}
 		return false;
+	}
+	/**
+	 * @description 收藏夹查询
+	 * @todo
+	 */
+	public async favouritesQuery(uuid: number)
+	{
+		try
+		{
+			const res = this.favourites.findAll({
+				where:
+				{
+					uuid
+				}
+			})
+			return res;
 
+		} catch (error)
+		{
+			return [];
+		}
+	}
+	/**
+	 * @description 收藏夹批量添加
+	 * @todo
+	 */
+	public async favouritesAdd(uuid: string, src: any)
+	{
+		var res = new Object() as any;
+		try
+		{
+
+			for (var i in src)
+			{
+				const itemid = i;
+				this.favourites.create(
+					{
+						uuid,
+						itemid
+					}
+				)
+			}
+			res.status = conf.res.success;
+			return res
+		} catch (error)
+		{
+			res.status = conf.res.failure;
+			res.info = error;
+			return res;
+		}
+	}
+	/**
+	 * @description 收藏夹批量删除
+	*/
+	public async favouritesDelete(uuid: string, res: any)
+	{
+		try
+		{
+			for (var i in res)
+			{
+				const itemid: any = i;
+				this.favourites.destory(
+					{
+						where:
+						{
+							$and: [
+								{ uuid: uuid },
+								{ itemid: itemid }
+							]
+						}
+					}
+				)
+			}
+			res.status = conf.res.success;
+			return res
+		} catch (error)
+		{
+			console.error(error);
+			res.status = conf.res.failure;
+			res.info = error;
+			return res
+		}
 	}
 	/**
 	 * @description 响应修饰器

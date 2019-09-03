@@ -4,30 +4,67 @@
  * @description config
  */
 export default {
-	"userTableName":"users",
-	"itemTableName":"goods",
-	"port":4000,
-	"host":"localhost",
-	"datatable":"foof",
-	"username":"app",
-	"password": "foof",
-	"avatar": "./image/avatar",
-	"imgurl":"./image/item",
-	"avatarfs": "./asset/image/avatar",
-	"imgurlfs": "./asset/image/item",
-	"secretkey": "5593a7901f990f28c117027f519a1a851c382520",
-	"except":{
-		"reset":"fetal error,reseting server",
-		"dbConnT":"[info] database connect success",
-		"dbConnF":"[error] database connect failed",
-		"database exception":"database exception",
-		"invaildReq":"invaild request"
+	res:
+	{
+		success: "success",
+		failure: "failure",
 	},
-	"mailConfig":
+	table:
+	{
+
+		users: "users",
+		items: "items",
+		favourites: "favourites",
+	},
+	port: 4000,
+	host: "localhost",
+	datatable: "foof",
+	username: "app",
+	password: "foof",
+	avatar: "./image/avatar",
+	imgurl: "./image/item",
+	avatarfs: "./asset/image/avatar",
+	imgurlfs: "./asset/image/item",
+	secretkey: "5593a7901f990f28c117027f519a1a851c382520",
+	except: {
+		reset: "fetal error,reseting server",
+		dbConnT: "[info] database connect success",
+		dbConnF: "[error] database connect failed",
+		databaseexception: "database exception",
+		invaildReq: "invaild request"
+	},
+	SMSConfig:
+	{
+		host: "https://webapi.sms.mob.com/sms/verify",
+		appkey: "2c3bb00a9ca40",
+		zone: "86",
+		error:
+		{
+			200: "验证成功",
+			405: "AppKey为空",
+			456: "国家代码或手机号码为空",
+			457: "手机号码格式错误",
+			466: "请求校验的验证码为空",
+			467: "请求校验验证码频繁",
+			468: "验证码错误",
+			474: "没有打开服务端验证开关",
+		}
+	},
+	mailConfig:
 	{
 		serivce: "qq",
 		user: "wakamiyaeve@qq.com",
 		pass: "azffygurwzxfdhgf",
-
+	},
+	searchConfig:
+	{
+		host: "http://hanyuu.top:9200/index-users/_search",
+	},
+	sold:
+	{
+		sale: 1,
+		sold: 2,
+		want: -1,
+		got: -2,
 	}
 }

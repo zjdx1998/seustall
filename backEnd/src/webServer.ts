@@ -3,25 +3,23 @@
  * @version 1.0.0
  * @date 2019/08/31
  */
-console.log("[info] in dex loaded.");
+console.log("[info] web server loaded.");
 import Koa from 'koa';
 import koaBody from 'koa-body';
 import logger from 'koa-logger';
 import koaRouter from 'koa-router';
 import fs from 'fs';
 import path from 'path';
+import jwt, { decode } from 'jsonwebtoken';
+import { User, Item, UserInterface, ItemInterface } from './role';
 import conf from './conf';
 import data from "./database";
-import { User, Item, UserInterface, ItemInterface } from './role';
-import jwt, { decode } from 'jsonwebtoken';
 import mail from './mailpush';
+import resend from './resend';
+import SMSVerify from './SMSVerify';
 import { any } from 'bluebird';
 
-console.log(conf);
-console.log(conf.avatar);
 const router = new koaRouter();
-// const staticPath = path.join(__dirname,'../src/asset')
-// const staticPath = '../src/asset';
 function webServer()
 {
 	//尝试连接数据库，若失败则抛出异常重新尝试连接
@@ -31,7 +29,6 @@ function webServer()
 		const app = new Koa();
 		app.use(logger());
 		app.use(koaBody({ multipart: true }));
-		// app.use(parser());
 		app.use(router.routes());
 		/**
 		 * @description public 根据uuid查询用户脱敏信息
@@ -93,19 +90,51 @@ function webServer()
 		 */
 		router.post('/user/register', async (ctx, next) =>
 		{
-			var newUser = new Object() as UserInterface;
-			newUser = ctx.request.body;
-			newUser.username = "新手咸鱼人员";
-			newUser.idcard = "";
-			newUser.studentid = 0;
-			newUser.address = "";
-			newUser.score = 10;
-			newUser.info = "这家伙很懒，什么都没有写＞︿＜"
-			newUser.verified = false;
-			newUser.avatarurl = path.join(conf.avatar, "default.jpg")
-			const res = await database.writeUser(newUser);
-			ctx.response.body = JSON.stringify(res);
-			ctx.response.type = 'application/json';
+			var res = new Object() as any;
+			try
+			{
+				const smsres = await SMSVerify(ctx.request.body.phonenumber, ctx.request.body.verifycode)
+				/**
+				 * @description 临时跳过手机验证
+				 * @todo 正式版上线时删除
+				 */
+				// if (smsres.status === "200")
+				if (true)
+				{
+					var newUser = new Object() as UserInterface;
+					newUser = ctx.request.body;
+					newUser.username = "新手咸鱼人员";
+					newUser.idcard = "";
+					newUser.studentid = 0;
+					newUser.address = "";
+					newUser.score = 10;
+					newUser.info = "这家伙很懒，什么都没有写＞︿＜"
+					newUser.verified = false;
+					newUser.avatarurl = path.join(conf.avatar, "default.jpg")
+					const resdatabase = await database.writeUser(newUser);
+					if (resdatabase.status === "success")
+					{
+						res.status = conf.res.success
+					}
+					else
+					{
+						res.status = conf.res.failure;
+						res.info = resdatabase.info;
+					}
+				}
+				else
+				{
+					res.status = conf.res.failure;
+					res.info = smsres.error;
+					res.extra = smsres.status;
+				}
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = 'application/json';
+
+			} catch (error)
+			{
+				console.error(error);
+			}
 		})
 		/**
 		 * @description 更改用户头像
@@ -131,13 +160,13 @@ function webServer()
 					const reader = fs.createReadStream(file.path);
 					const stream = fs.createWriteStream(url);
 					reader.pipe(stream);
-					console.log(`${file.name} -> ${url}`);
-					response.status = "success"
+					// console.log(`${file.name} -> ${url}`);
+					response.status = conf.res.success
 					ctx.response.body = JSON.stringify(response);
 					ctx.response.type = "application/json";
 				} else
 				{
-					response.status = "failure";
+					response.status = conf.res.failure;
 					response.info = "invaild request";
 					ctx.response.body = JSON.stringify(response);
 					ctx.response.type = "application/json";
@@ -145,7 +174,7 @@ function webServer()
 			} catch (error)
 			{
 				console.error(`[ERROR] ${error}`);
-				response.status = "failure";
+				response.status = conf.res.failure;
 				response.info = "server failed";
 				ctx.response.body = JSON.stringify(response);
 				ctx.response.type = "application/json";
@@ -172,7 +201,7 @@ function webServer()
 					ctx.response.status = 403
 					return;
 				}
-				res.status = "success";
+				res.status = conf.res.success;
 				ctx.response.type = "application/json";
 				ctx.response.body = JSON.stringify(res)
 
@@ -196,13 +225,13 @@ function webServer()
 				const verifyRes = database.verifyUser(userInfo.uuid);
 				if (verifyRes)
 				{
-					res.status = "success";
+					res.status = conf.res.success;
 					ctx.response.body = JSON.stringify(res);
 					ctx.response.type = "application/json";
 					return;
 				}
 			}
-			res.status = "failure";
+			res.status = conf.res.failure;
 			res.info = "invaild request"
 			ctx.response.body = JSON.stringify(res);
 			ctx.response.type = "application/json";
@@ -225,10 +254,10 @@ function webServer()
 				const queryres: any = await database.queryUserS(verify.uuid);
 				if (await mail(queryres as UserInterface))
 				{
-					res.status = "success";
+					res.status = conf.res.success;
 				} else
 				{
-					res.status = "failure";
+					res.status = conf.res.failure;
 				}
 				ctx.response.body = JSON.stringify(res);
 				ctx.response.type = 'application/json';
@@ -294,7 +323,7 @@ function webServer()
 					reader.pipe(stream);
 					++count;
 				}
-				response.status = "success"
+				response.status = conf.res.success
 				response.imgurl = imgList;
 				ctx.response.body = JSON.stringify(response);
 				ctx.response.type = "application/json";
@@ -302,7 +331,7 @@ function webServer()
 			} catch (error)
 			{
 				console.error(`[ERROR] ${error}`);
-				response.status = "failure";
+				response.status = conf.res.failure;
 				response.info = conf.except.invaildReq;
 				ctx.response.body = JSON.stringify(response);
 				ctx.response.type = "application/json";
@@ -339,7 +368,7 @@ function webServer()
 					ctx.response.status = 403
 					return;
 				}
-				res.status = "success";
+				res.status = conf.res.success;
 				ctx.response.type = "application/json";
 				ctx.response.body = JSON.stringify(res)
 
@@ -368,10 +397,10 @@ function webServer()
 				const restrade = await database.tradeItem(ctx.body.itemid, verifyres.uuid);
 				if (restrade)
 				{
-					res.status = "success";
+					res.status = conf.res.success;
 				} else
 				{
-					res.status = "failure";
+					res.status = conf.res.failure;
 					res.info = "item not availabe for trade"
 				}
 
@@ -381,6 +410,149 @@ function webServer()
 				res.info = "invaild requests";
 			}
 		});
+		/**
+		 * @description 用户搜索功能
+		 */
+		router.get('/item/search/:str', async (ctx, next) =>
+		{
+			const res = await resend(conf.searchConfig.host,
+				{
+					// "source": "_id",
+					"query": {
+						"multi_match": {
+							"query": ctx.params.str,
+							"fields": ["username", "info"]
+						}
+					}
+				}
+			)
+			ctx.response.body = JSON.stringify(res);
+			ctx.response.type = "application/json";
+			return;
+		})
+		/**
+		 * @description 商品搜索功能
+		 */
+		router.get('/item/search/:str', async (ctx, next) =>
+		{
+			const res = await resend(conf.searchConfig.host,
+				{
+					// "source": "_id",
+					"query": {
+						"multi_match": {
+							"query": ctx.params.str,
+							"fields": ["username", "info"]
+						}
+					}
+				}
+			)
+			ctx.response.body = JSON.stringify(res);
+			ctx.response.type = "application/json";
+			return;
+		})
+		/**
+		 * @description 查询收藏夹
+		 */
+		router.post('/fav/query', async (ctx, next) =>
+		{
+			var res = new Object() as any;
+			try
+			{
+				var res = new Object() as any;
+				const verifyres = verifyToken(ctx.request.body.token)
+				if (!verifyres)
+				{
+					ctx.response.status = 403;
+					return;
+				}
+				const resfav = await database.favouritesQuery(verifyres.uuid);
+				res.status = conf.res.success;
+				res.res = resfav;
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+				return;
+
+			} catch (error)
+			{
+				res.status = conf.res.success;
+				res.info = conf.except.invaildReq;
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+				console.error(error);
+			}
+		});
+		/**
+		 * @description 添加到收藏夹
+		 * @todo 收藏夹权限隔离
+		 */
+		router.post('/fav/add', async (ctx, next) =>
+		{
+			var res = new Object() as any;
+			try
+			{
+				var res = new Object() as any;
+				const verifyres = verifyToken(ctx.request.body.token)
+				if (!verifyres)
+				{
+					ctx.response.status = 403;
+					return;
+				}
+				const resdatabase = await database.favouritesAdd(verifyres.uuid, JSON.parse(ctx.request.body.data));
+				if (resdatabase.status === conf.res.success)
+				{
+					res.status = conf.res.success;
+				}
+				else
+				{
+					res.status = conf.res.failure;
+					res.info = resdatabase.info;
+				}
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			} catch (error)
+			{
+				res.status = conf.res.failure;
+				res.info = error;
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			}
+		});
+		/**
+		 * @description  从收藏夹删除
+		 * @todo  收藏夹权限隔离
+		 */
+		router.post('/fav/delete', async (ctx, next) =>
+		{
+			var res = new Object() as any;
+			try
+			{
+				var res = new Object() as any;
+				const verifyres = verifyToken(ctx.request.body.token)
+				if (!verifyres)
+				{
+					ctx.response.status = 403;
+					return;
+				}
+				const resdatabase = await database.favouritesDelete(verifyres.uuid,JSON.parse(ctx.request.body.data));
+				if (resdatabase.status === conf.res.success)
+				{
+					res.status = conf.res.success;
+				}
+				else
+				{
+					res.status = conf.res.failure;
+					res.info = resdatabase.info;
+				}
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			} catch (error)
+			{
+				res.status = conf.res.failure;
+				res.info = error;
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			}
+		})
 		app.listen(conf.port);
 	} catch (error)
 	{
