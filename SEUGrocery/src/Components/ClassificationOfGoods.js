@@ -13,13 +13,6 @@ export default class GoodsClassification extends Component {
   render() {
     return (
       <View style={styles.container_col}>
-        <View style={styles.title}>
-          <Icon name="pagelines" type="font-awesome" color={'#cc6699'} />
-          <Text h4 style={styles.titleFont}>
-            {' '}
-            杂货百般
-          </Text>
-        </View>
         <View style={styles.block}>
           <View style={styles.container_row}>
             {classes1.map(x => (
@@ -54,7 +47,7 @@ class Item extends Component {
     return (
       <View style={styles.container_col}>
         <Icon
-          raised
+          reverse
           name={this.props.iconName}
           type={this.props.type}
           color={this.props.color}
@@ -91,12 +84,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   block: {
-    backgroundColor: '#EED2EE',
+    backgroundColor: '#fff0f5',
     borderRadius: 10,
     width: width - 20,
-  },
-  titleFont: {
-    color: '#cc6699',
   },
   goodsFont: {
     color: '#000',
