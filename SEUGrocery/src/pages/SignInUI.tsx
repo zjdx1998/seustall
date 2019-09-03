@@ -14,6 +14,7 @@ import {
   NativeModules,
   LayoutAnimation,
   TouchableOpacity,
+  KeyboardAvoidingView,
 } from 'react-native';
 import {postData} from '../Common/FetchHelper';
 import {sha1} from '../Common/SHA-1Encryptor';
@@ -129,7 +130,7 @@ export default class SignInUI extends Component {
 
   render() {
     return (
-      //background
+        <KeyboardAvoidingView style={{width:totalWidth,height: totalHeight}} behavior="position">
       <ImageBackground
         source={require('../Common/img/loginBackground.png')}
         style={styles.background}>
@@ -138,6 +139,7 @@ export default class SignInUI extends Component {
           {/*//手机号输入*/}
           <View style={[styles.inputStyle, styles.numberInputStyle]}>
             <Icon
+                light
               name={'phone-square'}
               type={'font-awesome'}
               color={'#772850'}
@@ -212,6 +214,7 @@ export default class SignInUI extends Component {
           </View>
         </View>
       </ImageBackground>
+        </KeyboardAvoidingView>
     );
   }
 }
@@ -223,7 +226,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     // backgroundColor: '#F5FCFF',
   },
   container_row: {
@@ -232,7 +235,7 @@ const styles = StyleSheet.create({
   },
 
   numberInputStyle: {
-    top: heading + 20,
+    bottom: heading + 90,
     left: leftStartPoint,
     width: componentWidth,
     backgroundColor: 'white',
@@ -240,7 +243,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   passwordInputStyle: {
-    top: heading + 50,
+    bottom: heading + 70,
     left: leftStartPoint,
     // width: componentWidth,
     // backgroundColor:'#cc6699',
@@ -249,7 +252,7 @@ const styles = StyleSheet.create({
     borderColor: '#cc6699',
   },
   bigButton: {
-    top: heading + 70,
+    bottom: heading + 50,
     backgroundColor: 'white',
     left: leftStartPoint,
     width: componentWidth,
@@ -269,7 +272,7 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   registerButton: {
-    top: heading + 90,
+    bottom: heading + 30,
     left: leftStartPoint,
     width: componentWidth*0.7,
   },
@@ -283,7 +286,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   idButton: {
-    top: heading + 50,
+    bottom: heading + 70,
     backgroundColor: 'white',
     // color:'#cc6699'
     textAlign: 'center',

@@ -109,12 +109,12 @@ export default class SignUpUI extends Component {
     render() {
         return (
             //background
+            <KeyboardAvoidingView style={{width:SP.WB(100),height: SP.HB(100),backgroundColor:'#cc6699'}} behavior="position">
             <ImageBackground
                 source={require('../Common/img/loginBackground.png')}
                 style={styles.background}>
                 {/*//五个条形框*/}
-                <KeyboardAvoidingView style={styles.container} behaver={'position'}>
-                <View >
+                <View style={styles.container}>
                     {/*//手机号输入*/}
                     <View style={[styles.inputStyle]}>
                         <Icon
@@ -223,8 +223,8 @@ export default class SignUpUI extends Component {
                     </TouchableOpacity>
                     {/*<View style={{backgroundColor:'red',width:this.state.PWInputWidth,height:50}}></View>*/}
                 </View>
-                </KeyboardAvoidingView>
             </ImageBackground>
+            </KeyboardAvoidingView>
         );
     }
 }
