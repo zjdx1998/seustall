@@ -23,6 +23,7 @@ import {uploadImage} from '../Common/UplodeImageTool';
 import {getImgUrl} from '../Components/PostPhotos';
 import Loading from '../Components/Loading';
 import ItemList from '../Common/ItemList';
+import {postData} from '../Common/FetchHelper';
 import {TouchableOpacity} from "react-native-gesture-handler";
 
 
@@ -38,22 +39,6 @@ const classes = [
   '其他',
 ];
 
-function postData(url, data) {
-  // Default options are marked with *
-  return fetch(url, {
-    body: JSON.stringify(data), // must match 'Content-Type' header
-    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-    credentials: 'same-origin', // include, same-origin, *omit
-    headers: {
-      'user-agent': 'Mozilla/4.0 MDN Example',
-      'content-type': 'application/x-www-form-urlencoded',
-    },
-    method: 'POST', // *GET, POST, PUT, DELETE, etc.
-    mode: 'cors', // no-cors, cors, *same-origin
-    redirect: 'follow', // manual, *follow, error
-    referrer: 'no-referrer', // *client, no-referrer
-  }).then(response => response.json()); // parses response to JSON
-}
 
 export default class ReleaseInformation extends Component {
   private state: any;
@@ -67,7 +52,7 @@ export default class ReleaseInformation extends Component {
       newDegree: '',
       firstValue: '',
       secondValue: '',
-      classes: '电子产品',
+      classes: '1',
     };
   }
 
@@ -124,26 +109,23 @@ export default class ReleaseInformation extends Component {
   uploadItemData = async () => {
     this.Loading.show();
     const [uid, token] = await ItemList.getIdAndToken();
+    const commonURL='http://inari.ml:8080/';
 
     let params = {
-      // token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjozLCJnZW5lcmF0ZSI6MT' +
-      //     'U2NzA0MTI3ODcxMSwiaWF0IjoxNTY3MDQxMjc4fQ.X48-FXKuBOK6f_PBDE4E2jfB457739iAe3dEQKs2mzY',
       token:token,
       itemid: '3',
       path: getImgUrl(), //本地文件地址
     };
     let data = {
-      // token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjozLCJnZW5lcmF0ZSI6MT' +
-      //     'U2NzA0MTI3ODcxMSwiaWF0IjoxNTY3MDQxMjc4fQ.X48-FXKuBOK6f_PBDE4E2jfB457739iAe3dEQKs2mzY',
       token:token,
       uuid: uid,
       title: this.state.title,
-      type: this.state.classes,
+      type: '1',
       price: this.computeValue(),
-      imgurl: '',
+      imgurl: commonURL+'image/item/0.9321619878296834.jpg',
       depreciatione: this.state.newDegree,
-      note: this.state.detail,
-      sold:0,
+      note: this.state.campus+this.state.detail,
+      sold:1,
     };
 
     const addImageURL = 'http://inari.ml:8080/item/image';
@@ -175,7 +157,7 @@ export default class ReleaseInformation extends Component {
           .then(responseData => {
             console.log('uploadImage', responseData);
             if (responseData.status == 'success') {
-              data.imgurl = responseData.imgurl;
+              data.imgurl = commonURL+responseData.imgurl[0];
               postData(addItemURL, data)
                   .then(response => {
                     console.log('uploadData', response);
@@ -256,9 +238,9 @@ export default class ReleaseInformation extends Component {
             onValueChange={(itemValue, itemIndex) => {
               this.setState({campus: itemValue});
             }}>
-            <Picker.Item label="九龙湖校区" value="九龙湖" />
-            <Picker.Item label="四牌楼校区" value="四牌楼" />
-            <Picker.Item label="丁家桥校区" value="丁家桥" />
+            <Picker.Item label="九龙湖校区" value="九龙湖校区，" />
+            <Picker.Item label="四牌楼校区" value="四牌楼校区，" />
+            <Picker.Item label="丁家桥校区" value="丁家桥校区，" />
           </Picker>
         </View>
 
@@ -268,8 +250,8 @@ export default class ReleaseInformation extends Component {
             selectedValue={this.state.classes}
             style={{width: width * 0.35, fontSize: 20}}
             onValueChange={itemValue => this.setState({classes: itemValue})}>
-            {classes.map(i => (
-              <Picker.Item label={i} value={i} />
+            {classes.map((i,j) => (
+              <Picker.Item label={i} value={j} />
             ))}
           </Picker>
         </View>

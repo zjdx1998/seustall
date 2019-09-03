@@ -53,6 +53,7 @@ let imgurl;
 
 export default class ReleaseIWantPage extends Component {
   private state: any;
+  private Loading: any;
   constructor(props) {
     super(props);
     this.state = {
@@ -108,32 +109,41 @@ export default class ReleaseIWantPage extends Component {
     return this.state.firstValue + this.state.secondValue / 100;
   };
 
-  uploadItemData = () => {
+  // @ts-ignore
+  uploadItemData = async () => {
     this.Loading.show();
+    const [uid, token] = await ItemList.getIdAndToken();
 
     let data = {
-      token: UserInfo.get('token'),
-      uuid: UserInfo.get('uuid'),
+      token:token,
+      uuid: uid,
       title: this.state.title,
-      type: this.state.classes,
+      type: '1',
       price: this.computeValue(),
-      imgurl: 'url',
+      imgurl: 'null',
       depreciatione: this.state.newDegree,
-      note: this.state.detail,
+      note: this.state.campus+this.state.detail,
+      sold:-1,
     };
     console.log(data);
     const addItemURL = 'http://inari.ml:8080/item/add';
 
     postData(addItemURL, data)
-                .then(response => {
-                  this.Loading.close();
-                  alert('发布成功');
-                })
-                .catch(err => {
-                  console.error(err);
-                  this.Loading.close();
-                  alert('上传数据失败');
-                });
+        .then(response => {
+          console.log('uploadData', response);
+          if (response.status == 'success') {
+            this.Loading.close();
+            alert('发布成功');
+          }else{
+            alert('上传数据失败');
+            this.Loading.close();
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          alert('上传数据失败');
+          this.Loading.close();
+        });
   };
 
   confirm = () => {
@@ -190,9 +200,9 @@ export default class ReleaseIWantPage extends Component {
                 onValueChange={(itemValue, itemIndex) => {
                   this.setState({campus: itemValue});
                 }}>
-                <Picker.Item label="九龙湖校区" value="九龙湖" />
-                <Picker.Item label="四牌楼校区" value="四牌楼" />
-                <Picker.Item label="丁家桥校区" value="丁家桥" />
+                <Picker.Item label="九龙湖校区" value="九龙湖校区，" />
+                <Picker.Item label="四牌楼校区" value="四牌楼校区，" />
+                <Picker.Item label="丁家桥校区" value="丁家桥校区，" />
               </Picker>
             </View>
 
@@ -204,8 +214,8 @@ export default class ReleaseIWantPage extends Component {
                 onValueChange={itemValue =>
                   this.setState({classes: itemValue})
                 }>
-                {classes.map(i => (
-                  <Picker.Item label={i} value={i} />
+                {classes.map((i,j) => (
+                  <Picker.Item label={i} value={j} />
                 ))}
               </Picker>
             </View>
