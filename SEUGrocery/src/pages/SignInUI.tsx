@@ -91,7 +91,7 @@ export default class SignInUI extends Component {
       password: sha1('13315585158zz'), //this.state.inputedPW),
     })
       .then(data => {
-        UserInfo.saveUserInfo(data);
+        //UserInfo.saveUserInfo(data);
         this.props.navigation.navigate('home');
         // alert(data.info.username+'\n'+UserInfo.get('username'));
         // UserInfo.get('idcard').then(name => {
