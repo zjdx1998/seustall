@@ -1,18 +1,13 @@
 // /*
-//   @version: 0.3
+//   @version: 0.9
 //   @author: 71117123张建东
 //   @date: 2019-8-22
 // */
 import React, {Component} from 'react';
 import MainPages from '../pages/MainPages';
-import {
-  createAppContainer,
-  createDrawerNavigator,
-  DrawerItems,
-  DrawerNavigator,
-} from 'react-navigation';
+import {createAppContainer, createDrawerNavigator} from 'react-navigation';
 import {Text} from 'react-native-elements';
-import {ScrollView, SafeAreaView, StyleSheet, Image, View} from 'react-native';
+import {StyleSheet, Image, View} from 'react-native';
 import detailPage from '../pages/detailPage';
 import StartPage from '../pages/StartPage';
 import * as SP from '../Common/ScreenProperty';
@@ -75,6 +70,9 @@ const customComponents = props => (
           props.navigation.closeDrawer();
           props.navigation.navigate('home', {
             go_back_key: props.navigation.state.key,
+            refresh: () => {
+              that.setState({currentIndex: 1});
+            },
           });
           that.setState({currentIndex: 1});
         }}>
@@ -106,6 +104,9 @@ const customComponents = props => (
           props.navigation.closeDrawer();
           props.navigation.navigate('page1', {
             go_back_key: props.navigation.state.key,
+            refresh: function() {
+              that.setState({currentIndex: 1});
+            },
           });
           that.setState({currentIndex: 2});
         }}>
@@ -137,6 +138,9 @@ const customComponents = props => (
           props.navigation.closeDrawer();
           props.navigation.navigate('page2', {
             go_back_key: props.navigation.state.key,
+            refresh: () => {
+              that.setState({currentIndex: 1});
+            },
           });
           that.setState({currentIndex: 3});
           // props.navigation.navigate('firstPage', {
@@ -170,6 +174,9 @@ const customComponents = props => (
           props.navigation.closeDrawer();
           props.navigation.navigate('page3', {
             go_back_key: props.navigation.state.key,
+            refresh: () => {
+              that.setState({currentIndex: 1});
+            },
           });
           that.setState({currentIndex: 4});
         }}>
@@ -196,6 +203,9 @@ const customComponents = props => (
           props.navigation.closeDrawer();
           props.navigation.navigate('page4', {
             go_back_key: props.navigation.state.key,
+            refresh: () => {
+              that.setState({currentIndex: 1});
+            },
           });
           that.setState({currentIndex: 5});
         }}>
