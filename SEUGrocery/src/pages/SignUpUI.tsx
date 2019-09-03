@@ -35,6 +35,7 @@ let heading = SP.HB(10);
 
 export default class SignUpUI extends Component {
     private state: any;
+    private props: any;
     constructor(props) {
         super(props);
         this.state = {
@@ -104,17 +105,6 @@ export default class SignUpUI extends Component {
         alert('验证码已发送')
     }
 
-    identifyingCodeLoginButton = () => {
-        LayoutAnimation.spring();
-        this.setState(state => {
-            if (this.state.stateNum == 1) {
-                return state2;
-            }
-            if (this.state.stateNum == 2) {
-                return state1;
-            }
-        });
-    };
 
     render() {
         return (
@@ -226,7 +216,7 @@ export default class SignUpUI extends Component {
                     {/*//切换页面的按键*/}
                     <TouchableOpacity
                         style={styles.registerButton}
-                        onPress={this.identifyingCodeLoginButton}>
+                        onPress={()=>this.props.navigation.navigate('loginP')}>
                         {/*<View style={{backgroundColor:'#cc9966', top:heading+90}}>*/}
                         <Text style={styles.registerText}>{this.state.register}</Text>
                         {/*</View>*/}

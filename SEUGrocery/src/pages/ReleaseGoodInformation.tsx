@@ -19,7 +19,6 @@ import {Icon} from "react-native-elements";
 import LocalBackHeader from '../Components/LocalBackHeader';
 import * as SP from '../Common/ScreenProperty';
 import PostPhoto from '../Components/PostPhotos';
-import {postData} from '../Common/FetchHelper';
 import {uploadImage} from '../Common/UplodeImageTool';
 import {getImgUrl} from '../Components/PostPhotos';
 import Loading from '../Components/Loading';
@@ -38,6 +37,23 @@ const classes = [
   '运动健身',
   '其他',
 ];
+
+function postData(url, data) {
+  // Default options are marked with *
+  return fetch(url, {
+    body: JSON.stringify(data), // must match 'Content-Type' header
+    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+    credentials: 'same-origin', // include, same-origin, *omit
+    headers: {
+      'user-agent': 'Mozilla/4.0 MDN Example',
+      'content-type': 'application/x-www-form-urlencoded',
+    },
+    method: 'POST', // *GET, POST, PUT, DELETE, etc.
+    mode: 'cors', // no-cors, cors, *same-origin
+    redirect: 'follow', // manual, *follow, error
+    referrer: 'no-referrer', // *client, no-referrer
+  }).then(response => response.json()); // parses response to JSON
+}
 
 export default class ReleaseInformation extends Component {
   private state: any;
@@ -113,7 +129,7 @@ export default class ReleaseInformation extends Component {
       // token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjozLCJnZW5lcmF0ZSI6MT' +
       //     'U2NzA0MTI3ODcxMSwiaWF0IjoxNTY3MDQxMjc4fQ.X48-FXKuBOK6f_PBDE4E2jfB457739iAe3dEQKs2mzY',
       token:token,
-      itemid: '8',
+      itemid: '3',
       path: getImgUrl(), //本地文件地址
     };
     let data = {
@@ -124,9 +140,10 @@ export default class ReleaseInformation extends Component {
       title: this.state.title,
       type: this.state.classes,
       price: this.computeValue(),
-      imgurl: 'url',
+      imgurl: '',
       depreciatione: this.state.newDegree,
       note: this.state.detail,
+      sold:0,
     };
 
     const addImageURL = 'http://inari.ml:8080/item/image';
@@ -138,8 +155,14 @@ export default class ReleaseInformation extends Component {
     if(getImgUrl()==''){
       postData(addItemURL, data)
           .then(response => {
+            console.log('uploadData', response);
+            if (response.status == 'success') {
             this.Loading.close();
             alert('发布成功');
+          }else{
+              alert('上传数据失败');
+              this.Loading.close();
+            }
           })
           .catch(err => {
             console.error(err);
@@ -155,23 +178,24 @@ export default class ReleaseInformation extends Component {
               data.imgurl = responseData.imgurl;
               postData(addItemURL, data)
                   .then(response => {
-                    this.Loading.close();
-                    alert('发布成功');
+                    console.log('uploadData', response);
+                    if (response.status == 'success') {
+                      this.Loading.close();
+                      alert('发布成功');
+                    } else {
+                      alert('上传数据失败');
+                      this.Loading.close();
+                    }
                   })
                   .catch(err => {
-                    console.error(err);
-                    alert('上传数据失败');
+                    console.log('err', err);
+                    alert('上传图片失败');
                     this.Loading.close();
                   });
             }
-          })
-          .catch(err => {
-            console.log('err', err);
-            alert('上传图片失败');
-            this.Loading.close();
-          });
+            })
     }
-  };
+  }
 
   confirm = () => {
     console.log(this.checkInput())

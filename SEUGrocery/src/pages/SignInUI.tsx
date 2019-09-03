@@ -63,6 +63,7 @@ const state2 = {
 
 export default class SignInUI extends Component {
   private state: any;
+  private props: any;
   constructor(props) {
     super(props);
     this.state = Object.assign({inputedNum: ''}, state1);
@@ -201,7 +202,11 @@ export default class SignInUI extends Component {
 
           <TouchableOpacity
               style={styles.registerButton}
-              onPress={this.changeToSignUp}>
+              onPress={()=>{
+                this.props.navigation.navigate('signUpP')
+                console.log('注册')
+              }}
+          >
             <Text style={styles.registerText}>注册</Text>
           </TouchableOpacity>
           </View>

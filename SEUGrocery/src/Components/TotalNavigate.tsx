@@ -13,6 +13,7 @@ import StartPage from '../pages/StartPage';
 import * as SP from '../Common/ScreenProperty';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import SignInUI from '../pages/SignInUI';
+import SignUpUI from '../pages/SignUpUI';
 import MyGroceryPage from '../pages/MyGroceryPage';
 import WhatIBoughtPage from '../pages/WhatIBoughtPage';
 import WhatIWantPage from '../pages/WhatIWantPage';
@@ -20,6 +21,7 @@ import ReleaseGoodInformation from '../pages/ReleaseGoodInformation';
 import ReleaseIWantPage from '../pages/ReleaseIWantPage';
 import ReleaseUserInformationPage from '../pages/ReleaseUserInformationPage';
 import PostPhotos from './PostPhotos';
+
 // const customComponent = props => (
 //   <ScrollView style={{backgroundColor: '#FFE4E1', flex: 1}}>
 //     <SafeAreaView forceInset={{top: 'always', horizontal: 'never'}}>
@@ -299,6 +301,12 @@ const TotalNav = createDrawerNavigator(
         drawerLabel: () => null,
       },
     },
+      signUpP: {
+          screen: SignUpUI,
+          navigationOptions: {
+              drawerLabel: () => null,
+          },
+      },
     postPhoto: {
       screen: PostPhotos,
       navigationOptions: {
@@ -317,6 +325,7 @@ const TotalNav = createDrawerNavigator(
       'page4',
       'startP',
       'loginP',
+        'signUpP',
       'release_good',
       'release_want',
       'release_info',
