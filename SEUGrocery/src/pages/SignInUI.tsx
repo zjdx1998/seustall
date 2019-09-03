@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
   registerButton: {
     top: heading + 90,
     left: leftStartPoint,
-    width: componentWidth * 0.46,
+     width: componentWidth,
   },
   inputStyle: {
     flexDirection: 'row',

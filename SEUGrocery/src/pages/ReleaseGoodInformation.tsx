@@ -21,6 +21,8 @@ import {postData} from '../Common/FetchHelper';
 import {uploadImage} from '../Common/UplodeImageTool';
 import {getImgUrl} from '../Components/PostPhotos';
 import Loading from '../Components/Loading';
+import ItemList from '../Common/ItemList';
+
 
 var {height, width} = Dimensions.get('window');
 const classes = [
@@ -33,10 +35,6 @@ const classes = [
   '运动健身',
   '其他',
 ];
-const addItemURL = 'http://inari.ml:8080/item/add';
-// const addItemURL = 'http://10.203.252.131/item/add';
-let imgurl;
-// let loading=false;
 
 export default class ReleaseInformation extends Component {
   private state: any;
@@ -54,20 +52,30 @@ export default class ReleaseInformation extends Component {
     };
   }
 
+  // getIdAndToken=()=>{
+  //
+  //   return Promise.all([
+  //     UserInfo.get('uuid'),
+  //     UserInfo.get('token'),
+  //   ])
+  // }
+
   checkNewDegree = () => {
     let value = Number(this.state.newDegree);
+    let flag=true;
     if (isNaN(value)) {
       alert('请输入新旧程度');
-      return false;
+      flag=false;
     } else if (value === 0) {
       alert('新旧程度不能等于零');
-      return false;
+      flag=false;
     } else if (value > 100) {
       alert('新旧程度不能大于100%');
-      return false;
+      flag=false;
     }
     console.log('new degree:', value);
-    return true;
+    console.log(flag);
+    return flag;
   };
 
   checkInput = () => {
@@ -80,10 +88,11 @@ export default class ReleaseInformation extends Component {
         alert('商品价格还没设置哦^_^');
         return false;
       }
+      console.log('title', this.state.title);
+      console.log('value', this.computeValue());
+      return true;
     }
-    console.log('title', this.state.title);
-    console.log('value', this.computeValue());
-    return true;
+
   };
 
   computeValue = () => {
@@ -91,19 +100,24 @@ export default class ReleaseInformation extends Component {
 
     return Number(this.state.firstValue) + Number(this.state.secondValue) / 100;
   };
-  uploadItemData = () => {
+
+  // @ts-ignore
+  uploadItemData = async () => {
     this.Loading.show();
-    console.log(getImgUrl());
+    const [uid, token] = await ItemList.getIdAndToken();
+
     let params = {
-      token:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjozLCJnZW5lcmF0ZSI6MTU2NzA0MTI3ODcxMSwiaWF0IjoxNTY3MDQxMjc4fQ.X48-FXKuBOK6f_PBDE4E2jfB457739iAe3dEQKs2mzY',
-      itemid: '6',
+      // token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjozLCJnZW5lcmF0ZSI6MT' +
+      //     'U2NzA0MTI3ODcxMSwiaWF0IjoxNTY3MDQxMjc4fQ.X48-FXKuBOK6f_PBDE4E2jfB457739iAe3dEQKs2mzY',
+      token:token,
+      itemid: '8',
       path: getImgUrl(), //本地文件地址
     };
     let data = {
-      // token:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjozLCJnZW5' +
-      //     'lcmF0ZSI6MTU2NzA0MTI3ODcxMSwiaWF0IjoxNTY3MDQxMjc4fQ.X48-FXKuBOK6f_PBDE4E2jfB457739iAe3dEQKs2mzY',
-      uuid: '3',
+      // token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjozLCJnZW5lcmF0ZSI6MT' +
+      //     'U2NzA0MTI3ODcxMSwiaWF0IjoxNTY3MDQxMjc4fQ.X48-FXKuBOK6f_PBDE4E2jfB457739iAe3dEQKs2mzY',
+      token:token,
+      uuid: uid,
       title: this.state.title,
       type: this.state.classes,
       price: this.computeValue(),
@@ -113,32 +127,51 @@ export default class ReleaseInformation extends Component {
     };
 
     const addImageURL = 'http://inari.ml:8080/item/image';
+    const addItemURL = 'http://inari.ml:8080/item/add';
 
-    uploadImage(addImageURL, params)
-      .then(responseData => {
-        console.log('uploadImage', responseData);
-        if (responseData.status == 'success') {
-          imgurl = responseData.imgurl;
-          postData(addItemURL, data)
-            .then(response => {
-              this.Loading.close();
-              alert('发布成功');
-            })
-            .catch(err => {
-              console.error(err);
-              alert('上传数据失败');
-              this.Loading.close();
-            });
-        }
-      })
-      .catch(err => {
-        console.log('err', err);
-        alert('上传图片失败');
-        this.Loading.close();
-      });
+    console.log(params);
+    console.log(data);
+
+    if(getImgUrl()==''){
+      postData(addItemURL, data)
+          .then(response => {
+            this.Loading.close();
+            alert('发布成功');
+          })
+          .catch(err => {
+            console.error(err);
+            alert('上传数据失败');
+            this.Loading.close();
+          });
+    }
+    else {
+      uploadImage(addImageURL, params)
+          .then(responseData => {
+            console.log('uploadImage', responseData);
+            if (responseData.status == 'success') {
+              data.imgurl = responseData.imgurl;
+              postData(addItemURL, data)
+                  .then(response => {
+                    this.Loading.close();
+                    alert('发布成功');
+                  })
+                  .catch(err => {
+                    console.error(err);
+                    alert('上传数据失败');
+                    this.Loading.close();
+                  });
+            }
+          })
+          .catch(err => {
+            console.log('err', err);
+            alert('上传图片失败');
+            this.Loading.close();
+          });
+    }
   };
 
   confirm = () => {
+    console.log(this.checkInput())
     if (this.checkInput()) {
       this.uploadItemData();
     }
@@ -153,7 +186,7 @@ export default class ReleaseInformation extends Component {
             <Button
               title="确认"
               type="clear"
-              color={'#cc6699'}
+              color={'#fff'}
               onPress={this.confirm}
             />
           </View>
