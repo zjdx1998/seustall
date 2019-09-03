@@ -242,7 +242,7 @@ const TotalNav = createDrawerNavigator(
       },
     },
     page3: {
-      screen: WhatIBoughtPage,
+      screen: WhatIWantPage,
       navigationOptions: {
         drawerLabel: '我想买的',
       },

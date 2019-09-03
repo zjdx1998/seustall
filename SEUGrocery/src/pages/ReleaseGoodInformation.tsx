@@ -4,6 +4,7 @@
   @date: 2019-8-27
 */
 import React, {Component} from 'react';
+// @ts-ignore
 import {
   View,
   ScrollView,
@@ -14,6 +15,7 @@ import {
   TextInput,
   Text,
 } from 'react-native';
+import {Icon} from "react-native-elements";
 import LocalBackHeader from '../Components/LocalBackHeader';
 import * as SP from '../Common/ScreenProperty';
 import PostPhoto from '../Components/PostPhotos';
@@ -22,6 +24,7 @@ import {uploadImage} from '../Common/UplodeImageTool';
 import {getImgUrl} from '../Components/PostPhotos';
 import Loading from '../Components/Loading';
 import ItemList from '../Common/ItemList';
+import {TouchableOpacity} from "react-native-gesture-handler";
 
 
 var {height, width} = Dimensions.get('window');
@@ -183,10 +186,17 @@ export default class ReleaseInformation extends Component {
         <View style={{height: SP.HB(12)}}>
           <LocalBackHeader navigation={this.props.navigation} />
           <View style={styles.buttonContainer}>
+            {/*<TouchableOpacity*/}
+            {/*style={styles.button}*/}
+            {/*onPress={this.confirm}*/}
+            {/*>*/}
+            {/*  <Icon name={'upload'} type={'font-awesome'} color={'#cc6699'}/>*/}
+            {/*  <Text style={{color:'#cc6699'}}>确认发布</Text>*/}
+            {/*</TouchableOpacity>*/}
             <Button
               title="确认"
               type="clear"
-              color={'#fff'}
+              color={'#cc6699'}
               onPress={this.confirm}
             />
           </View>
@@ -293,6 +303,12 @@ const styles = StyleSheet.create({
     width: width * 0.25,
     justifyContent: 'center',
     padding: 10,
+  },
+  button:{
+    flexDirection: 'row',
+    backgroundColor:"#000",
+    borderRadius:50,
+    flex:1,
   },
   title: {
     fontSize: 40,

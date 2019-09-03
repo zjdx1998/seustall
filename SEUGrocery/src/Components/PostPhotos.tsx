@@ -28,7 +28,7 @@ var photoOptions = {
   noData: false,
   storageOptions: {
     skipBackup: true,
-    path: 'images',
+    path: '东大杂货铺',
   },
 };
 

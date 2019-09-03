@@ -41,7 +41,7 @@ const state1 = {
   sendIDText: '',
   bigButtonText: '登    录',
   registerAlpha: 1,
-  register: '验证码登录 / 注册',
+  register: '验证码登录',
   PWplacehold: ' 请输入密码',
   PWIcon: 'lock',
   PWVisible: false,
@@ -53,7 +53,7 @@ const state2 = {
   PWInputWidth: componentWidth * 0.6,
   idButtonAlpha: 1,
   sendIDText: '发送验证码',
-  bigButtonText: '登  录   /   注  册',
+  bigButtonText: '登    录',
   registerAlpha: 0,
   register: '密码登录',
   PWplacehold: '请输入验证码',
@@ -105,6 +105,11 @@ export default class SignInUI extends Component {
     //   };
     // });
   }
+
+  sendVerifyCode=(event)=>{
+    alert('验证码已发送')
+  }
+
   identifyingCodeLoginButton = () => {
     LayoutAnimation.spring();
     this.setState(state => {
@@ -116,6 +121,10 @@ export default class SignInUI extends Component {
       }
     });
   };
+
+  changeToSignUp=()=>{
+
+  }
 
   render() {
     return (
@@ -169,8 +178,9 @@ export default class SignInUI extends Component {
             </View>
             {/*//发送验证码*/}
             <View
-              style={[styles.idButton, {opacity: this.state.idButtonAlpha}]}>
-              <Text style={{color: '#cc6699', size: 30}}>
+              style={[styles.idButton, {opacity: this.state.idButtonAlpha}]}
+            >
+              <Text style={{color: '#cc6699', size: 30}} onPress={this.sendVerifyCode}>
                 {this.state.sendIDText}
               </Text>
             </View>
@@ -182,14 +192,19 @@ export default class SignInUI extends Component {
             <Text style={styles.bigTextPrompt}>{this.state.bigButtonText}</Text>
           </TouchableOpacity>
           {/*//切换状态的按键*/}
+          <View style={[styles.container_row,{marginLeft:componentWidth*0.1}]}>
           <TouchableOpacity
             style={styles.registerButton}
             onPress={this.identifyingCodeLoginButton}>
-            {/*<View style={{backgroundColor:'#cc9966', top:heading+90}}>*/}
             <Text style={styles.registerText}>{this.state.register}</Text>
-            {/*</View>*/}
           </TouchableOpacity>
-          {/*<View style={{backgroundColor:'red',width:this.state.PWInputWidth,height:50}}></View>*/}
+
+          <TouchableOpacity
+              style={styles.registerButton}
+              onPress={this.changeToSignUp}>
+            <Text style={styles.registerText}>注册</Text>
+          </TouchableOpacity>
+          </View>
         </View>
       </ImageBackground>
     );
@@ -251,7 +266,7 @@ const styles = StyleSheet.create({
   registerButton: {
     top: heading + 90,
     left: leftStartPoint,
-     width: componentWidth,
+    width: componentWidth*0.7,
   },
   inputStyle: {
     flexDirection: 'row',
