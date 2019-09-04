@@ -81,6 +81,7 @@ export default class SignUpUI extends Component {
             return;
         }
         console.log(this.state);
+
         // postData(loginURL, {
         //     phonenumber: '17551046561', //this.state.inputedNum,
         //     password: sha1('13315585158zz'), //this.state.inputedPW),
@@ -209,7 +210,8 @@ export default class SignUpUI extends Component {
 
                     {/*//注册按钮*/}
                     <TouchableOpacity
-                        onPress={this.buttonPressed}
+                        // onPress={this.buttonPressed}
+                        onPress={()=>this.props.navigation.navigate('afterSignUp')}
                         style={styles.bigButton}>
                         <Text style={styles.bigTextPrompt}>{this.state.bigButtonText}</Text>
                     </TouchableOpacity>

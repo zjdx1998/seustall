@@ -21,6 +21,7 @@ import ReleaseGoodInformation from '../pages/ReleaseGoodInformation';
 import ReleaseIWantPage from '../pages/ReleaseIWantPage';
 import ReleaseUserInformationPage from '../pages/ReleaseUserInformationPage';
 import PostPhotos from './PostPhotos';
+import AfterSignUpPage from "../pages/AfterSignUpPage";
 
 // const customComponent = props => (
 //   <ScrollView style={{backgroundColor: '#FFE4E1', flex: 1}}>
@@ -313,6 +314,12 @@ const TotalNav = createDrawerNavigator(
         drawerlabel: () => null,
       },
     },
+      afterSignUp: {
+          screen: AfterSignUpPage,
+          navigationOptions: {
+              drawerlabel: () => null,
+          },
+      },
   },
   {
     order: [
@@ -326,6 +333,7 @@ const TotalNav = createDrawerNavigator(
       'startP',
       'loginP',
         'signUpP',
+        'afterSignUp',
       'release_good',
       'release_want',
       'release_info',
