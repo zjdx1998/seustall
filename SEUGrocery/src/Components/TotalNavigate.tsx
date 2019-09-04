@@ -301,12 +301,12 @@ const TotalNav = createDrawerNavigator(
         drawerLabel: () => null,
       },
     },
-      signUpP: {
-          screen: SignUpUI,
-          navigationOptions: {
-              drawerLabel: () => null,
-          },
+    signUpP: {
+      screen: SignUpUI,
+      navigationOptions: {
+        drawerLabel: () => null,
       },
+    },
     postPhoto: {
       screen: PostPhotos,
       navigationOptions: {
@@ -325,7 +325,7 @@ const TotalNav = createDrawerNavigator(
       'page4',
       'startP',
       'loginP',
-        'signUpP',
+      'signUpP',
       'release_good',
       'release_want',
       'release_info',
