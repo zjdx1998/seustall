@@ -22,12 +22,25 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Loading from "../Components/Loading";
 import {postData} from '../Common/FetchHelper';
 import ItemList from '../Common/ItemList';
+import ImagePicker from "react-native-image-picker";
+
+var photoOptions = {
+    //底部弹出框选项
+    title: '请选择',
+    cancelButtonTitle: '取消',
+    takePhotoButtonTitle: '拍照',
+    chooseFromLibraryButtonTitle: '选择相册',
+    quality: 0.75,
+    allowsEditing: true,
+    noData: false,
+    storageOptions: {
+        skipBackup: true,
+        path: '东大杂货铺',
+    },
+};
+
 
 var {height, width} = Dimensions.get('window');
-
-const addItemURL = 'http://inari.ml:8080/item/add';
-// const addItemURL = 'http://10.203.252.131/item/add';
-let imgurl;
 
 /*export default class Loading extends Component{
     state={
@@ -92,6 +105,8 @@ const majorNum = [
   'TJ',
 ];
 
+
+
 export default class ReleaseIWantPage extends Component {
   private state: any;
 
@@ -104,6 +119,7 @@ export default class ReleaseIWantPage extends Component {
       major: '',
       detail: '',
       campus: '九龙湖',
+      imgURL: {uri:'http://hanyuu.top:8080/image/avatar/4.jpg'},
     };
   }
 
@@ -145,32 +161,33 @@ export default class ReleaseIWantPage extends Component {
     return false;
   };
 
-  uploadUserData = () => {
-    this.Loading.show();
+  uploadUserData = async () => {
+      this.Loading.show();
+      const [uid, token] = await ItemList.getIdAndToken();
 
-    let data = {
-      token: UserInfo.get('token'),
-      uuid: UserInfo.get('uuid'),
-      title: this.state.title,
-      type: this.state.classes,
-      price: this.computeValue(),
-      imgurl: 'url',
-      depreciatione: this.state.newDegree,
-      note: this.state.detail,
-    };
-    console.log(data);
-    const addItemURL = 'http://inari.ml:8080/item/add';
+      let data = {
+          token: token,
+          uuid: uid,
+          title: this.state.title,
+          type: this.state.classes,
+          imgurl: 'url',
+          depreciatione: this.state.newDegree,
+          note: this.state.detail,
+      };
+      console.log(data);
+      const commonURL='http://inari.ml:8080/';
+      const modifyURL=commonURL+'user/modify';
 
-    postData(addItemURL, data)
-        .then(response => {
-          this.Loading.close();
-          alert('发布成功');
-        })
-        .catch(err => {
-          console.error(err);
-          this.Loading.close();
-          alert('上传数据失败');
-        });
+      postData(modifyURL, data)
+          .then(response => {
+              this.Loading.close();
+              alert('发布成功');
+          })
+          .catch(err => {
+              console.error(err);
+              this.Loading.close();
+              alert('上传数据失败');
+          });
   };
 
   confirm = () => {
@@ -178,6 +195,20 @@ export default class ReleaseIWantPage extends Component {
     // if(this.checkInput()){}
     this.checkInput();
   };
+
+    cameraAction = () => {
+        ImagePicker.showImagePicker(photoOptions, (response) => {
+            console.log('response' + response);
+            if (response.didCancel) {
+                return;
+            }
+
+            this.setState({
+                imgURL:response.uri,
+            });
+        })
+
+    }
 
   render() {
     return (
@@ -190,10 +221,10 @@ export default class ReleaseIWantPage extends Component {
             <Avatar
               size={120}
               rounded
-              source={require('../Common/img/avatar.png')}
+              source={this.state.imgURL}
             />
             <TouchableOpacity
-              onPress={() => {this.props.navigation.navigate('postPhoto')}}
+              onPress={this.cameraAction}
               activeOpacity={0.2}
               focusedOpacity={0.5}>
               <View style={styles.txtArea}>

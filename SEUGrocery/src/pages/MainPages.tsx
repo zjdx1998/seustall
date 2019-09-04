@@ -13,9 +13,18 @@ import ClassificationOfGoods from '../Components/ClassificationOfGoods';
 import {Button, Text} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import ActionButton from 'react-native-action-button';
+import IDReminder from "../Components/IDReminder";
 
 export default class MainPages extends Component {
   private props: any;
+  state={
+    modalVisible: true,
+  }
+
+  setModalVisible(visible) {
+    this.setState({ modalVisible: visible });
+  }
+
 
   render() {
     return (
@@ -43,8 +52,9 @@ export default class MainPages extends Component {
             </View>
             <View style={styles.headerContainer}>
               <Button
-                  onPress={() => this.props.navigation.navigate('detailPage')}
-                  title=" MyHomeScreen ----> open drawer"
+                  onPress={() => this.setModalVisible(true)}
+                  title="去认证"
+                  buttonStyle={{backgroundColor:'#cc6699'}}
               />
             </View>
           </ScrollView>
@@ -102,6 +112,14 @@ export default class MainPages extends Component {
               <Text style={{fontSize: 20, color:'white'}}>WANT</Text>
             </ActionButton.Item>
           </ActionButton>
+
+          <IDReminder
+              modalVisible={this.state.modalVisible}
+              content={this.state.content}
+              callback={this.setModalVisible.bind(this)}
+              navigation={this.props.navigation}
+          >
+          </IDReminder>
         </View>
     );
   }
