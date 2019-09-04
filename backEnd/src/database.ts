@@ -9,12 +9,12 @@ let mysql2 = require('mysql2');
 import conf from './conf';
 import
 {
-	UserInterface, ItemInterface, favouritesInterface, chatInterface,
+	UserInterface, ItemInterface, favoritesInterface, chatInterface,
 	User, Item,
 } from './role';
 import users from './users';
 import items from './items';
-import favourites, { favouritesInedxes } from './favourites';
+import favorites, { favoritesIndexes } from './favorites';
 import chat, { chatIndexes } from './chat';
 
 
@@ -23,7 +23,7 @@ export default class data
 	database: Sequelize;
 	users: any;
 	items: any;
-	favourites: any;
+	favorites: any;
 	chat: any;
 	isConnected: boolean
 
@@ -80,9 +80,9 @@ export default class data
 					charset: "utf8",
 				}
 			);
-			this.favourites = this.database.define(
-				conf.table.favourites,
-				favourites,
+			this.favorites = this.database.define(
+				conf.table.favorites,
+				favorites,
 				{
 					timestamps: false,
 					engine: "Innodb",
@@ -115,6 +115,7 @@ export default class data
 		var response = new Object() as any;
 		try
 		{
+			item.to = 0;
 			await this.items.create(item);
 			response.status = conf.res.success;
 			return response;
@@ -550,11 +551,11 @@ export default class data
 	 * @description 收藏夹查询
 	 * @todo
 	 */
-	public async favouritesQuery(uuid: number)
+	public async favoritesQuery(uuid: number)
 	{
 		try
 		{
-			const res = this.favourites.findAll({
+			const res = this.favorites.findAll({
 				where:
 				{
 					uuid
@@ -571,7 +572,7 @@ export default class data
 	 * @description 收藏夹批量添加
 	 * @todo
 	 */
-	public async favouritesAdd(uuid: string, src: any)
+	public async favoritesAdd(uuid: string, src: any)
 	{
 		var res = new Object() as any;
 		try
@@ -580,7 +581,7 @@ export default class data
 			for (var i in src)
 			{
 				const itemid = i;
-				await this.favourites.create(
+				await this.favorites.create(
 					{
 						uuid,
 						itemid
@@ -599,14 +600,14 @@ export default class data
 	/**
 	 * @description 收藏夹批量删除
 	*/
-	public async favouritesDelete(uuid: string, res: any)
+	public async favoritesDelete(uuid: string, res: any)
 	{
 		try
 		{
 			for (var i in res)
 			{
 				const itemid: any = i;
-				const waittodelete = await this.favourites.destroy
+				const waittodelete = await this.favorites.destroy
 					(
 						{
 							where:

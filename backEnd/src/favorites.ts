@@ -30,4 +30,4 @@ const indexes =
 			fields: ['itemid'],
 		}
 	]
-export { indexes as favouritesInedxes }
+export { indexes as favoritesIndexes }

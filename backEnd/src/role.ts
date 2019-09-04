@@ -109,9 +109,10 @@ export interface ItemInterface
 	imgurl: string,
 	depreciatione: number,
 	note: string,
-	sold: number
+	sold: number,
+	to:number,
 }
-export interface favouritesInterface
+export interface favoritesInterface
 {
 	uuid: number,
 	itemid: number,

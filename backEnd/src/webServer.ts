@@ -16,7 +16,7 @@ import conf from './conf';
 import data from "./database";
 import mail from './mailpush';
 import resend from './resend';
-import SMSVerify from './SMSVerify';
+import { requireCode, verifyCode } from './SMSVerify';
 
 const router = new koaRouter();
 function webServer()
@@ -107,12 +107,8 @@ function webServer()
 			var res = new Object() as any;
 			try
 			{
-				const smsres = await SMSVerify(ctx.request.body.phonenumber, ctx.request.body.verifycode)
-				/**
-				 * @description 临时跳过手机验证
-				 * @todo 正式版上线时删除
-				 */
-				// if (smsres.status === "200")
+				const resverify = verifyCode(ctx.request.body.phoneNumber, ctx.request.body.verifycode);
+				// if (resverify.status == conf.res.success)
 				if (true)
 				{
 					var newUser = new Object() as UserInterface;
@@ -139,8 +135,7 @@ function webServer()
 				else
 				{
 					res.status = conf.res.failure;
-					res.info = smsres.error;
-					res.extra = smsres.status;
+					res.info = resverify.info;
 				}
 				ctx.response.body = JSON.stringify(res);
 				ctx.response.type = 'application/json';
@@ -149,6 +144,15 @@ function webServer()
 			{
 				console.error(error);
 			}
+		})
+		/**
+		 * @description 请求验证码
+		 */
+		router.post('/user/requirecode', async (ctx, next) =>
+		{
+			var res = requireCode(ctx.request.body.phonenumber);
+			ctx.response.body = JSON.stringify(res);
+			ctx.response.type = "application/json";
 		})
 		/**
 		 * @description 更改用户头像
@@ -228,33 +232,9 @@ function webServer()
 			}
 		})
 		/**
-		 * @description 邮箱验证
-		 */
-		router.get('/user/verify/:token', async (ctx, next) =>
-		{
-			const res = new Object() as any;
-			const userInfo = verifyToken(ctx.params.token);
-			if (userInfo.useage === "mail")
-			{
-				const verifyRes = database.verifyUser(userInfo.uuid);
-				if (verifyRes)
-				{
-					res.status = conf.res.success;
-					ctx.response.body = JSON.stringify(res);
-					ctx.response.type = "application/json";
-					return;
-				}
-			}
-			res.status = conf.res.failure;
-			res.info = "invaild request"
-			ctx.response.body = JSON.stringify(res);
-			ctx.response.type = "application/json";
-			return;
-		})
-		/**
-		 * @description 邮箱验证请求
-		 */
-		router.post('/user/verify', async (ctx, next) =>
+ 		 * @description 邮箱验证请求
+ 		 */
+		router.post('/user/mail/verify', async (ctx, next) =>
 		{
 			try
 			{
@@ -284,6 +264,39 @@ function webServer()
 				ctx.response.type = 'application/json';
 			}
 		})
+		/**
+		 * @description 邮箱验证
+		 */
+		router.get('/user/mail/verify/:token', async (ctx, next) =>
+		{
+			const res = new Object() as any;
+			const userInfo = verifyToken(ctx.params.token);
+			if (!userInfo)
+			{
+				res.status = conf.res.failure;
+				res.info = conf.except.invaildReq;
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+				return;
+			}
+			if (userInfo.useage === "mail")
+			{
+				const verifyRes = database.verifyUser(userInfo.uuid);
+				if (verifyRes)
+				{
+					res.status = conf.res.success;
+					ctx.response.body = JSON.stringify(res);
+					ctx.response.type = "application/json";
+					return;
+				}
+			}
+			res.status = conf.res.failure;
+			res.info = "invaild request"
+			ctx.response.body = JSON.stringify(res);
+			ctx.response.type = "application/json";
+			return;
+		})
+
 		/**
 		 * @description 聊天-发送消息
 		 * @todo
@@ -562,7 +575,7 @@ function webServer()
 					ctx.response.status = 403;
 					return;
 				}
-				const resfav = await database.favouritesQuery(verifyres.uuid);
+				const resfav = await database.favoritesQuery(verifyres.uuid);
 				res.status = conf.res.success;
 				res.res = resfav;
 				ctx.response.body = JSON.stringify(res);
@@ -593,7 +606,7 @@ function webServer()
 					ctx.response.status = 403;
 					return;
 				}
-				const resdatabase = await database.favouritesAdd(verifyres.uuid, JSON.parse(ctx.request.body.data));
+				const resdatabase = await database.favoritesAdd(verifyres.uuid, JSON.parse(ctx.request.body.data));
 				if (resdatabase.status === conf.res.success)
 				{
 					res.status = conf.res.success;
@@ -629,7 +642,7 @@ function webServer()
 					ctx.response.status = 403;
 					return;
 				}
-				const resdatabase = await database.favouritesDelete(verifyres.uuid, JSON.parse(ctx.request.body.data));
+				const resdatabase = await database.favoritesDelete(verifyres.uuid, JSON.parse(ctx.request.body.data));
 				if (resdatabase.status === conf.res.success)
 				{
 					res.status = conf.res.success;

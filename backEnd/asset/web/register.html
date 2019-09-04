@@ -15,11 +15,18 @@
 		phonenumber<br>
 		<input type="tel" name="phonenumber"><br>
 		verifiy code<br>
-		<input type="text" name = "verifycode"><br>
+		<input type="text" name="verifycode"><br>
 		password（这里请输入SHA-1 40bit计算之后的值）<br>
 		<input type="password" name="password"><br>
 		<input type="submit" value="Register">
 	</form>
+	===================先在下面获取验证码======================
+	<form action="/user/requirecode" method="POST">
+		phonenumber<br>
+		<input type="tel" name="phonenumber"><br>
+		<input type="submit" value="Register">
+	</form>
+
 </body>
 
 </html>
