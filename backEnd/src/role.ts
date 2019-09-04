@@ -116,3 +116,10 @@ export interface favouritesInterface
 	uuid: number,
 	itemid: number,
 }
+export interface chatInterface
+{
+	from: number,
+	to: number,
+	data: string,
+	fetched?: boolean,
+}

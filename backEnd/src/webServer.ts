@@ -63,6 +63,21 @@ function webServer()
 			ctx.response.type = 'application/json';
 		})
 		/**
+		 * @description public 查看用户完成交易（非自身发布）的商品
+		 */
+		router.post('/user/finished', async (ctx, next) =>
+		{
+			const verify: any = verifyToken(ctx.request.body.token);
+			if (!verify)
+			{
+				ctx.response.status = 403;
+				return;
+			}
+			const res = await database.queryFinished(verify.uuid);
+			ctx.response.body = JSON.stringify(res);
+			ctx.response.type = 'application/json';
+		})
+		/**
 		 * @description public->token 用户登录
 		 */
 		router.post('/user/login', async (ctx, next) =>
@@ -270,6 +285,85 @@ function webServer()
 			}
 		})
 		/**
+		 * @description 聊天-发送消息
+		 * @todo
+		 */
+		router.post('/user/chat/push', async (ctx, next) =>
+		{
+			var res: any = new Object() as any;
+			try
+			{
+				const verify: any = verifyToken(ctx.request.body.token);
+				if (!verify)
+				{
+					ctx.response.status = 403;
+					return;
+				}
+				res = await database.chatPush(verify.uuid, ctx.request.body.to, ctx.request.body.data);
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			} catch (error)
+			{
+				console.error(error);
+				res.status = conf.res.failure;
+				res.info = error;
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			}
+		})
+		/**
+		 * @description 聊天-查询更新
+		 * @todo
+		 */
+		router.post('/user/chat/fetchnew', async (ctx, next) =>
+		{
+			var res = new Object() as any;
+			try
+			{
+				const verify: any = verifyToken(ctx.request.body.token);
+				if (!verify)
+				{
+					ctx.response.status = 403;
+					return;
+				}
+				res = await database.chatFetchNew(verify.uuid);
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			} catch (error)
+			{
+				res.status = conf.res.failure;
+				res.info = error;
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			}
+		})
+		/**
+		 * @description 聊天-获取所有记录
+		 * @todo
+		 */
+		router.post('/user/chat/fetchall', async (ctx, next) =>
+		{
+			var res = new Object() as any;
+			try
+			{
+				const verify: any = verifyToken(ctx.request.body.token);
+				if (!verify)
+				{
+					ctx.response.status = 403;
+					return;
+				}
+				res = await database.chatFetchAll(verify.uuid);
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			} catch (error)
+			{
+				res.status = conf.res.failure;
+				res.info = error;
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			}
+		})
+		/**
 		 * @description token 用户添加求购/商品
 		 */
 		router.post('/item/add', async (ctx, next) =>
@@ -393,7 +487,7 @@ function webServer()
 					ctx.response.status = 403;
 					return;
 				}
-				const restrade = await database.tradeItem(ctx.body.itemid, verifyres.uuid);
+				const restrade = await database.tradeItem(ctx.request.body.itemid, verifyres.uuid);
 				if (restrade)
 				{
 					res.status = conf.res.success;
@@ -402,11 +496,15 @@ function webServer()
 					res.status = conf.res.failure;
 					res.info = "item not availabe for trade"
 				}
-
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
 			} catch (error)
 			{
+				console.error(error)
 				res.status = "filure";
 				res.info = "invaild requests";
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
 			}
 		});
 		/**
@@ -531,7 +629,7 @@ function webServer()
 					ctx.response.status = 403;
 					return;
 				}
-				const resdatabase = await database.favouritesDelete(verifyres.uuid,JSON.parse(ctx.request.body.data));
+				const resdatabase = await database.favouritesDelete(verifyres.uuid, JSON.parse(ctx.request.body.data));
 				if (resdatabase.status === conf.res.success)
 				{
 					res.status = conf.res.success;

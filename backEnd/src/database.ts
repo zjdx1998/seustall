@@ -7,10 +7,15 @@ import sequelize, { Sequelize, ConnectionRefusedError, JSON, where } from 'seque
 // The bug of sequelize https://github.com/sequelize/sequelize/issues/9489
 let mysql2 = require('mysql2');
 import conf from './conf';
-import { UserInterface, ItemInterface, favouritesInterface, User } from './role';
+import
+{
+	UserInterface, ItemInterface, favouritesInterface, chatInterface,
+	User, Item,
+} from './role';
 import users from './users';
 import items from './items';
 import favourites, { favouritesInedxes } from './favourites';
+import chat, { chatIndexes } from './chat';
 
 
 export default class data
@@ -19,6 +24,7 @@ export default class data
 	users: any;
 	items: any;
 	favourites: any;
+	chat: any;
 	isConnected: boolean
 
 	constructor()
@@ -79,6 +85,15 @@ export default class data
 				favourites,
 				{
 					timestamps: false,
+					engine: "Innodb",
+					charset: "utf8",
+				}
+			)
+			this.chat = this.database.define(
+				conf.table.chat,
+				chat,
+				{
+					timestamps: true,
 					engine: "Innodb",
 					charset: "utf8",
 				}
@@ -162,19 +177,25 @@ export default class data
 	 */
 	public async queryUser(uuid: number)
 	{
+		var res = new Object() as any;
 		try
 		{
-			const res = await this.users.findOne({
+			const resquery = await this.users.findOne({
 				where:
 				{
 					uuid
 				}
 			})
-			const userRes = new User(res);
-			return this.responseFix(userRes.public());
+			const userRes = new User(resquery);
+			res = this.responseFix(userRes.public());
+			res.status = conf.res.success;
+			return res;
 		} catch (error)
 		{
-			throw new Error("[ERROR] Database connect failed.\n" + error);
+			console.error(error);
+			res.status = conf.res.failure;
+			res.info = error;
+			return res;
 		}
 	}
 	/**
@@ -263,7 +284,7 @@ export default class data
 		try
 		{
 			const queryres: any = await this.queryUser(uuid)
-			if (queryres.status === "none")
+			if (queryres.status == conf.res.failure)
 			{
 				return false;
 			}
@@ -291,31 +312,54 @@ export default class data
 		try
 		{
 			const queryres: any = await this.queryUser(src.uuid)
-			if (queryres.status === "none")
+			if (queryres.status == conf.res.failure)
 			{
 				return false;
 			}
-			const res = await this.users.update(
-				{
-					"password": src.password,
-					"username": src.username,
-					"idcard": src.idcard,
-					"studentid": src.studentid,
-					"address": src.address,
-					"avatarurl": src.avatarurl,
-					"info": src.info,
-				},
-				{
-					where:
+			if (src.password)
+			{
+				const res = await this.users.update(
 					{
-						"uuid": src.uuid
+						password: src.password,
+						username: src.username,
+						idcard: src.idcard,
+						studentid: src.studentid,
+						address: src.address,
+						avatarurl: src.avatarurl,
+						info: src.info,
+					},
+					{
+						where:
+						{
+							"uuid": src.uuid
+						}
 					}
-				}
-			);
+				);
+			} else
+			{
+				const res = await this.users.update(
+					{
+						username: src.username,
+						idcard: src.idcard,
+						studentid: src.studentid,
+						address: src.address,
+						avatarurl: src.avatarurl,
+						info: src.info,
+					},
+					{
+						where:
+						{
+							"uuid": src.uuid
+						}
+					}
+				);
+
+			}
 			return true;
 		} catch (error)
 		{
 			console.error(error)
+			return false;
 		}
 	}
 	/**
@@ -360,22 +404,43 @@ export default class data
 		try
 		{
 			const queryres: any = await this.queryItem(itemid as number)
-			if (queryres.status === "none" || queryres.sold > 0)
+			if (queryres.status === "none" || queryres.sold == 2 || queryres.sold == -2)
 			{
 				return false;
 			}
-			const res = await this.items.update(
-				{
-					sold: uuid
-				},
-				{
-					where:
+			if (queryres.sold == -1)
+			{
+
+				const res = await this.items.update(
 					{
-						itemid: itemid
+						to: uuid,
+						sold: -2
+					},
+					{
+						where:
+						{
+							itemid: itemid
+						}
 					}
-				}
-			)
-			return true;
+				)
+				return true;
+			} else if (queryres.sold == 1)
+			{
+				const res = await this.items.update(
+					{
+						to: uuid,
+						sold: 2
+					},
+					{
+						where:
+						{
+							itemid: itemid
+						}
+					}
+				)
+				return true;
+			}
+			return false;
 		} catch (error)
 		{
 			console.error(error)
@@ -422,6 +487,28 @@ export default class data
 					where:
 					{
 						uuid
+					}
+				}
+			)
+			return res;
+		} catch (error)
+		{
+			console.error(`[ERROR] ${error}`);
+			return { status: "failure" };
+		}
+	}
+	/**
+	 * @description 查看用户完成交易（非自身发布）的商品
+	 */
+	public async queryFinished(uuid: string)
+	{
+		try
+		{
+			const res = await this.items.findAll(
+				{
+					where:
+					{
+						to: uuid
 					}
 				}
 			)
@@ -493,7 +580,7 @@ export default class data
 			for (var i in src)
 			{
 				const itemid = i;
-				this.favourites.create(
+				await this.favourites.create(
 					{
 						uuid,
 						itemid
@@ -525,11 +612,11 @@ export default class data
 							where:
 							{
 								itemid: { [sequelize.Op.eq]: itemid },
-								uuid:{[sequelize.Op.eq]:uuid}
+								uuid: { [sequelize.Op.eq]: uuid }
 							}
 
-					}
-				)
+						}
+					)
 			}
 			res.status = conf.res.success;
 			return res
@@ -539,6 +626,123 @@ export default class data
 			res.status = conf.res.failure;
 			res.info = error;
 			return res
+		}
+	}
+	/**
+	 * @description 添加一个消息记录
+	 * @todo
+	 */
+	public async chatPush(from: number, to: number, data: string)
+	{
+		var res = new Object() as any;
+		try
+		{
+			const resquery = await this.queryUser(to);
+			if (resquery.status == conf.res.success)
+			{
+				const ins: chatInterface =
+				{
+					from,
+					to,
+					data,
+					fetched: false,
+				}
+				await this.chat.create(ins);
+				res.status = conf.res.success;
+				return res;
+			} else
+			{
+				res.status = conf.res.failure;
+				res.info = conf.except.noUser;
+				return res;
+			}
+		} catch (error)
+		{
+			console.error(error);
+			res.status = conf.res.failure;
+			res.info = error;
+			return res;
+		}
+	}
+	/**
+	 * @description 查询未读记录
+	 * @todo
+	 */
+	public async chatFetchNew(uuid: number)
+	{
+		var res = new Object() as any;
+		try
+		{
+			const resquery = await this.chat.findAll(
+				{
+					where:
+					{
+						to: uuid,
+						fetched: false,
+					}
+				}
+			)
+			await this.chat.update(
+				{
+					fetched: true,
+				},
+				{
+					where:
+					{
+						to: uuid,
+						fetched: false,
+					}
+				}
+			)
+			res.status = conf.res.success;
+			res.data = resquery;
+			return res;
+		} catch (error)
+		{
+			console.error(error);
+			res.status = conf.res.failure;
+			res.info = error;
+			return res;
+		}
+	}
+	/**
+	 * @description 查询所有记录
+	 * @todo
+	 */
+	public async chatFetchAll(uuid: number)
+	{
+		var res = new Object() as any;
+		try
+		{
+			const resquery = await this.chat.findAll(
+				{
+					where:
+					{
+						to: uuid,
+					}
+				}
+			)
+			await this.chat.update(
+				{
+					fetched: true,
+				},
+				{
+					where:
+					{
+						to: uuid,
+						fetched: false,
+					}
+				}
+			)
+			res.status = conf.res.success;
+			res.data = resquery;
+			return res;
+		} catch (error)
+		{
+			console.error(error);
+			res.status = conf.res.failure;
+			res.info = error;
+			return res;
 		}
 	}
 	/**

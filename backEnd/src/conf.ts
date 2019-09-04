@@ -15,6 +15,7 @@ export default {
 		users: "users",
 		items: "items",
 		favourites: "favourites",
+		chat: "chat",
 	},
 	port: 4000,
 	host: "localhost",
@@ -28,10 +29,11 @@ export default {
 	secretkey: "5593a7901f990f28c117027f519a1a851c382520",
 	except: {
 		reset: "fetal error,reseting server",
-		dbConnT: "[info] database connect success",
-		dbConnF: "[error] database connect failed",
+		dbConnT: "database connect success",
+		dbConnF: "database connect failed",
 		databaseexception: "database exception",
-		invaildReq: "invaild request"
+		invaildReq: "invaild request",
+		noUser:"no such user",
 	},
 	SMSConfig:
 	{

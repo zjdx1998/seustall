@@ -1,7 +1,8 @@
 # FOOF Background Service
+[toc]
+> 文档目前未得到更新，请勿参考。请以线上demo为准。
 > Author
 > - Hanyuu Furude
-> - Ted Zhan
 ## Characteristics
 - Docker
 - Nginx
@@ -62,6 +63,26 @@ docker run --network host -d -v /home/admin/avatar:/foof/avatar hanyuufurude/foo
 | sold          | int(11)      | NO   |     | NULL    |                |
 +---------------+--------------+------+-----+---------+----------------+
 ```
+#### favourites
++--------+---------+------+-----+---------+----------------+
+| Field  | Type    | Null | Key | Default | Extra          |
++--------+---------+------+-----+---------+----------------+
+| id     | int(11) | NO   | PRI | NULL    | auto_increment |
+| itemid | int(11) | NO   |     | NULL    |                |
+| uuid   | int(11) | NO   |     | NULL    |                |
++--------+---------+------+-----+---------+----------------+
+#### chats
++-----------+--------------+------+-----+---------+----------------+
+| Field     | Type         | Null | Key | Default | Extra          |
++-----------+--------------+------+-----+---------+----------------+
+| id        | int(11)      | NO   | PRI | NULL    | auto_increment |
+| from      | int(11)      | NO   |     | NULL    |                |
+| to        | int(11)      | NO   |     | NULL    |                |
+| data      | varchar(255) | NO   |     | NULL    |                |
+| fetched   | tinyint(1)   | NO   |     | NULL    |                |
+| createdAt | datetime     | NO   |     | NULL    |                |
+| updatedAt | datetime     | NO   |     | NULL    |                |
++-----------+--------------+------+-----+---------+----------------+
 # Interface to frond end.
 
 ## Test page
@@ -94,7 +115,7 @@ None
   "address": null,
   "avatarurl": "image\\avatar\\2.jpg",
   "verified": 0,
-  "score": 10,  
+  "score": 10,
   "info": "lsakfdjlk",
   "status": "success"
 }
@@ -366,8 +387,8 @@ Content-Type:multipart/form-data
 > 文件的name属性任意，请求尺寸不大于2mb
 
 ``` json
-	
-请求载荷（payload）	
+
+请求载荷（payload）
 
 -----------------------------5005412110300
 
@@ -407,7 +428,7 @@ Content-Type: image/png
 ```json
 // success
 {"status":"success"}
-// file too large 
+// file too large
 413 Request Entity Too Large
 //wrong token
 403 Forbidden
