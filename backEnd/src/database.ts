@@ -519,15 +519,15 @@ export default class data
 			for (var i in res)
 			{
 				const itemid: any = i;
-				this.favourites.destory(
-					{
-						where:
+				const waittodelete = await this.favourites.destroy
+					(
 						{
-							$and: [
-								{ uuid: uuid },
-								{ itemid: itemid }
-							]
-						}
+							where:
+							{
+								itemid: { [sequelize.Op.eq]: itemid },
+								uuid:{[sequelize.Op.eq]:uuid}
+							}
+
 					}
 				)
 			}

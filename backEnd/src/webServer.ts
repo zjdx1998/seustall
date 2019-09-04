@@ -17,7 +17,6 @@ import data from "./database";
 import mail from './mailpush';
 import resend from './resend';
 import SMSVerify from './SMSVerify';
-import { any } from 'bluebird';
 
 const router = new koaRouter();
 function webServer()
@@ -483,7 +482,6 @@ function webServer()
 		});
 		/**
 		 * @description 添加到收藏夹
-		 * @todo 收藏夹权限隔离
 		 */
 		router.post('/fav/add', async (ctx, next) =>
 		{
@@ -547,6 +545,7 @@ function webServer()
 				ctx.response.type = "application/json";
 			} catch (error)
 			{
+				console.error(error)
 				res.status = conf.res.failure;
 				res.info = error;
 				ctx.response.body = JSON.stringify(res);

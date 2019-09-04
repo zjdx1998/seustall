@@ -7,7 +7,7 @@ import sequelize from 'sequelize';
 export default {
 	itemid: {
 		type: sequelize.INTEGER,
-		primaryKey: true,
+		primaryKey: false,
 		allowNull: false,
 	},
 	uuid:
