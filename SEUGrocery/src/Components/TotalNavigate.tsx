@@ -22,6 +22,7 @@ import ReleaseIWantPage from '../pages/ReleaseIWantPage';
 import ReleaseUserInformationPage from '../pages/ReleaseUserInformationPage';
 import PostPhotos from './PostPhotos';
 import AfterSignUpPage from "../pages/AfterSignUpPage";
+import IDVerifyPage from "../pages/IDVerifyPage";
 
 // const customComponent = props => (
 //   <ScrollView style={{backgroundColor: '#FFE4E1', flex: 1}}>
@@ -320,6 +321,12 @@ const TotalNav = createDrawerNavigator(
               drawerlabel: () => null,
           },
       },
+      verifyP: {
+          screen: IDVerifyPage,
+          navigationOptions: {
+              drawerlabel: () => null,
+          },
+      },
   },
   {
     order: [
@@ -338,6 +345,7 @@ const TotalNav = createDrawerNavigator(
       'release_want',
       'release_info',
       'postPhoto',
+        'verifyP',
     ],
     initialRouteName: 'startP',
     backBehavior: 'initialRoute',
