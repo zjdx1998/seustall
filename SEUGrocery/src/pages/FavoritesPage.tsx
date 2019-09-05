@@ -8,6 +8,9 @@ import {View, ScrollView, StyleSheet, TouchableOpacity} from 'react-native';
 import {Text, Avatar} from 'react-native-elements';
 import GoodsPanel from '../Components/GoodsPanel';
 import LocalBackHeader from '../Components/LocalBackHeader';
+import UserInfo from '../Common/UserInfo';
+
+const favQueryURL = "fav/query";
 
 export default class FavoritesPage extends Component {
   constructor(props) {
@@ -18,25 +21,7 @@ export default class FavoritesPage extends Component {
   }
 
   fetchData = () => {
-    fetch(itemURL + this.props.navigation.state.params.itemid)
-      .then(response => response.json())
-      .then(rT => {
-        this.setState({
-          itemid: rT.itemid,
-          username: itemURL + this.props.navigation.state.params.itemid,
-          uuid: rT.uuid,
-          title: rT.title,
-          type: rT.type,
-          price: parseFloat(rT.price),
-          imgurl: rT.imgurl,
-          note: rT.note,
-          depreciatione: rT.depreciatione,
-        });
-        console.log(rT);
-      })
-      .catch(e => {
-        console.log('Oops, error');
-      });
+
   };
 
   render() {

@@ -10,6 +10,8 @@ import UserInfo from './UserInfo';
 
 
 const publishedUrl = 'http://inari.ml:8080/user/published'
+const finishedUrl = 'http://inari.ml:8080/user/finished'
+
 
 class ItemList{
     itemList= {
@@ -50,7 +52,7 @@ class ItemList{
 
     /**
    * 获取物品列表(别人)
-   *
+   * @param uuid
    * @returns JSON:list
    */
 
@@ -77,6 +79,15 @@ class ItemList{
         // alert(Object.keys(list).length);
         // alert(JSON.stringify(list));
         return list;
+     }
+    /**
+   * 获取已买到物品列表(自己)
+   * @returns JSON:list
+   */
+
+     static async getFinishedList(){
+       const[uid,toke] = await this.getIdAndToken();
+       return postData(finishedUrl,{token:toke})
      }
 
 

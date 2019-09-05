@@ -26,6 +26,8 @@ import {postData} from '../Common/FetchHelper';
 import {uploadImage} from '../Common/UplodeImageTool';
 import ItemList from '../Common/ItemList';
 import ImagePicker from 'react-native-image-picker'
+import UserInfo from '../Common/UserInfo';
+import {sha1}from '../Common/SHA-1Encryptor';
 
 var photoOptions = {
     //底部弹出框选项

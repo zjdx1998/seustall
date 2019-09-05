@@ -23,6 +23,9 @@ import Loading from "../Components/Loading";
 import {postData} from '../Common/FetchHelper';
 import ItemList from '../Common/ItemList';
 import ImagePicker from "react-native-image-picker";
+import {sha1} from "../Common/SHA-1Encryptor";
+import UserInfo from '../Common/UserInfo';
+
 
 var photoOptions = {
     //底部弹出框选项
@@ -116,12 +119,33 @@ export default class ReleaseIWantPage extends Component {
       userName: '',
       password: '',
       password2: '',
+      idcard: '',
       major: '',
       detail: '',
-      campus: '九龙湖',
-      imgURL: {uri:'http://hanyuu.top:8080/image/avatar/4.jpg'},
+      campus: '',
+      imgURL: '',
     };
+    UserInfo.get('username').then(data=>{
+      this.setState({userName:data});
+    })
+    UserInfo.get('idcard').then(data=>{
+      this.setState({idcard:data});
+    })
+    UserInfo.get('studentid').then(data=>{
+      this.setState({major:data});
+    })
+    UserInfo.get('info').then(data=>{
+      this.setState({detail:data});
+    })
+    UserInfo.get('avatarurl').then(data=>{
+      this.setState({imgURL:data});
+    })
+    UserInfo.get('address').then(data=>{
+      this.setState({campus:data});
+    })
+
   }
+
 
   /*updateState = (data) => {
         this.setState(data);
@@ -148,44 +172,48 @@ export default class ReleaseIWantPage extends Component {
   checkMajor = () => {
     let ma = String(this.state.major);
     if (!(ma in majorNum)) {
-      alert('请输入正确的院系编号！');
+      alert(ma);
       return false;
     }
     return true;
   };
 
   checkInput = () => {
-    if (this.checkUserName() && this.checkPassWord() && this.checkMajor()) {
+    // if (this.checkUserName() && this.checkPassWord() && this.checkMajor()) {
+    if (this.checkUserName() && this.checkPassWord()) {
+      this.uploadUserData();
       return true;
     }
     return false;
   };
 
   uploadUserData = async () => {
-      this.Loading.show();
+      // var Loading = new Loading();
+      // Loading.show();
       const [uid, token] = await ItemList.getIdAndToken();
 
       let data = {
           token: token,
-          uuid: uid,
-          title: this.state.title,
-          type: this.state.classes,
-          imgurl: 'url',
-          depreciatione: this.state.newDegree,
-          note: this.state.detail,
+          username: this.state.userName,
+          password: sha1(this.state.password),
+          idcard: this.state.idcard,
+          studentid:this.state.major,
+          address: this.state.campus,
+          info: this.state.detail,
       };
-      console.log(data);
+      // console.log(data);
       const commonURL='http://inari.ml:8080/';
       const modifyURL=commonURL+'user/modify';
+      // alert(data);
 
       postData(modifyURL, data)
           .then(response => {
-              this.Loading.close();
+              // Loading.close();
               alert('发布成功');
           })
           .catch(err => {
               console.error(err);
-              this.Loading.close();
+              // Loading.close();
               alert('上传数据失败');
           });
   };
@@ -221,7 +249,7 @@ export default class ReleaseIWantPage extends Component {
             <Avatar
               size={120}
               rounded
-              source={this.state.imgURL}
+              source={{uri:this.state.imgURL}}
             />
             <TouchableOpacity
               onPress={this.cameraAction}

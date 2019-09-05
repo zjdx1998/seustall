@@ -89,13 +89,20 @@ export default class SignInUI extends Component {
   }
   buttonPressed() {
     postData(loginURL, {
-      phonenumber: '17551046561', //this.state.inputedNum,
-      password: sha1('13315585158zz'), //this.state.inputedPW),
+      phonenumber: '17551046561', 
+      password: sha1('13315585158zz'), 
+      // phonenumber: this.state.inputedNum,
+      // password:sha1(this.state.inputedPW),
     })
       .then(data => {
-        //UserInfo.saveUserInfo(data);
-        this.props.navigation.navigate('home');
-        // alert(data.info.username+'\n'+UserInfo.get('username'));
+        if (data.status == "success") {
+          UserInfo.saveUserInfo(data);
+          this.props.navigation.navigate('home');
+        }
+        else {
+          alert("账号或密码错误");
+        }
+                // alert(data.info.username+'\n'+UserInfo.get('username'));
         // UserInfo.get('idcard').then(name => {
         //   alert(name);
         // });
@@ -146,7 +153,7 @@ export default class SignInUI extends Component {
             />
 
             <TextInput
-              onChangeText={newText => this.updateNum({newText})}
+              onChangeText={newText => this.updateNum(newText)}
               placeholder={'请输入手机号'}
               placeholderTextColor={'#772850'}
               style={{width: componentWidth}}
@@ -170,7 +177,7 @@ export default class SignInUI extends Component {
                 color={'#772850'}
               />
               <TextInput
-                onChangeText={newText => this.updatePW({newText})}
+                onChangeText={newText => this.updatePW(newText)}
                 password={true}
                 placeholder={this.state.PWplacehold}
                 placeholderTextColor={'#772850'}
