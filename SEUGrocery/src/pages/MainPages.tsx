@@ -18,7 +18,7 @@ import IDReminder from "../Components/IDReminder";
 export default class MainPages extends Component {
   private props: any;
   state={
-    modalVisible: true,
+    modalVisible: false,
   }
 
   setModalVisible(visible) {
@@ -36,17 +36,11 @@ export default class MainPages extends Component {
             <View style={styles.slideshowContainer}>
               <SlideShow />
             </View>
-            <View style={styles.slideshowContainer}>
+            <View style={styles.ClassificationContainer}>
               <ClassificationOfGoods />
             </View>
             <View style={styles.headerContainer} />
             <View style={styles.slideshowContainer} />
-            <View style={styles.slideshowContainer}>
-              <SlideShow />
-            </View>
-            <View style={styles.slideshowContainer}>
-              <SlideShow />
-            </View>
             <View style={styles.recommendationAreaContainer}>
               <RecommendationArea navigation={this.props.navigation} />
             </View>
@@ -132,13 +126,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF0F5',
   },
   headerContainer: {
-    flex: 1,
+    // flex: 1,
   },
   slideshowContainer: {
     flex: 5,
   },
   ClassificationContainer: {
-    flex: 3,
+    flex: 2,
   },
   recommendationAreaContainer: {
     flex: 20,

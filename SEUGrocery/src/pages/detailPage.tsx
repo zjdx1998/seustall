@@ -120,6 +120,8 @@ export default class DetailPage extends Component {
                 />
                 <Text style={styles.priceTag}>￥{this.state.price.toFixed(2)}</Text>
                 <Text style={styles.title}>{this.state.title}</Text>
+
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('userInformation')}>
                 <View style={styles.userBanner}>
                     <View style={styles.avator}>
                         <Avatar
@@ -132,6 +134,7 @@ export default class DetailPage extends Component {
                         <Text style={styles.username}>{this.state.username}</Text>
                     </View>
                 </View>
+                </TouchableOpacity>
                 <Text style={styles.note}>{this.state.note}</Text>
                 {/*{this.state.isCustomer ?*/}
                     <View style={styles.contractButton}>
@@ -151,7 +154,7 @@ export default class DetailPage extends Component {
                         <TouchableOpacity
                             style={styles.buttonStyle}
                             onPress={() => {
-                                //
+                                this.props.navigation.navigate('chatP');
                                 //
                             }}>
                             <Text

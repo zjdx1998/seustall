@@ -21,6 +21,7 @@ export default class extends Component {
         }}
         placement="center"
         backgroundColor="#CC6699"
+        containerStyle={{marginTop: -20,borderBottomWidth:0}}
         leftComponent={
           <AntDesign
             name="left"

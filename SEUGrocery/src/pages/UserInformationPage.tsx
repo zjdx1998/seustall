@@ -13,6 +13,7 @@ import GoodsPanel from '../Components/GoodsPanel';
 import RecommendationArea from '../Components/RecommendationArea';
 
 export default class UserInformationPage extends Component {
+  private props: any;
   constructor(props) {
     super(props);
     //this.state.uuid = props;
@@ -50,14 +51,15 @@ export default class UserInformationPage extends Component {
                 这里是个人简介How can you benefit with a certificate from the
                 American Certification Institute
               </Text>
-              <View style={styles.viewEdit}>
+              <TouchableOpacity style={styles.viewEdit}
+              onPress={()=>this.props.navigation.navigate('release_info')}>
                 <Icon
                   name="pencil-square-o"
                   style={{color: '#cc6699'}}
                   size={15}
                 />
                 <Text style={styles.txtEdit}>编辑个人资料</Text>
-              </View>
+              </TouchableOpacity>
             </View>
           </View>
         </View>

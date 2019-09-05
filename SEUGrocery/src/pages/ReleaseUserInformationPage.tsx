@@ -23,6 +23,7 @@ import Loading from "../Components/Loading";
 import {postData} from '../Common/FetchHelper';
 import ItemList from '../Common/ItemList';
 import ImagePicker from "react-native-image-picker";
+import * as SP from '../Common/ScreenProperty';
 
 var photoOptions = {
     //底部弹出框选项
@@ -147,8 +148,8 @@ export default class ReleaseIWantPage extends Component {
 
   checkMajor = () => {
     let ma = String(this.state.major);
-    if (!(ma in majorNum)) {
-      alert('请输入正确的院系编号！');
+    if (majorNum.indexOf(ma)==-1) {
+      alert('请输入正确的院系编号');
       return false;
     }
     return true;
@@ -214,9 +215,7 @@ export default class ReleaseIWantPage extends Component {
     return (
       <View style={styles.baseContainer}>
         <ScrollView style={styles.test}>
-          <View style={{height: 50}}>
             <LocalBackHeader navigation={this.props.navigation} />
-          </View>
           <View style={styles.viewUserTop}>
             <Avatar
               size={120}
@@ -248,7 +247,6 @@ export default class ReleaseIWantPage extends Component {
                 value={this.state.userName}
                 editable={true}
                 onChangeText={userName => this.setState({userName})}
-                keyboardType={'numeric'}
                 maxLength={15}
                 style={styles.h4}
               />
@@ -363,7 +361,7 @@ const styles = StyleSheet.create({
   },
   viewUserTop: {
     marginBottom: 5,
-    height: 200,
+    height: SP.HB(20),
     backgroundColor: '#cc6699',
     alignItems: 'center',
     justifyContent: 'flex-end',
@@ -389,7 +387,7 @@ const styles = StyleSheet.create({
 
   inputContainer: {
     //margin:1,
-    width: 200,
+    width: SP.WB(70),
     backgroundColor: 'white',
     borderRadius: 10,
     flex: 1,

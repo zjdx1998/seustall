@@ -23,6 +23,10 @@ import ReleaseUserInformationPage from '../pages/ReleaseUserInformationPage';
 import PostPhotos from './PostPhotos';
 import AfterSignUpPage from "../pages/AfterSignUpPage";
 import IDVerifyPage from "../pages/IDVerifyPage";
+import FavoritesPage from "../pages/FavoritesPage";
+import ChatPage from "../pages/ChatPage";
+import Search from "../pages/Search";
+import UserInformationPage from "../pages/UserInformationPage";
 
 // const customComponent = props => (
 //   <ScrollView style={{backgroundColor: '#FFE4E1', flex: 1}}>
@@ -50,7 +54,7 @@ const customComponents = props => (
       </View>
       <View style={styles.roleInfoContainer}>
         <TouchableOpacity
-          onPress={() => props.navigation.navigate('release_info')}>
+          onPress={() =>props.navigation.navigate('userInformation')}>
           <Text style={styles.roleInfoNameText}>韩愈</Text>
           <Text style={styles.roleInfoText}>"我是韩愈。"</Text>
         </TouchableOpacity>
@@ -262,7 +266,7 @@ const TotalNav = createDrawerNavigator(
       },
     },
     page4: {
-      screen: WhatIWantPage,
+      screen: FavoritesPage,
       navigationOptions: {
         drawerLabel: '收藏夹',
       },
@@ -327,6 +331,24 @@ const TotalNav = createDrawerNavigator(
               drawerlabel: () => null,
           },
       },
+      chatP: {
+          screen: ChatPage,
+          navigationOptions: {
+              drawerlabel: () => null,
+          },
+      },
+      searchP: {
+          screen: Search,
+          navigationOptions: {
+              drawerlabel: () => null,
+          },
+      },
+      userInformation: {
+          screen: UserInformationPage,
+          navigationOptions: {
+              drawerlabel: () => null,
+          },
+      },
   },
   {
     order: [
@@ -346,6 +368,9 @@ const TotalNav = createDrawerNavigator(
       'release_info',
       'postPhoto',
         'verifyP',
+        'chatP',
+        'searchP',
+        'userInformation'
     ],
     initialRouteName: 'startP',
     backBehavior: 'initialRoute',

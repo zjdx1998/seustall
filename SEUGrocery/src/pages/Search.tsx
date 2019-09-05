@@ -1,7 +1,7 @@
 /*
-  @version: 0.1
+  @version: 0.2
   @author: 71117133 张睦婕
-  @date: 2019-8-30
+  @date: 2019-9-5
 */
 import React, { Component } from 'react';
 import { StyleSheet,
@@ -12,25 +12,55 @@ import { StyleSheet,
     TouchableOpacity,
     StatusBar,
     TextInput } from 'react-native';
-// import { NavigationEvents } from "react-navigation";
 import * as DataBase from '../Common/DataBase';
-import {Icon} from "react-native-elements";
+import {Icon,Header,SearchBar} from "react-native-elements";
+import * as SP from '../Common/ScreenProperty';
 
 export default class Search extends Component {
     private state: any;
+    private props: any;
     constructor(props) {
         super(props);
         this.state = {
             isLoading: false,
             searchVal: "",// 搜索文字
-            hasData: false,// 删除确认弹框
             searchHistory: [],// 搜索历史数组
-            hotTagsArr: [],// 热门搜索标签数组
+            search: '',
+            sgbc:'#fff',
+            subc:'#cc6699',
+            sgs:10,
+            sus:0,
+            sgtc:'#cc6699',
+            sutc:'#fff',
+        }
+    }
+    updateSearch = search => {
+        this.setState({ search });
+    };
+    changeSearchGoal=(index)=>{
+        if(index==1){
+            this.setState({
+                sgbc:'#fff',
+                subc:'#cc6699',
+                sgs:10,
+                sus:0,
+                sgtc:'#cc6699',
+                sutc:'#fff',
+            })
+        }
+        if(index==2){
+            this.setState({
+                subc:'#fff',
+                sgbc:'#cc6699',
+                sus:10,
+                sgs:0,
+                sutc:'#cc6699',
+                sgtc:'#fff',
+            })
         }
     }
     componentDidMount() {
 
-        // 获取热门搜索标签
         this.setState({
             isLoading: true,
         })
@@ -66,30 +96,66 @@ export default class Search extends Component {
         }
     }
     render() {
-        // const { navigate, goBack } = this.props.navigation;
+        const params = this.props.navigation.state.params || {};
         return (
             <View style={styles.container}>
-                {/* 监听页面 刷新搜索本地历史 */}
-                {/*<NavigationEvents*/}
-                {/*    onWillFocus={() => {*/}
-                {/*        // 查询本地搜索历史*/}
-                {/*        this.getHistory();*/}
-                {/*    }}*/}
-                {/*/>*/}
-                <StatusBar
-                    animated={true}//是否动画
-                    hidden={false}//是否隐藏
-                    backgroundColor={'#000'}//android 设置状态栏背景颜色
-                    translucent={false}//android 设置状态栏是否为透明
-                    showHideTransition="fade"//IOS状态栏改变时动画 fade:默认 slide
-                    networkActivityIndicatorVisible={this.state.isLoading}//IOS设定网络活动指示器(就是那个菊花)是否显示在状态栏。
-                    statusBarStyle={"default"}//状态栏样式 default	默认（IOS为白底黑字、Android为黑底白字）
-                    barStyle={"default"}// 状态栏文本的颜色。
+                <Header
+                    containerStyle={{
+                        backgroundColor: '#cc6699',
+                        justifyContent: 'space-around',
+                    }}
+                    leftComponent={
+                        <Icon
+                            name="left"
+                            size={36}
+                            type={'antdesign'}
+                            color={"#030303"}
+                            onPress={() => {
+                                try {
+                                    this.props.navigation.state.params.refresh();
+                                } catch (e) {}
+                                if (params.go_back_key == null) {
+                                    this.props.navigation.navigate('home');
+                                } else {
+                                    this.props.navigation.navigate(params.go_back_key);
+                                }
+                            }}
+                        />
+                    }
+                    centerComponent={
+                        <View style={styles.container_row}>
+                            <View style={[styles.mode,
+                                {backgroundColor:this.state.sgbc}]}>
+                                <Text
+                                    style={[styles.text,
+                                        {color:this.state.sgtc,textShadowRadius:this.state.sgs}]}
+                                    onPress={()=>this.changeSearchGoal(1)}
+                                >搜商品 </Text>
+                            </View>
+                            <View style={[styles.mode,
+                                {backgroundColor:this.state.subc}]}>
+                                <Text
+                                    style={[styles.text,
+                                        {color:this.state.sutc,textShadowRadius:this.state.sus}]}
+                                    onPress={()=>this.changeSearchGoal(2)}
+                                > 搜用户 </Text>
+                            </View>
+                        </View>
+                    }
                 />
-                <View style={styles.headContent}>
+
+                <View style={{
+                    backgroundColor:'#fff',
+                    flexDirection:'row',
+                    justifyContent:'center',
+                    alignItems:'center',
+                    width:SP.WB(100),
+                    height:SP.H(100),
+                    borderBottomColor: '#bbb',
+                    borderBottomWidth:1,
+                }}>
                     <View style={styles.searchInp}>
-                        {/*<Image style={styles.searchInpIcon} source={require('../../images/search.png')} />*/}
-                        <Icon  name={'search1'}/>
+                        <Icon  name={'search1'} type={'antdesign'}/>
                         <TextInput
                             style={styles.TextInput}
                             returnKeyType={"search"}// 键盘确定按钮类型 done/go/next/search/send
@@ -99,8 +165,7 @@ export default class Search extends Component {
                             onSubmitEditing={() => {
                                 // 保存搜索内容
                                 this.insertSearch(this.state.searchVal);
-                                // 跳转到搜索结果页，并传搜索内容searchText
-                                // navigate("SearchResult", { "searchText": this.state.searchVal })
+                                this.props.navigation.navigate('searchR')
                             }}// 确定事件
                             defaultValue={this.state.searchVal}
                             onChangeText={(text) => {
@@ -110,16 +175,19 @@ export default class Search extends Component {
                             }}
                             autoFocus={true}
                         />
+
                     </View>
                     <TouchableOpacity
-                        onPress={() => {
-                            // goBack();
-                        }}
-                        activeOpacity={.8}
-                        style={styles.cancleClick}
-                    >
-                        <Text style={styles.cancleBtn}>取消</Text>
-                    </TouchableOpacity>
+                            onPress={() => {
+                                this.setState({
+                                    searchVal: ''
+                                })
+                            }}
+                            activeOpacity={.8}
+                            style={styles.cancleClick}
+                        >
+                            <Text style={styles.cancleBtn}>取消</Text>
+                        </TouchableOpacity>
                 </View>
                 <ScrollView>
                     <View style={styles.searchMain}>
@@ -129,16 +197,12 @@ export default class Search extends Component {
                             <TouchableOpacity
                                 activeOpacity={0.8}
                                 onPress={() => {
-                                    // 判断是否有本地搜索历史
-                                    if (this.state.searchHistory.length > 0) {
                                         this.setState({
-                                            hasData: true,
+                                            searchHistory:[],
                                         })
-                                    }
                                 }}
                             >
                                 <Icon name={'delete'} type={'antdesign'}/>
-                                {/*<Image source={require('../../images/searchDelete.png')} />*/}
                             </TouchableOpacity>
                         </View>
                         {
@@ -156,7 +220,6 @@ export default class Search extends Component {
                                                         })
                                                         // 保存搜索内容
                                                         this.insertSearch(item);
-                                                        // navigate("SearchResult", { "searchText": item })
                                                     }}
                                                     activeOpacity={.8}
                                                     style={styles.searchLabelBox}
@@ -172,76 +235,51 @@ export default class Search extends Component {
                                     <Text style={styles.noDataTxt}>暂无搜索历史</Text>
                                 </View>
                         }
-                        <Text style={styles.searchMainTit}>热门搜索</Text>
-                        <View style={styles.searchMainLabel}>
-                            {/* 热门搜索标签渲染 */}
-                            {this.state.hotTagsArr.map((item, i) => {
-                                return (
-                                    <TouchableOpacity
-                                        activeOpacity={0.8}
-                                        style={styles.searchLabelBox}
-                                        key={i}
-                                        onPress={() => {
-                                            this.setState({
-                                                searchVal: item.name,
-                                            })
-                                            // 保存搜索内容
-                                            this.insertSearch(item.name);
-                                            // navigate("SearchResult", { "label": item })
-                                        }}
-                                    >
-                                        <Text style={styles.searchLabelText}>{item.name}</Text>
-                                    </TouchableOpacity>
-                                )
-                            })}
-                        </View>
+
                     </View>
                 </ScrollView>
-                {/* 删除历史记录确认弹框 */}
-                {/*<Confirm visible={this.state.hasData}*/}
-                {/*         text="确定删除全部搜索历史吗？"*/}
-                {/*         yesClick={() => {*/}
-                {/*             this.setState({*/}
-                {/*                 searchVal: '',*/}
-                {/*                 searchHistory: [],*/}
-                {/*                 hasData: false,*/}
-                {/*             })*/}
-                {/*             DataBase.removeItem("searchHistory");*/}
-                {/*         }}*/}
-                {/*         noClick={() => {*/}
-                {/*             this.setState({*/}
-                {/*                 hasData: false*/}
-                {/*             })*/}
-                {/*         }}*/}
-                {/*/>*/}
             </View>
         );
     }
 }
 const styles = StyleSheet.create({
+    mode:{
+        width:SP.WB(35),
+        justifyContent:'center',
+        borderTopLeftRadius:20,
+        borderTopRightRadius:20,
+    },
+    header:{
+        flex:1,
+        backgroundColor:'#cc6699',
+    },
     container: {
         flex: 1,
-        backgroundColor: 'white',
+        backgroundColor: '#fff',
     },
-    // 头部搜索框
-    headContent: {
-        backgroundColor: 'white',
-        paddingTop: 100,
-        height: 100,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-around',
-        borderBottomWidth: 100,
-        borderBottomColor: '#ECECEC'
+    container_row:{
+        flex:1,
+        flexDirection:'row',
+    },
+    text:{
+        fontSize:20,
+        textAlign:'center',
+        padding:10,
+        color:'#fff',
+    },
+    search:{
+        backgroundColor:'#fff',
+        borderWidth:0,
     },
     searchInp: {
-        width: 304,
-        height: 30,
+        width: SP.WB(70),
+        height: SP.H(70),
         flexDirection: "row",
         alignItems: 'center',
-        borderRadius: 4,
-        backgroundColor: 'grey',
-        marginLeft: 16,
+        borderRadius: 40,
+        backgroundColor: '#ddd',
+        marginLeft: SP.W(50),
+        paddingLeft:SP.W(20),
     },
     searchInpIcon: {
         width: 14,
@@ -263,8 +301,9 @@ const styles = StyleSheet.create({
     cancleBtn: {
         fontSize: 14,
         color: '#666',
-        lineHeight: 44,
+        // lineHeight: 44,
     },
+
     // 搜索标签内容盒子
     searchMain: {
         paddingLeft: 16,
@@ -298,7 +337,6 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         marginTop: 16,
     },
-    // 热门搜索
     searchMainLabel: {
         flexDirection: "row",
         flexWrap: 'wrap',
@@ -306,8 +344,8 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
     },
     searchLabelBox: {
-        borderRadius: 2,
-        backgroundColor: 'gray',
+        borderRadius: 20,
+        backgroundColor: '#cc669922',
         marginRight: 10,
         marginTop: 10,
         height: 32,
@@ -319,4 +357,5 @@ const styles = StyleSheet.create({
         paddingLeft: 18,
         paddingRight: 18,
     },
+
 });
