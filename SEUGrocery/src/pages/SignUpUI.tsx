@@ -19,11 +19,14 @@ import {
 import {postData} from '../Common/FetchHelper';
 import {sha1} from '../Common/SHA-1Encryptor';
 import UserInfo from '../Common/UserInfo';
-const loginURL = 'http://inari.ml:8080/user/login';
 import {Icon} from 'react-native-elements';
 import * as SP from '../Common/ScreenProperty';
+// import sendVerify from '../Common/QCloudSMS';
 
 const {UIManager} = NativeModules;
+
+const registerURL = 'http://inari.ml:8080/user/register';
+const verifiycodeURL = "http://inari.ml:8080/user/requirecode";
 
 UIManager.setLayoutAnimationEnabledExperimental &&
 UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -81,28 +84,46 @@ export default class SignUpUI extends Component {
             return;
         }
         console.log(this.state);
-        // postData(loginURL, {
-        //     phonenumber: '17551046561', //this.state.inputedNum,
-        //     password: sha1('13315585158zz'), //this.state.inputedPW),
-        // })
-        //     .then(data => {
-        //         UserInfo.saveUserInfo(data);
-        //         this.props.navigation.navigate('home');
-        //         // alert(data.info.username+'\n'+UserInfo.get('username'));
-        //         // UserInfo.get('idcard').then(name => {
-        //         //   alert(name);
-        //         // });
-        //     }) // JSON from `response.json()` call
-        //     .catch(error => console.error(error));
-        // // this.setState(state => {
-        // //   return {
-        // //     inputedPW: '',
-        // //   };
-        // // });
-    }
+        postData(registerURL, {
+            // phonenumber: '17551046561', 
+            // password: sha1('13315585158zz'), 
+            phonenumber: this.state.inputNum,
+            verifiycode: this.state.inputedCode,
+            password: sha1(this.state.inputedPW),
+        })
+            .then(data => {
+                if(data.status=="success"){
+                    alert("注册成功")
+                    this.props.navigation.navigate('signin');
+                    }
+                    else{
+                      alert(data.info);
+                    }
+                // alert(data.info.username+'\n'+UserInfo.get('username'));
+                // UserInfo.get('idcard').then(name => {
+                //   alert(name);
+                // })
+            }) // JSON from `response.json()` call
+            .catch(error => console.error(error));
+        // this.setState(state => {
+        //   return {
+        //     inputedPW: '',
+        //   };
+        // });
+        }
 
     sendVerifyCode=(event)=>{
-        alert('验证码已发送')
+        // sendVerify('17551046561');
+        // alert(this.state.inputNum);
+        postData(verifiycodeURL,
+            {phonenumber:this.state.inputNum})
+        .then(data=>{
+            if(data.status=="success"){
+                alert("验证码已发送")
+            }else{
+                alert(JSON.stringify(data));
+            }
+        })
     }
 
 
