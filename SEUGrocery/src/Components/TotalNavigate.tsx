@@ -1,30 +1,29 @@
 // /*
-//   @version: 0.3
+//   @version: 0.9
 //   @author: 71117123张建东
 //   @date: 2019-8-22
 // */
 import React, {Component} from 'react';
 import MainPages from '../pages/MainPages';
-import {
-  createAppContainer,
-  createDrawerNavigator,
-  DrawerItems,
-  DrawerNavigator,
-} from 'react-navigation';
+import {createAppContainer, createDrawerNavigator} from 'react-navigation';
 import {Text} from 'react-native-elements';
-import {ScrollView, SafeAreaView, StyleSheet, Image, View} from 'react-native';
+import {StyleSheet, Image, View} from 'react-native';
 import detailPage from '../pages/detailPage';
 import StartPage from '../pages/StartPage';
 import * as SP from '../Common/ScreenProperty';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import SignInUI from '../pages/SignInUI';
+import SignUpUI from '../pages/SignUpUI';
 import MyGroceryPage from '../pages/MyGroceryPage';
 import WhatIBoughtPage from '../pages/WhatIBoughtPage';
 import WhatIWantPage from '../pages/WhatIWantPage';
 import ReleaseGoodInformation from '../pages/ReleaseGoodInformation';
 import ReleaseIWantPage from '../pages/ReleaseIWantPage';
-import ReleaseUserInformationPage from "../pages/ReleaseUserInformationPage";
-import PostPhotos from "./PostPhotos";
+import ReleaseUserInformationPage from '../pages/ReleaseUserInformationPage';
+import PostPhotos from './PostPhotos';
+import AfterSignUpPage from "../pages/AfterSignUpPage";
+import IDVerifyPage from "../pages/IDVerifyPage";
+
 // const customComponent = props => (
 //   <ScrollView style={{backgroundColor: '#FFE4E1', flex: 1}}>
 //     <SafeAreaView forceInset={{top: 'always', horizontal: 'never'}}>
@@ -62,8 +61,7 @@ const customComponents = props => (
         style={[
           styles.menuSingleContainer,
           {
-            backgroundColor:
-              that.state.currentIndex === 1 ? '#a52a7c' : '#249aa3',
+            backgroundColor: that.state.currentIndex === 1 ? '#fff' : '#CC6699',
           },
         ]}
         onPress={() => {
@@ -76,17 +74,29 @@ const customComponents = props => (
           props.navigation.closeDrawer();
           props.navigation.navigate('home', {
             go_back_key: props.navigation.state.key,
+            refresh: () => {
+              that.setState({currentIndex: 1});
+            },
           });
           that.setState({currentIndex: 1});
         }}>
-        <Text style={styles.menuTitleStyle}>首页</Text>
+        <Text
+          style={[
+            styles.menuTitleStyle,
+            {color: that.state.currentIndex === 1 ? '#CC6699' : '#fff'},
+            {
+              marginHorizontal:
+                that.state.currentIndex === 1 ? SP.WB(10) : SP.WB(3),
+            },
+          ]}>
+          首页
+        </Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[
           styles.menuSingleContainer,
           {
-            backgroundColor:
-              that.state.currentIndex === 2 ? '#a52a7c' : '#249aa3',
+            backgroundColor: that.state.currentIndex === 2 ? '#fff' : '#CC6699',
           },
         ]}
         onPress={() => {
@@ -98,17 +108,29 @@ const customComponents = props => (
           props.navigation.closeDrawer();
           props.navigation.navigate('page1', {
             go_back_key: props.navigation.state.key,
+            refresh: function() {
+              that.setState({currentIndex: 1});
+            },
           });
           that.setState({currentIndex: 2});
         }}>
-        <Text style={styles.menuTitleStyle}>我的铺子</Text>
+        <Text
+          style={[
+            styles.menuTitleStyle,
+            {color: that.state.currentIndex === 2 ? '#CC6699' : '#fff'},
+            {
+              marginHorizontal:
+                that.state.currentIndex === 2 ? SP.WB(10) : SP.WB(3),
+            },
+          ]}>
+          我的铺子
+        </Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[
           styles.menuSingleContainer,
           {
-            backgroundColor:
-              that.state.currentIndex === 3 ? '#a52a7c' : '#249aa3',
+            backgroundColor: that.state.currentIndex === 3 ? '#fff' : '#CC6699',
           },
         ]}
         onPress={() => {
@@ -120,6 +142,9 @@ const customComponents = props => (
           props.navigation.closeDrawer();
           props.navigation.navigate('page2', {
             go_back_key: props.navigation.state.key,
+            refresh: () => {
+              that.setState({currentIndex: 1});
+            },
           });
           that.setState({currentIndex: 3});
           // props.navigation.navigate('firstPage', {
@@ -129,42 +154,76 @@ const customComponents = props => (
           //   },
           // });
         }}>
-        <Text style={styles.menuTitleStyle}>我买到的</Text>
+        <Text
+          style={[
+            styles.menuTitleStyle,
+            {color: that.state.currentIndex === 3 ? '#CC6699' : '#fff'},
+            {
+              marginHorizontal:
+                that.state.currentIndex === 3 ? SP.WB(10) : SP.WB(3),
+            },
+          ]}>
+          我买到的
+        </Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={[
           styles.menuSingleContainer,
           {
-            backgroundColor:
-              that.state.currentIndex === 4 ? '#a52a7c' : '#249aa3',
+            backgroundColor: that.state.currentIndex === 4 ? '#fff' : '#CC6699',
           },
         ]}
         onPress={() => {
           props.navigation.closeDrawer();
           props.navigation.navigate('page3', {
             go_back_key: props.navigation.state.key,
+            refresh: () => {
+              that.setState({currentIndex: 1});
+            },
           });
           that.setState({currentIndex: 4});
         }}>
-        <Text style={styles.menuTitleStyle}>我想买的</Text>
+        <Text
+          style={[
+            styles.menuTitleStyle,
+            {color: that.state.currentIndex === 4 ? '#CC6699' : '#fff'},
+            {
+              marginHorizontal:
+                that.state.currentIndex === 4 ? SP.WB(10) : SP.WB(3),
+            },
+          ]}>
+          我想买的
+        </Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[
           styles.menuSingleContainer,
           {
-            backgroundColor:
-              that.state.currentIndex === 5 ? '#a52a7c' : '#249aa3',
+            backgroundColor: that.state.currentIndex === 5 ? '#fff' : '#CC6699',
           },
         ]}
         onPress={() => {
           props.navigation.closeDrawer();
           props.navigation.navigate('page4', {
             go_back_key: props.navigation.state.key,
+            refresh: () => {
+              that.setState({currentIndex: 1});
+            },
           });
-          that.setState({currentIndex: 3});
+          that.setState({currentIndex: 5});
         }}>
-        <Text style={styles.menuTitleStyle}>收藏夹</Text>
+        <Text
+          style={[
+            styles.menuTitleStyle,
+            {color: that.state.currentIndex === 5 ? '#CC6699' : '#fff'},
+            {
+              marginHorizontal:
+                that.state.currentIndex === 5 ? SP.WB(10) : SP.WB(3),
+            },
+          ]}>
+          收藏夹
+        </Text>
       </TouchableOpacity>
     </View>
   </View>
@@ -197,7 +256,7 @@ const TotalNav = createDrawerNavigator(
       },
     },
     page3: {
-      screen: WhatIBoughtPage,
+      screen: WhatIWantPage,
       navigationOptions: {
         drawerLabel: '我想买的',
       },
@@ -244,12 +303,30 @@ const TotalNav = createDrawerNavigator(
         drawerLabel: () => null,
       },
     },
+    signUpP: {
+      screen: SignUpUI,
+      navigationOptions: {
+        drawerLabel: () => null,
+      },
+    },
     postPhoto: {
       screen: PostPhotos,
       navigationOptions: {
         drawerlabel: () => null,
       },
     },
+      afterSignUp: {
+          screen: AfterSignUpPage,
+          navigationOptions: {
+              drawerlabel: () => null,
+          },
+      },
+      verifyP: {
+          screen: IDVerifyPage,
+          navigationOptions: {
+              drawerlabel: () => null,
+          },
+      },
   },
   {
     order: [
@@ -262,10 +339,13 @@ const TotalNav = createDrawerNavigator(
       'page4',
       'startP',
       'loginP',
+      'signUpP',
+      'afterSignUp',
       'release_good',
       'release_want',
       'release_info',
       'postPhoto',
+        'verifyP',
     ],
     initialRouteName: 'startP',
     backBehavior: 'initialRoute',
@@ -306,12 +386,14 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'space-between',
+    backgroundColor: 'white',
   },
   roleBaseContainer: {
     flex: 1,
     flexDirection: 'row',
     paddingTop: SP.HB(5),
     backgroundColor: '#cc6699',
+    marginBottom: SP.HB(0.5),
   },
   roleAvatorContainer: {
     flex: 1,
@@ -341,12 +423,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#CC6699',
   },
   menuSingleContainer: {
-    borderBottomWidth: SP.HB(0.1),
-    borderBottomColor: '#fff',
+    borderRadius: SP.HB(1),
+    marginVertical: SP.HB(1),
+    // borderTopWidth: SP.HB(1),
+    // borderBottomWidth: SP.HB(1),
+    // borderBottomColor: '#CC6699',
+    // borderTopColor: '#CC6699',
   },
   menuTitleStyle: {
     fontSize: 24,
-    color: '#fff',
-    marginLeft: SP.WB(3),
+    margin: SP.WB(3),
   },
 });

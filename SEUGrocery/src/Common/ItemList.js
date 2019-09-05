@@ -27,7 +27,7 @@ class ItemList{
      }
 
      static async getIdAndToken(){
-       
+
          return Promise.all([
              UserInfo.get('uuid'),
              UserInfo.get('token'),
@@ -41,7 +41,7 @@ class ItemList{
      static async getItemList(){
         // alert('rua');
         const[uid,toke] = await this.getIdAndToken();
-        //  alert(uid+toke);
+         // alert(uid+toke);
         return postData(publishedUrl,{token:toke,
         uuid:uid})
 
@@ -50,7 +50,7 @@ class ItemList{
 
     /**
    * 获取物品列表(别人)
-   * 
+   *
    * @returns JSON:list
    */
 

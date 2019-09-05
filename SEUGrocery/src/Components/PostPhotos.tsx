@@ -28,7 +28,7 @@ var photoOptions = {
   noData: false,
   storageOptions: {
     skipBackup: true,
-    path: 'images',
+    path: '东大杂货铺',
   },
 };
 
@@ -54,9 +54,24 @@ export default class PostPhotos extends Component {
         .map(i => <Image source={{uri: i}} style={styles.img} />);
     }
   };
+
+  delete=()=>{
+    alert('将删除所有选中照片');
+    this.setState({
+      imgURL: '',
+    });
+  }
+
   render = () => {
     return (
       <View>
+        <View style={{flexDirection:'row',justifyContent: 'flex-end',margin:20}}>
+        <Icon
+            name={'delete'}
+            type={'antdesign'}
+            onPress={this.delete}
+        />
+        </View>
         <View style={styles.container}>
           {this.renderImg()}
           <TouchableOpacity onPress={this.cameraAction}>
@@ -107,7 +122,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    // justifyContent: 'center',
     flexWrap: 'wrap',
     margin: SP.WB(2),
   },

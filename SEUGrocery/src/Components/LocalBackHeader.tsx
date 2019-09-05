@@ -4,15 +4,6 @@
   @date: 2019-8-22
 */
 import React, {Component} from 'react';
-import {
-  StyleSheet,
-  View,
-  Dimensions,
-  Image,
-  Alert,
-  Text,
-  ImageBackground,
-} from 'react-native';
 import {Header} from 'react-native-elements';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 export default class extends Component {
@@ -36,6 +27,9 @@ export default class extends Component {
             size={36}
             color="#030303"
             onPress={() => {
+              try {
+                this.props.navigation.state.params.refresh();
+              } catch (e) {}
               if (params.go_back_key == null) {
                 this.props.navigation.navigate('home');
               } else {

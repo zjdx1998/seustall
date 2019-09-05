@@ -14,6 +14,7 @@ import {
   NativeModules,
   LayoutAnimation,
   TouchableOpacity,
+  KeyboardAvoidingView,
 } from 'react-native';
 import {postData} from '../Common/FetchHelper';
 import {sha1} from '../Common/SHA-1Encryptor';
@@ -41,7 +42,7 @@ const state1 = {
   sendIDText: '',
   bigButtonText: '登    录',
   registerAlpha: 1,
-  register: '验证码登录 / 注册',
+  register: '验证码登录',
   PWplacehold: ' 请输入密码',
   PWIcon: 'lock',
   PWVisible: false,
@@ -53,7 +54,7 @@ const state2 = {
   PWInputWidth: componentWidth * 0.6,
   idButtonAlpha: 1,
   sendIDText: '发送验证码',
-  bigButtonText: '登  录   /   注  册',
+  bigButtonText: '登    录',
   registerAlpha: 0,
   register: '密码登录',
   PWplacehold: '请输入验证码',
@@ -63,6 +64,7 @@ const state2 = {
 
 export default class SignInUI extends Component {
   private state: any;
+  private props: any;
   constructor(props) {
     super(props);
     this.state = Object.assign({inputedNum: ''}, state1);
@@ -91,7 +93,7 @@ export default class SignInUI extends Component {
       password: sha1('13315585158zz'), //this.state.inputedPW),
     })
       .then(data => {
-        UserInfo.saveUserInfo(data);
+        //UserInfo.saveUserInfo(data);
         this.props.navigation.navigate('home');
         // alert(data.info.username+'\n'+UserInfo.get('username'));
         // UserInfo.get('idcard').then(name => {
@@ -105,6 +107,11 @@ export default class SignInUI extends Component {
     //   };
     // });
   }
+
+  sendVerifyCode=(event)=>{
+    alert('验证码已发送')
+  }
+
   identifyingCodeLoginButton = () => {
     LayoutAnimation.spring();
     this.setState(state => {
@@ -117,9 +124,13 @@ export default class SignInUI extends Component {
     });
   };
 
+  changeToSignUp=()=>{
+
+  }
+
   render() {
     return (
-      //background
+        <KeyboardAvoidingView style={{width:totalWidth,height: totalHeight}} behavior="position">
       <ImageBackground
         source={require('../Common/img/loginBackground.png')}
         style={styles.background}>
@@ -128,6 +139,7 @@ export default class SignInUI extends Component {
           {/*//手机号输入*/}
           <View style={[styles.inputStyle, styles.numberInputStyle]}>
             <Icon
+                light
               name={'phone-square'}
               type={'font-awesome'}
               color={'#772850'}
@@ -169,8 +181,9 @@ export default class SignInUI extends Component {
             </View>
             {/*//发送验证码*/}
             <View
-              style={[styles.idButton, {opacity: this.state.idButtonAlpha}]}>
-              <Text style={{color: '#cc6699', size: 30}}>
+              style={[styles.idButton, {opacity: this.state.idButtonAlpha}]}
+            >
+              <Text style={{color: '#cc6699', size: 30}} onPress={this.sendVerifyCode}>
                 {this.state.sendIDText}
               </Text>
             </View>
@@ -182,16 +195,26 @@ export default class SignInUI extends Component {
             <Text style={styles.bigTextPrompt}>{this.state.bigButtonText}</Text>
           </TouchableOpacity>
           {/*//切换状态的按键*/}
+          <View style={[styles.container_row,{marginLeft:componentWidth*0.1}]}>
           <TouchableOpacity
             style={styles.registerButton}
             onPress={this.identifyingCodeLoginButton}>
-            {/*<View style={{backgroundColor:'#cc9966', top:heading+90}}>*/}
             <Text style={styles.registerText}>{this.state.register}</Text>
-            {/*</View>*/}
           </TouchableOpacity>
-          {/*<View style={{backgroundColor:'red',width:this.state.PWInputWidth,height:50}}></View>*/}
+
+          <TouchableOpacity
+              style={styles.registerButton}
+              onPress={()=>{
+                this.props.navigation.navigate('signUpP')
+                console.log('注册')
+              }}
+          >
+            <Text style={styles.registerText}>注册</Text>
+          </TouchableOpacity>
+          </View>
         </View>
       </ImageBackground>
+        </KeyboardAvoidingView>
     );
   }
 }
@@ -203,7 +226,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     // backgroundColor: '#F5FCFF',
   },
   container_row: {
@@ -212,7 +235,7 @@ const styles = StyleSheet.create({
   },
 
   numberInputStyle: {
-    top: heading + 20,
+    bottom: heading + 90,
     left: leftStartPoint,
     width: componentWidth,
     backgroundColor: 'white',
@@ -220,7 +243,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   passwordInputStyle: {
-    top: heading + 50,
+    bottom: heading + 70,
     left: leftStartPoint,
     // width: componentWidth,
     // backgroundColor:'#cc6699',
@@ -229,7 +252,7 @@ const styles = StyleSheet.create({
     borderColor: '#cc6699',
   },
   bigButton: {
-    top: heading + 70,
+    bottom: heading + 50,
     backgroundColor: 'white',
     left: leftStartPoint,
     width: componentWidth,
@@ -249,9 +272,9 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   registerButton: {
-    top: heading + 90,
+    bottom: heading + 30,
     left: leftStartPoint,
-    width: componentWidth * 0.46,
+    width: componentWidth*0.7,
   },
   inputStyle: {
     flexDirection: 'row',
@@ -263,7 +286,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   idButton: {
-    top: heading + 50,
+    bottom: heading + 70,
     backgroundColor: 'white',
     // color:'#cc6699'
     textAlign: 'center',

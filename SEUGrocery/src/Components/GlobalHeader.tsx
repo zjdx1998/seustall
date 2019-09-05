@@ -62,9 +62,6 @@ export default class extends Component {
       />
     );
   }
-  _onClickList = () => {
-    //this.props.navigation.openDrawer();
-  };
   updateSearch = (search: any) => {
     this.setState({search});
   };

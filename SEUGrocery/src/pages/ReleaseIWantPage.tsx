@@ -17,7 +17,9 @@ import {
 } from 'react-native';
 import LocalBackHeader from '../Components/LocalBackHeader';
 import * as SP from '../Common/ScreenProperty';
-//import {postData} from '../Common/FetchHelper';
+import {postData} from '../Common/FetchHelper';
+import ItemList from '../Common/ItemList';
+import Loading from '../Components/Loading';
 
 var {height, width} = Dimensions.get('window');
 const classes = [
@@ -51,6 +53,7 @@ let imgurl;
 
 export default class ReleaseIWantPage extends Component {
   private state: any;
+  private Loading: any;
   constructor(props) {
     super(props);
     this.state = {
@@ -83,17 +86,18 @@ export default class ReleaseIWantPage extends Component {
     return true;
   };
   checkInput = () => {
+    console.log(this.checkNewDegree());
     if (this.checkNewDegree()) {
       if (this.state.title == '') {
         alert('请输入求购物品名！');
         return false;
       }
+      return true;
       /*if(this.computeValue()<=0){
                 alert('最高可接受价格还没设置哦^_^');
                 return false;
             }*/
     }
-    return true;
   };
   updateFirstValue = value => {
     this.setState({firstValue: value});
@@ -105,27 +109,47 @@ export default class ReleaseIWantPage extends Component {
     return this.state.firstValue + this.state.secondValue / 100;
   };
 
-  ifPostDataSucceed = () => {
-    let data = {
-      token:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjozLCJnZW5' +
-        'lcmF0ZSI6MTU2NzA0MTI3ODcxMSwiaWF0IjoxNTY3MDQxMjc4fQ.X48-FXKuBOK6f_PBDE4E2jfB457739iAe3dEQKs2mzY',
-      uuid: '3',
-      title: 'pagetest',
-      type: '1',
-      price: '87',
-      imgurl: 'url',
-      depreciatione: '6',
-      note: 'dsfasdg',
-    };
+  // @ts-ignore
+  uploadItemData = async () => {
+    this.Loading.show();
+    const [uid, token] = await ItemList.getIdAndToken();
 
-    // postData(addItemURL,data)
-    //     .then(res=>console.log(res))
-    //     .catch(err=>console.error(err))
+    let data = {
+      token:token,
+      uuid: uid,
+      title: this.state.title,
+      type: '1',
+      price: this.computeValue(),
+      imgurl: 'null',
+      depreciatione: this.state.newDegree,
+      note: this.state.campus+this.state.detail,
+      sold:-1,
+    };
+    console.log(data);
+    const addItemURL = 'http://inari.ml:8080/item/add';
+
+    postData(addItemURL, data)
+        .then(response => {
+          console.log('uploadData', response);
+          if (response.status == 'success') {
+            this.Loading.close();
+            alert('发布成功');
+          }else{
+            alert('上传数据失败');
+            this.Loading.close();
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          alert('上传数据失败');
+          this.Loading.close();
+        });
   };
+
   confirm = () => {
-    // this.checkNewDegree();
-    // if(this.checkInput()){}
+     if(this.checkInput()){
+       this.uploadItemData();
+     };
   };
   render() {
     return (
@@ -176,9 +200,9 @@ export default class ReleaseIWantPage extends Component {
                 onValueChange={(itemValue, itemIndex) => {
                   this.setState({campus: itemValue});
                 }}>
-                <Picker.Item label="九龙湖校区" value="九龙湖" />
-                <Picker.Item label="四牌楼校区" value="四牌楼" />
-                <Picker.Item label="丁家桥校区" value="丁家桥" />
+                <Picker.Item label="九龙湖校区" value="九龙湖校区，" />
+                <Picker.Item label="四牌楼校区" value="四牌楼校区，" />
+                <Picker.Item label="丁家桥校区" value="丁家桥校区，" />
               </Picker>
             </View>
 
@@ -190,8 +214,8 @@ export default class ReleaseIWantPage extends Component {
                 onValueChange={itemValue =>
                   this.setState({classes: itemValue})
                 }>
-                {classes.map(i => (
-                  <Picker.Item label={i} value={i} />
+                {classes.map((i,j) => (
+                  <Picker.Item label={i} value={j} />
                 ))}
               </Picker>
             </View>
@@ -230,6 +254,13 @@ export default class ReleaseIWantPage extends Component {
               {100 - this.state.detail.length}/100
             </Text>
           </View>
+
+          <Loading
+              ref={r => {
+                this.Loading = r;
+              }}
+              hide={true}
+          />
         </ScrollView>
       </View>
     );

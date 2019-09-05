@@ -79,36 +79,39 @@ export default class SlideShow extends Component {
           }}
           loop>
           <View style={styles.slide}>
-            <Text numberOfLines={1}>Aussie tourist dies at Bali hotel</Text>
+
             <Image
               resizeMode="stretch"
               style={styles.image}
               source={require('../Common/img/banner1.png')}
             />
+              <Text numberOfLines={1}> </Text>
           </View>
           <View style={styles.slide}>
-            <Text numberOfLines={1}>Big lie behind Nine’s new show</Text>
+
             <Image
               resizeMode="stretch"
               style={styles.image}
               source={require('../Common/img/banner2.png')}
             />
+              <Text numberOfLines={1}> </Text>
           </View>
           <View style={styles.slide}>
-            <Text numberOfLines={1}>Why Stone split from Garfield</Text>
+
             <Image
               resizeMode="stretch"
               style={styles.image}
               source={require('../Common/img/banner3.png')}
             />
+              <Text numberOfLines={1}> </Text>
           </View>
           <View style={styles.slide}>
-            <Text numberOfLines={1}>Learn from Kim K to land that job</Text>
             <Image
               resizeMode="stretch"
               style={styles.image}
               source={require('../Common/img/banner4.png')}
             />
+              <Text numberOfLines={1}> </Text>
           </View>
         </Swiper>
       </View>

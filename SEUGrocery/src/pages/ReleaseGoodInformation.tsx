@@ -4,6 +4,7 @@
   @date: 2019-8-27
 */
 import React, {Component} from 'react';
+// @ts-ignore
 import {
   View,
   ScrollView,
@@ -14,13 +15,17 @@ import {
   TextInput,
   Text,
 } from 'react-native';
+import {Icon} from "react-native-elements";
 import LocalBackHeader from '../Components/LocalBackHeader';
 import * as SP from '../Common/ScreenProperty';
 import PostPhoto from '../Components/PostPhotos';
-import {postData} from '../Common/FetchHelper';
 import {uploadImage} from '../Common/UplodeImageTool';
 import {getImgUrl} from '../Components/PostPhotos';
 import Loading from '../Components/Loading';
+import ItemList from '../Common/ItemList';
+import {postData} from '../Common/FetchHelper';
+import {TouchableOpacity} from "react-native-gesture-handler";
+
 
 var {height, width} = Dimensions.get('window');
 const classes = [
@@ -33,10 +38,7 @@ const classes = [
   '运动健身',
   '其他',
 ];
-const addItemURL = 'http://inari.ml:8080/item/add';
-// const addItemURL = 'http://10.203.252.131/item/add';
-let imgurl;
-// let loading=false;
+
 
 export default class ReleaseInformation extends Component {
   private state: any;
@@ -50,24 +52,34 @@ export default class ReleaseInformation extends Component {
       newDegree: '',
       firstValue: '',
       secondValue: '',
-      classes: '电子产品',
+      classes: '1',
     };
   }
 
+  // getIdAndToken=()=>{
+  //
+  //   return Promise.all([
+  //     UserInfo.get('uuid'),
+  //     UserInfo.get('token'),
+  //   ])
+  // }
+
   checkNewDegree = () => {
     let value = Number(this.state.newDegree);
+    let flag=true;
     if (isNaN(value)) {
       alert('请输入新旧程度');
-      return false;
+      flag=false;
     } else if (value === 0) {
       alert('新旧程度不能等于零');
-      return false;
+      flag=false;
     } else if (value > 100) {
       alert('新旧程度不能大于100%');
-      return false;
+      flag=false;
     }
     console.log('new degree:', value);
-    return true;
+    console.log(flag);
+    return flag;
   };
 
   checkInput = () => {
@@ -80,10 +92,11 @@ export default class ReleaseInformation extends Component {
         alert('商品价格还没设置哦^_^');
         return false;
       }
+      console.log('title', this.state.title);
+      console.log('value', this.computeValue());
+      return true;
     }
-    console.log('title', this.state.title);
-    console.log('value', this.computeValue());
-    return true;
+
   };
 
   computeValue = () => {
@@ -91,54 +104,83 @@ export default class ReleaseInformation extends Component {
 
     return Number(this.state.firstValue) + Number(this.state.secondValue) / 100;
   };
-  uploadItemData = () => {
+
+  // @ts-ignore
+  uploadItemData = async () => {
     this.Loading.show();
-    console.log(getImgUrl());
+    const [uid, token] = await ItemList.getIdAndToken();
+    const commonURL='http://inari.ml:8080/';
+
     let params = {
-      token:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjozLCJnZW5lcmF0ZSI6MTU2NzA0MTI3ODcxMSwiaWF0IjoxNTY3MDQxMjc4fQ.X48-FXKuBOK6f_PBDE4E2jfB457739iAe3dEQKs2mzY',
-      itemid: '6',
+      token:token,
+      itemid: '3',
       path: getImgUrl(), //本地文件地址
     };
     let data = {
-      // token:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjozLCJnZW5' +
-      //     'lcmF0ZSI6MTU2NzA0MTI3ODcxMSwiaWF0IjoxNTY3MDQxMjc4fQ.X48-FXKuBOK6f_PBDE4E2jfB457739iAe3dEQKs2mzY',
-      uuid: '3',
+      token:token,
+      uuid: uid,
       title: this.state.title,
-      type: this.state.classes,
+      type: '1',
       price: this.computeValue(),
-      imgurl: 'url',
+      imgurl: commonURL+'image/item/0.9321619878296834.jpg',
       depreciatione: this.state.newDegree,
-      note: this.state.detail,
+      note: this.state.campus+this.state.detail,
+      sold:1,
     };
 
     const addImageURL = 'http://inari.ml:8080/item/image';
+    const addItemURL = 'http://inari.ml:8080/item/add';
 
-    uploadImage(addImageURL, params)
-      .then(responseData => {
-        console.log('uploadImage', responseData);
-        if (responseData.status == 'success') {
-          imgurl = responseData.imgurl;
-          postData(addItemURL, data)
-            .then(response => {
-              this.Loading.close();
-              alert('发布成功');
-            })
-            .catch(err => {
-              console.error(err);
+    console.log(params);
+    console.log(data);
+
+    if(getImgUrl()==''){
+      postData(addItemURL, data)
+          .then(response => {
+            console.log('uploadData', response);
+            if (response.status == 'success') {
+            this.Loading.close();
+            alert('发布成功');
+          }else{
               alert('上传数据失败');
               this.Loading.close();
-            });
-        }
-      })
-      .catch(err => {
-        console.log('err', err);
-        alert('上传图片失败');
-        this.Loading.close();
-      });
-  };
+            }
+          })
+          .catch(err => {
+            console.error(err);
+            alert('上传数据失败');
+            this.Loading.close();
+          });
+    }
+    else {
+      uploadImage(addImageURL, params)
+          .then(responseData => {
+            console.log('uploadImage', responseData);
+            if (responseData.status == 'success') {
+              data.imgurl = commonURL+responseData.imgurl[0];
+              postData(addItemURL, data)
+                  .then(response => {
+                    console.log('uploadData', response);
+                    if (response.status == 'success') {
+                      this.Loading.close();
+                      alert('发布成功');
+                    } else {
+                      alert('上传数据失败');
+                      this.Loading.close();
+                    }
+                  })
+                  .catch(err => {
+                    console.log('err', err);
+                    alert('上传图片失败');
+                    this.Loading.close();
+                  });
+            }
+            })
+    }
+  }
 
   confirm = () => {
+    console.log(this.checkInput())
     if (this.checkInput()) {
       this.uploadItemData();
     }
@@ -150,6 +192,13 @@ export default class ReleaseInformation extends Component {
         <View style={{height: SP.HB(12)}}>
           <LocalBackHeader navigation={this.props.navigation} />
           <View style={styles.buttonContainer}>
+            {/*<TouchableOpacity*/}
+            {/*style={styles.button}*/}
+            {/*onPress={this.confirm}*/}
+            {/*>*/}
+            {/*  <Icon name={'upload'} type={'font-awesome'} color={'#cc6699'}/>*/}
+            {/*  <Text style={{color:'#cc6699'}}>确认发布</Text>*/}
+            {/*</TouchableOpacity>*/}
             <Button
               title="确认"
               type="clear"
@@ -189,9 +238,9 @@ export default class ReleaseInformation extends Component {
             onValueChange={(itemValue, itemIndex) => {
               this.setState({campus: itemValue});
             }}>
-            <Picker.Item label="九龙湖校区" value="九龙湖" />
-            <Picker.Item label="四牌楼校区" value="四牌楼" />
-            <Picker.Item label="丁家桥校区" value="丁家桥" />
+            <Picker.Item label="九龙湖校区" value="九龙湖校区，" />
+            <Picker.Item label="四牌楼校区" value="四牌楼校区，" />
+            <Picker.Item label="丁家桥校区" value="丁家桥校区，" />
           </Picker>
         </View>
 
@@ -201,8 +250,8 @@ export default class ReleaseInformation extends Component {
             selectedValue={this.state.classes}
             style={{width: width * 0.35, fontSize: 20}}
             onValueChange={itemValue => this.setState({classes: itemValue})}>
-            {classes.map(i => (
-              <Picker.Item label={i} value={i} />
+            {classes.map((i,j) => (
+              <Picker.Item label={i} value={j} />
             ))}
           </Picker>
         </View>
@@ -260,6 +309,12 @@ const styles = StyleSheet.create({
     width: width * 0.25,
     justifyContent: 'center',
     padding: 10,
+  },
+  button:{
+    flexDirection: 'row',
+    backgroundColor:"#000",
+    borderRadius:50,
+    flex:1,
   },
   title: {
     fontSize: 40,

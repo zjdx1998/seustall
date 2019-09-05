@@ -2,6 +2,7 @@
 
 ## Documents
 ### Common API
+0. Get current index: `curl "localhost:9200/_cat/indices?v"`
 1. create index: `curl -H "Content-Type: application/json" -XPUT "host/$indexName" -d $index-info.json`
 2. delete index: `curl -XDELETE "host/$indexName" `
 3. Add User: `curl -H "Content-Type: application/json" -XPOST "localhost:9200/index-users/users" -d @addUser.json`

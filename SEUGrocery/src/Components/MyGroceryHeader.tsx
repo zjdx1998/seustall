@@ -24,7 +24,7 @@ import ItemList from '../Common/ItemList';
 
 
 export default class MyGroceryHeader extends Component {
-    state: { 
+    state: {
         userAvatar: string;
         token:string;
         publishedNum:string;
@@ -48,7 +48,7 @@ export default class MyGroceryHeader extends Component {
         UserInfo.get('token').then((tok)=>{this.setState({
             token:tok
         })});
-        
+
 
         // UserInfo.getPulishedList().then((list)=>{
         //     this.setState({

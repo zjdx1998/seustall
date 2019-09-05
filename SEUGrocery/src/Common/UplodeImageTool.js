@@ -11,11 +11,13 @@
  */
 export function uploadImage(url,params) {
     let formData = new FormData();
-    for (let key in params){
+    for (let key in params) {
         formData.append(key, params[key]);
     }
-    let file = {uri: params.path, type: 'image/jpeg', name: 'image.jpg'};
+    for (let url of params.path.split('++')) {
+    let file = {uri: url, type: 'image/jpeg', name: 'image.jpg'};
     formData.append("file0", file);
+    }
     return fetch(url, {
         method: 'POST',
         headers: {

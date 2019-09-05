@@ -26,6 +26,11 @@
                     "type": "scaled_float",
                     "index": false,
                     "scaling_factor": 100
+                },
+                "info": {
+                    "type": "text",
+                    "search_analyzer": "ik_smart",
+                    "analyzer": "ik_smart"
                 }
             }
         }
