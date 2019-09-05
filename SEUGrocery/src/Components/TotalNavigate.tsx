@@ -21,12 +21,13 @@ import ReleaseGoodInformation from '../pages/ReleaseGoodInformation';
 import ReleaseIWantPage from '../pages/ReleaseIWantPage';
 import ReleaseUserInformationPage from '../pages/ReleaseUserInformationPage';
 import PostPhotos from './PostPhotos';
-import AfterSignUpPage from "../pages/AfterSignUpPage";
-import IDVerifyPage from "../pages/IDVerifyPage";
 import FavoritesPage from "../pages/FavoritesPage";
 import ChatPage from "../pages/ChatPage";
 import Search from "../pages/Search";
 import UserInformationPage from "../pages/UserInformationPage";
+import AfterSignUpPage from '../pages/AfterSignUpPage';
+import IDVerifyPage from '../pages/IDVerifyPage';
+import ClassificationPage from '../pages/ClassificationPage';
 
 // const customComponent = props => (
 //   <ScrollView style={{backgroundColor: '#FFE4E1', flex: 1}}>
@@ -307,48 +308,54 @@ const TotalNav = createDrawerNavigator(
         drawerLabel: () => null,
       },
     },
-      signUpP: {
-          screen: SignUpUI,
-          navigationOptions: {
-              drawerLabel: () => null,
-          },
+    signUpP: {
+      screen: SignUpUI,
+      navigationOptions: {
+        drawerLabel: () => null,
       },
+    },
     postPhoto: {
       screen: PostPhotos,
       navigationOptions: {
         drawerlabel: () => null,
       },
     },
-      afterSignUp: {
-          screen: AfterSignUpPage,
-          navigationOptions: {
-              drawerlabel: () => null,
-          },
+    afterSignUp: {
+      screen: AfterSignUpPage,
+      navigationOptions: {
+        drawerlabel: () => null,
       },
-      verifyP: {
-          screen: IDVerifyPage,
-          navigationOptions: {
-              drawerlabel: () => null,
-          },
+    },
+    verifyP: {
+      screen: IDVerifyPage,
+      navigationOptions: {
+        drawerlabel: () => null,
       },
-      chatP: {
-          screen: ChatPage,
-          navigationOptions: {
-              drawerlabel: () => null,
-          },
-      },
-      searchP: {
-          screen: Search,
-          navigationOptions: {
-              drawerlabel: () => null,
-          },
-      },
-      userInformation: {
-          screen: UserInformationPage,
-          navigationOptions: {
-              drawerlabel: () => null,
-          },
-      },
+    },
+    classificationP: {
+        screen: ClassificationPage,
+        navigationOptions: {
+            drawerlabel: () => null,
+        },
+        chatP: {
+            screen: ChatPage,
+            navigationOptions: {
+                drawerlabel: () => null,
+            },
+        },
+        searchP: {
+            screen: Search,
+            navigationOptions: {
+                drawerlabel: () => null,
+            },
+        },
+        userInformation: {
+            screen: UserInformationPage,
+            navigationOptions: {
+                drawerlabel: () => null,
+            },
+        },
+    },
   },
   {
     order: [
@@ -361,8 +368,8 @@ const TotalNav = createDrawerNavigator(
       'page4',
       'startP',
       'loginP',
-        'signUpP',
-        'afterSignUp',
+      'signUpP',
+      'afterSignUp',
       'release_good',
       'release_want',
       'release_info',
@@ -370,7 +377,8 @@ const TotalNav = createDrawerNavigator(
         'verifyP',
         'chatP',
         'searchP',
-        'userInformation'
+        'userInformation',
+      'classificationP',
     ],
     initialRouteName: 'startP',
     backBehavior: 'initialRoute',

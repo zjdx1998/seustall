@@ -77,7 +77,7 @@ export default class MyGroceryHeader extends Component {
         var i:number;
         var soldnum = 0;
         for(i=0;i<num;i++){
-          if(list[i].sold == 1){
+          if(list[i].sold == 2){
               soldnum++;
           }
         }

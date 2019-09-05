@@ -22,6 +22,9 @@ import {
 
 import Swipeout from 'react-native-swipeout';
 import LocalBackHeader from "../Components/LocalBackHeader";
+import UserInfo from '../Common/UserInfo';
+import ItemList from '../Common/ItemList';
+
 
 
 const Testdata = [
@@ -74,16 +77,39 @@ export default class WhatIWantPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: Testdata, //data.result为模拟的数据或服务端得到的数据
+            data: '', //data.result为模拟的数据或服务端得到的数据
             sectionID: '',
             rowID: '',
             page: 1,
             refreshing: true,
             loading: false,
+            userAvatar:'',
+            token:'',
         }
         this.renderRowList = this.renderRowList.bind(this);
+        UserInfo.get('avatarurl').then((url)=>{this.setState({
+            userAvatar:url
+        })});
+        UserInfo.get('token').then((tok)=>{this.setState({
+            token:tok
+        })});
 
     };
+
+    componentDidMount() {
+        // alert('rua12421312');
+        ItemList.getItemList().then(list => {
+        //   alert(JSON.stringify(list));
+        var wList = list.filter(function(e) {
+            return e.sold == -1;
+          });
+        //   this.renderRowList(wList);
+        //   alert(wList);
+          this.setState({data:wList});
+
+        });
+
+      }
 
     render() {
         return (
@@ -97,8 +123,8 @@ export default class WhatIWantPage extends Component {
                             <Avatar
                                 size={120}
                                 rounded
-                                source={require('../Common/img/avatar.png')}
-                            />
+                                source={{uri:this.state.userAvatar}}
+                                />
                         </View>
                         <View style={styles.txtArea}>
                             <Text style={styles.txtTitle}>我想买的</Text>
@@ -190,9 +216,9 @@ export default class WhatIWantPage extends Component {
                 buttonWidth={120}
             >
                 <View style={styles.item}>
-                    <Text numberOfLines={1} style={styles.txtName}>{item.item.goodName}</Text>
-                    <Text numberOfLines={2} style={styles.txtDetail}>{item.item.detail}</Text>
-                    <Text numberOfLines={1} style={styles.txtDetail}>最高接受价：￥{item.item.highestPrice}</Text>
+                    <Text numberOfLines={1} style={styles.txtName}>{item.item.title}</Text>
+                    <Text numberOfLines={2} style={styles.txtDetail}>{item.item.note}</Text>
+                    <Text numberOfLines={1} style={styles.txtDetail}>最高接受价：￥{item.item.price}</Text>
                     <Text numberOfLines={1} style={styles.txtTime}>{item.item.time}</Text>
                 </View>
 

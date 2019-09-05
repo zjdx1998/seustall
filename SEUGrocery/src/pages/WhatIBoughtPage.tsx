@@ -16,10 +16,35 @@ import {
 import {Text, ThemeProvider, Image, Avatar} from 'react-native-elements';
 import BoughtGoodsPanel from '../Components/BoughtGoodsPanel';
 import LocalBackHeader from '../Components/LocalBackHeader';
-import MyGroceryHeader from '../Components/MyGroceryHeader';
+import UserInfo from '../Common/UserInfo';
+import {postData} from '../Common/FetchHelper';
+import ItemList from '../Common/ItemList';
+
+const finishedURL = "http://inari.ml:8080/user/finished";
+
 
 export default class WhatIBoughtPage extends Component {
   private props: any;
+  state: { 
+    userAvatar: string;
+    token:string;
+ };
+constructor(props){
+    super(props);
+    this.state = {
+        userAvatar:'',
+        token:'',
+    };
+    UserInfo.get('avatarurl').then((url)=>{this.setState({
+        userAvatar:url
+    })});
+    UserInfo.get('token').then((tok)=>{this.setState({
+        token:tok
+    })});
+  }
+
+
+
   render() {
     return (
       <ScrollView style={styles.baseContainer}>
@@ -32,7 +57,7 @@ export default class WhatIBoughtPage extends Component {
               <Avatar
                 size={120}
                 rounded
-                source={require('../Common/img/avatar.png')}
+                source={{uri:this.state.userAvatar}}
               />
             </View>
             <View style={styles.txtArea}>
@@ -42,12 +67,23 @@ export default class WhatIBoughtPage extends Component {
         </View>
         <View style={styles.headerContainer} />
         <View style={styles.GoodsAreaContainer}>
-          <BoughtGoodsPanel navigation={this.props.navigation} />
+          <BoughtGoodsPanel navigation={this.props.navigation}
+            ref={goodsPanel => (this.goodsPanel = goodsPanel)}
+          />
         </View>
       </ScrollView>
     );
   }
+  componentDidMount() {
+    // alert('rua12421312');
+    ItemList.getFinishedList()
+    .then(list=>{
+      this.goodsPanel.setState({goodsList:list})
+    })
+  }
 }
+
+
 
 const styles = StyleSheet.create({
   baseContainer: {

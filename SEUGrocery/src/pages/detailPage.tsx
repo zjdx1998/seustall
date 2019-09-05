@@ -58,17 +58,18 @@ export default class DetailPage extends Component {
                     .then(user => {
                         this.setState({
                             username: user.username,
-                            avatorurl: user.avatarurl,
+                            avatorurl: "http://inari.ml:8080/"+user.avatarurl,
                             itemid: rT.itemid,
                             // username: itemURL + this.props.navigation.state.params.itemid,
                             uuid: rT.uuid,
                             title: rT.title,
                             type: rT.type,
                             price: parseFloat(rT.price),
-                            imgurl: rT.imgurl,
+                            imgurl: "http://inari.ml:8080/"+rT.imgurl,
                             note: rT.note,
                             depreciatione: rT.depreciatione,
                         });
+                        //  alert("http://inari.ml:8080/"+rT.imgurl.value);
                     })
                     .catch(e => {
                         console.log('Oops, error');
