@@ -37,7 +37,7 @@ export default class MainPages extends Component {
               <SlideShow />
             </View>
             <View style={styles.slideshowContainer}>
-              <ClassificationOfGoods />
+              <ClassificationOfGoods navigation={this.props.navigation} />
             </View>
             <View style={styles.headerContainer} />
             <View style={styles.slideshowContainer} />
