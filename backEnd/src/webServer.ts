@@ -16,7 +16,7 @@ import conf from './conf';
 import data from "./database";
 import mail from './mailpush';
 import resend from './resend';
-import { requireCode, verifyCode } from './SMSVerify';
+import { requireCode, verifyCode, testCode } from './SMSVerify';
 
 const router = new koaRouter();
 function webServer()
@@ -146,13 +146,34 @@ function webServer()
 			}
 		})
 		/**
-		 * @description 请求验证码
+		 * @description 请求手机号验证码
 		 */
 		router.post('/user/requirecode', async (ctx, next) =>
 		{
 			var res = requireCode(ctx.request.body.phonenumber);
+			// var res = testCode(ctx.request.body.phonenumber);
 			ctx.response.body = JSON.stringify(res);
 			ctx.response.type = "application/json";
+		})
+		/**
+		 * @description 手机号重置密码
+		 */
+		router.post('/user/reset', async (ctx, next) =>
+		{
+			var res = new Object() as any;
+			try
+			{
+				var res = verifyCode(ctx.request.body.phoneNumber, ctx.request.body.verifyCode);
+				if (res.status == conf.res.success)
+				{
+					
+				}
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			} catch (error)
+			{
+
+			}
 		})
 		/**
 		 * @description 更改用户头像
@@ -299,7 +320,6 @@ function webServer()
 
 		/**
 		 * @description 聊天-发送消息
-		 * @todo
 		 */
 		router.post('/user/chat/push', async (ctx, next) =>
 		{
@@ -326,7 +346,6 @@ function webServer()
 		})
 		/**
 		 * @description 聊天-查询更新
-		 * @todo
 		 */
 		router.post('/user/chat/fetchnew', async (ctx, next) =>
 		{
@@ -352,7 +371,6 @@ function webServer()
 		})
 		/**
 		 * @description 聊天-获取所有记录
-		 * @todo
 		 */
 		router.post('/user/chat/fetchall', async (ctx, next) =>
 		{
@@ -628,7 +646,6 @@ function webServer()
 		});
 		/**
 		 * @description  从收藏夹删除
-		 * @todo  收藏夹权限隔离
 		 */
 		router.post('/fav/delete', async (ctx, next) =>
 		{

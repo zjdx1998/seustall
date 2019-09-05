@@ -37,12 +37,13 @@ export default {
 	},
 	SMSConfig:
 	{
+		appkey: "5d3689b4c39a53ce7526fdeace54d9e3",
+		appid: 1400253561,
+		templateId: 233504,
+		zone: 86,
 		host: "",
-		appkey : "5d3689b4c39a53ce7526fdeace54d9e3",
-		appid : "1400253561",
-		templateId: "233504",
 		smsSign: "东大杂货铺",
-		zone: "86",
+		sign: "东大杂货铺"
 
 		// host: "https://webapi.sms.mob.com/sms/verify",
 		// appkey: "2c3bb00a9ca40",

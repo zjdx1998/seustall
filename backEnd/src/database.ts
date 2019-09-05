@@ -293,11 +293,11 @@ export default class data
 				{
 					"avatarurl": avatar
 				}, {
-					where:
-					{
-						uuid
-					}
+				where:
+				{
+					uuid
 				}
+			}
 			);
 			return true;
 		} catch (error)
@@ -356,6 +356,40 @@ export default class data
 				);
 
 			}
+			return true;
+		} catch (error)
+		{
+			console.error(error)
+			return false;
+		}
+	}
+	/**
+	 * @description 更新用户密码 !危险操作，谨慎使用。
+	 */
+	public async updatepassword(src: UserInterface)
+	{
+		var res = new Object() as any;
+		try
+		{
+			const queryres: any = await this.queryUser(src.uuid)
+			if (queryres.status == conf.res.failure)
+			{
+				res.status = conf.res.failure;
+				res.info = queryres.info;
+				return res;
+			}
+			const resupdate = await this.users.update(
+				{
+					password: src.password,
+				},
+				{
+					where:
+					{
+						"uuid": src.uuid
+					}
+				}
+			);
+
 			return true;
 		} catch (error)
 		{
@@ -464,11 +498,11 @@ export default class data
 				{
 					imgurl
 				}, {
-					where:
-					{
-						itemid
-					}
+				where:
+				{
+					itemid
 				}
+			}
 			);
 			return true;
 		} catch (error)
@@ -549,7 +583,6 @@ export default class data
 	}
 	/**
 	 * @description 收藏夹查询
-	 * @todo
 	 */
 	public async favoritesQuery(uuid: number)
 	{
@@ -570,7 +603,6 @@ export default class data
 	}
 	/**
 	 * @description 收藏夹批量添加
-	 * @todo
 	 */
 	public async favoritesAdd(uuid: string, src: any)
 	{
@@ -631,7 +663,6 @@ export default class data
 	}
 	/**
 	 * @description 添加一个消息记录
-	 * @todo
 	 */
 	public async chatPush(from: number, to: number, data: string)
 	{
@@ -667,7 +698,6 @@ export default class data
 	}
 	/**
 	 * @description 查询未读记录
-	 * @todo
 	 */
 	public async chatFetchNew(uuid: number)
 	{
@@ -708,7 +738,6 @@ export default class data
 	}
 	/**
 	 * @description 查询所有记录
-	 * @todo
 	 */
 	public async chatFetchAll(uuid: number)
 	{

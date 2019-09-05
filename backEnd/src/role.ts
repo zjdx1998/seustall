@@ -55,13 +55,6 @@ export class User
 				return JSON.stringify(response);
 			}
 		}
-		//TODO,更新数据库列表
-		// for (var key in temp)
-		// {
-		// 	if (key.localeCompare('uuid') == 0)
-		// 	{ continue; }
-		// 	this.data[key] = temp[key];
-		// }
 		response['status'] = 'success';
 		return JSON.stringify(response);
 	}
