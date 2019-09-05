@@ -10,6 +10,10 @@ import {Icon, Divider, Text, ListItem} from 'react-native-elements';
 const {width} = Dimensions.get('window'); //解构赋值 获取屏幕宽度
 
 export default class GoodsClassification extends Component {
+    //private props: any;
+  constructor(props) {
+    super(props);
+  }
   render() {
     return (
       <View style={styles.container_col}>
@@ -21,6 +25,7 @@ export default class GoodsClassification extends Component {
                 type={x.type}
                 color={x.color}
                 goodsName={x.goodsName}
+                navigation={this.props.navigation}
               />
             ))}
           </View>
@@ -31,6 +36,8 @@ export default class GoodsClassification extends Component {
                 type={x.type}
                 color={x.color}
                 goodsName={x.goodsName}
+                pageName={x.pageName}
+                navigation={this.props.navigation}
               />
             ))}
           </View>
@@ -51,6 +58,12 @@ class Item extends Component {
           name={this.props.iconName}
           type={this.props.type}
           color={this.props.color}
+          onPress={() =>
+              this.props.navigation.navigate('classificationP', {
+                go_back_key: this.props.navigation.state.key,
+                  classification: this.props.goodsName,
+              })
+          }
         />
         <Text style={styles.goodsFont}>{this.props.goodsName}</Text>
       </View>
