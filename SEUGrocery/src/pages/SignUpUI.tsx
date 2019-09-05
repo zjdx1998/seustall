@@ -230,7 +230,8 @@ export default class SignUpUI extends Component {
 
                     {/*//注册按钮*/}
                     <TouchableOpacity
-                        onPress={this.buttonPressed}
+                        // onPress={this.buttonPressed}
+                        onPress={()=>this.props.navigation.navigate('afterSignUp')}
                         style={styles.bigButton}>
                         <Text style={styles.bigTextPrompt}>{this.state.bigButtonText}</Text>
                     </TouchableOpacity>
