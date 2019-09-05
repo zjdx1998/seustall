@@ -16,7 +16,7 @@ import conf from './conf';
 import data from "./database";
 import mail from './mailpush';
 import resend from './resend';
-import { requireCode, verifyCode, testCode } from './SMSVerify';
+import { requireCode, verifyCode } from './SMSVerify';
 
 const router = new koaRouter();
 function webServer()
@@ -108,7 +108,7 @@ function webServer()
 			try
 			{
 				const resverify = verifyCode(ctx.request.body.phoneNumber, ctx.request.body.verifycode);
-				// if (resverify.status == conf.res.success)
+				if (resverify.status == conf.res.success)
 				if (true)
 				{
 					var newUser = new Object() as UserInterface;
@@ -151,7 +151,6 @@ function webServer()
 		router.post('/user/requirecode', async (ctx, next) =>
 		{
 			var res = requireCode(ctx.request.body.phonenumber);
-			// var res = testCode(ctx.request.body.phonenumber);
 			ctx.response.body = JSON.stringify(res);
 			ctx.response.type = "application/json";
 		})
@@ -163,16 +162,43 @@ function webServer()
 			var res = new Object() as any;
 			try
 			{
-				var res = verifyCode(ctx.request.body.phoneNumber, ctx.request.body.verifyCode);
-				if (res.status == conf.res.success)
+				const userInfo = await database.queryPhoneNumber(ctx.request.body.phonenumber);
+				if (userInfo.data == undefined || userInfo.data == {})
 				{
-					
+					res.status = conf.res.failure;
+					res.info = conf.except.invaildReq;
+					ctx.response.body = JSON.stringify(res);
+					ctx.response.type = "application/json";
+					return;
 				}
-				ctx.response.body = JSON.stringify(res);
-				ctx.response.type = "application/json";
+				var resverify = verifyCode(ctx.request.body.phonenumber, ctx.request.body.verifycode);
+				if (resverify.status == conf.res.success)
+				{
+					database.updatepassword(
+						{
+							uuid: userInfo.data.uuid,
+							password:ctx.request.body.password
+						}
+
+					)
+					res.status = conf.res.success;
+					ctx.response.body = JSON.stringify(res);
+					ctx.response.type = "application/json";
+				}
+				else
+				{
+					res.status = conf.res.failure;
+					res.info = resverify.info;
+					ctx.response.body = JSON.stringify(res);
+					ctx.response.type = "application/json";
+					}
 			} catch (error)
 			{
-
+				res.status = conf.res.failure;
+				res.info = error;
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+				return;
 			}
 		})
 		/**

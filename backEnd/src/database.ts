@@ -222,22 +222,26 @@ export default class data
 	/**
 	 * @description 查询电话号码
 	 */
-	private async queryPhoneNumber(phonenumber: number)
+	public async queryPhoneNumber(phonenumber: number)
 	{
+		var res = new Object() as any;
 		try
 		{
-			const res = await this.users.findOne({
+			const resquery = await this.users.findOne({
 				where:
 				{
 					phonenumber
 				}
 			})
-			const userRes = new User(res);
+			res.status = conf.res.success;
+			res.data = resquery;
 			return res;
 		} catch (error)
 		{
-			console.error(`[ERROR] on query phone number ${error}"`);
-			return { status: "failure" };
+			console.error(error);
+			res.status = conf.res.success;
+			res.info = error;
+			return res;
 		}
 	}
 	/**

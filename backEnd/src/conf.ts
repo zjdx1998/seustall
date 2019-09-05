@@ -34,6 +34,7 @@ export default {
 		databaseexception: "database exception",
 		invaildReq: "invaild request",
 		noUser: "no such user",
+		badverifycode:"bad verify code",
 	},
 	SMSConfig:
 	{

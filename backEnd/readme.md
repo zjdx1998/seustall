@@ -3,8 +3,8 @@
 [TOC]
 ## Version
 
-* version: v6.4.1 alpha
-* updated: 2019/09/04 00:15
+* version: v6.4.2 alpha
+* updated: 2019/09/05 17:12
 * author: Hanyuu Furude
 
 ## Characteristics
@@ -18,22 +18,40 @@
 
 ## Run docker
 
+* listening port: 4000
+
 ``` docker
 docker run --network host -d -v [locationOfAvatarOnPhysicsMachine]:[locationOfAvatarOnContainer] hanyuufurude/foofserver:v[x]
 ```
 - e.g.
 ``` docker
-docker run --network host -d -v /home/admin/avatar:/foof/avatar hanyuufurude/foofserver:v4
+docker run --network host -d -v /home/.../avatar:/foof/avatar hanyuufurude/foofserver:v3
 ```
 ## Warning
 1. If you meet Exception like this
 	> Error: Client does not support authentication protocol requested by server; consider upgrading MySQL client
 
-	You are suggested to change the type of your password, please typeing like this:
+	You are suggested to change the type of your password, please typing like this:
 	``` SQL
 	alter user 'USER'@'localhost' identified with mysql_native_password by 'PASSWORD'
 	flush privileges;
 	```
+2. If you try to pack the back end your self, you may meet error like this:
+
+   > require is not a function
+
+   You are suggest to stop the use of the ‘gently’, and  we suggest you can add a config in your **webpack.conf.ts** to resolve the error.
+
+   ```
+   module.exports = {
+   	plugins: [
+   		new webpack.DefinePlugin({ "global.GENTLY": false })
+   	],
+   };
+   ```
+
+   
+
 ## SQL table fields
 #### users
 ```
@@ -134,7 +152,7 @@ None
 ### me
 
 ```
-POST \user\me
+POST /user/me
 ```
 
 ```
@@ -168,7 +186,7 @@ Content-Type:application/x-www-form-urlencoded
 ### published
 
 ```
-POST \user\published
+POST /user/published
 ```
 
 ```
@@ -302,7 +320,37 @@ Content-Type:application/x-www-form-urlencoded
 // invaild request
 {"status":"failure","info":"invaild request"}
 ```
+### reset password
+
+```
+POST /user/reset
+```
+
+```
+Content-Type:application/x-www-form-urlencoded
+```
+
+``` json
+{"表单数据":{"phonenumber":"1111","verifycode":"2345","password":"1"}}
+```
+
+```json
+// success
+{"status":"success"}
+// invaild verify code
+{
+  "status":"failure",
+  "info":"bad verify code"
+}
+// invaild request
+{
+  "status":"failure",
+  "info":"invaild request"
+}
+```
+
 ### require verify code ( phone number )
+
 ```
 POST /user/requirecode
 ```
@@ -369,7 +417,7 @@ Content-Type: image/jpg
 - however, you have to copy the value of the fields of other fields even you don’t want to change those;
 
 ```
-POST \user\modify
+POST /user/modify
 ```
 
 ```
@@ -417,6 +465,18 @@ none
 
 ## Items
 
+### define of sold
+
+``` json
+	sold:
+	{
+		sale: 1,
+		sold: 2,
+		want: -1,
+		got: -2,
+	}
+```
+
 ### query
 
 ```
@@ -447,7 +507,7 @@ None
 ### add
 
 ```
-POST \item\add
+POST /item/add
 ```
 
 ```
@@ -472,7 +532,7 @@ Content-Type:application/x-www-form-urlencoded
 * The name property of the file is arbitrary and the request size is no greater than 1mb
 
 ```
-POST \item\image
+POST /item/image
 ```
 
 ```
@@ -798,17 +858,6 @@ Content-Type: application/x-www-form-urlencoded
 }
 ```
 
-### define of sold
-
-``` json
-	sold:
-	{
-		sale: 1,
-		sold: 2,
-		want: -1,
-		got: -2,
-	}
-```
 
 ## Search
 
