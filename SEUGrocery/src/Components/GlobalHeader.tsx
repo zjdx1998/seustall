@@ -4,7 +4,10 @@
   @date: 2019-8-22
 */
 import React, {Component} from 'react';
-import {Header, SearchBar} from 'react-native-elements';
+import {View,Text,TouchableOpacity} from 'react-native' ;
+import {Header, SearchBar,Icon} from 'react-native-elements';
+import * as SP from '../Common/ScreenProperty';
+
 export default class extends Component {
   private props: any;
   constructor(props) {
@@ -21,7 +24,7 @@ export default class extends Component {
           barStyle: 'light-content',
           backgroundColor: '#CC6699',
         }}
-        containerStyle={{marginTop: 0}}
+        containerStyle={{marginTop: -10,borderBottomWidth:0}}
         placement="center"
         backgroundColor="#CC6699"
         leftComponent={{
@@ -31,28 +34,25 @@ export default class extends Component {
           size: 30,
         }}
         centerComponent={
-          <SearchBar
-            searchIcon={{size: 30}}
-            containerStyle={{
-              backgroundColor: '#CC6699',
-              flex: 1,
-              flexDirection: 'row',
-              borderTopWidth: 0,
-              borderBottomWidth: 0,
-            }}
-            inputContainerStyle={{
-              backgroundColor: '#FFFFFF',
-              justifyContent: 'center',
-            }}
-            placeholder="请输入您要购买的商品"
-            inputStyle={{fontSize: 16}}
-            onChangeText={this.updateSearch}
-            lightTheme="Default"
-            value={search}
-            showLoading={true}
-          />
+            <View style={{padding:SP.H(20)}}>
+            <TouchableOpacity
+                onPress={()=>this.props.navigation.navigate('searchP')}
+                style={{
+                width:SP.WB(70),
+                backgroundColor:'white',
+                flex:1,
+                flexDirection:'row',
+                justifyContent:'center',
+                    alignItems:'center',
+                borderRadius:50,
+                opacity:0.9,
+
+            }}>
+                <Icon name={'search'} type={"font-awesome"} color={'grey'}/>
+                <Text style={{color:'grey'}}>请输入想要搜索的关键词</Text>
+            </TouchableOpacity>
+            </View>
         }
-        centerContainerStyle={{flex: 9, marginTop: -8}}
         rightComponent={{
           icon: 'camera',
           color: '#030303',
@@ -64,5 +64,6 @@ export default class extends Component {
   }
   updateSearch = (search: any) => {
     this.setState({search});
+      this.props.navigation.navigate('searchP')
   };
 }

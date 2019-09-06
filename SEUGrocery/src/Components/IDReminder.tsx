@@ -5,6 +5,7 @@
 */
 import React, { Component } from "react";
 import { Modal, Text, TouchableHighlight, View, Dimensions,StyleSheet } from "react-native";
+import * as SP from "../Common/ScreenProperty";
 
 export default class IDReminder extends Component {
     private props: any;
@@ -24,7 +25,7 @@ export default class IDReminder extends Component {
                 }}
             >
                 <View style={styles.container}>
-                    <View style={{height:250,  width:300, margin:20, backgroundColor:'white'}}>
+                    <View style={{height:SP.HB(33),  width:SP.WB(80), margin:SP.H(50), backgroundColor:'white'}}>
                         <View style={{flex:1, justifyContent:'center', alignItems:'center', borderWidth:1, borderColor:'#eee'}}>
                             <Text >感谢您对东大杂货铺的支持</Text>
                             <Text >为了更好地为您提供服务</Text>
@@ -61,7 +62,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0,0,0,0.5)'
     },
     button:{
-        height:50,
+        height:SP.H(80),
         justifyContent:'center',
         alignItems:'center',
     },

@@ -54,7 +54,7 @@ class Item extends Component {
     return (
       <View style={styles.container_col}>
         <Icon
-          reverse
+          raised
           name={this.props.iconName}
           type={this.props.type}
           color={this.props.color}
