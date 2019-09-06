@@ -108,8 +108,8 @@ function webServer()
 			try
 			{
 				const resverify = verifyCode(ctx.request.body.phonenumber, ctx.request.body.verifycode);
-				if (resverify.status == conf.res.success)
-				// if (true)
+				// if (resverify.status == conf.res.success)
+				if (true)
 				{
 					var newUser = new Object() as UserInterface;
 					newUser = ctx.request.body;
@@ -122,7 +122,7 @@ function webServer()
 					newUser.verified = false;
 					newUser.avatarurl = path.join(conf.avatar, "default.jpg")
 					const resdatabase = await database.writeUser(newUser);
-					postUser(newUser);
+					postUser(resdatabase.data);
 					if (resdatabase.status === "success")
 					{
 						res.status = conf.res.success
@@ -265,13 +265,13 @@ function webServer()
 					return;
 				}
 				ctx.request.body.uuid = verifyres.uuid;
-				const databaseres = await database.updateUser(ctx.request.body)
-				postUser(ctx.request.body)
-				if (!databaseres)
+				const resupdate = await database.updateUser(ctx.request.body)
+				if (resupdate.status == conf.res.failure)
 				{
 					ctx.response.status = 403
 					return;
 				}
+				postUser(resupdate.data);
 				res.status = conf.res.success;
 				ctx.response.type = "application/json";
 				ctx.response.body = JSON.stringify(res)
@@ -441,7 +441,7 @@ function webServer()
 			newGood = ctx.request.body;
 			newGood.uuid = verify.uuid;
 			const res = await database.writeItem(newGood);
-			postItem(newGood);
+			postItem(res.data);
 			ctx.response.body = JSON.stringify(res);
 			ctx.response.type = 'application/json';
 		})
@@ -519,13 +519,13 @@ function webServer()
 					ctx.response.status = 403;
 					return;
 				}
-				const databaseres = await database.updateItem(ctx.request.body)
-				postItem(ctx.request.body);
-				if (!databaseres)
+				const resdsatabase = await database.updateItem(ctx.request.body)
+				if (!resdsatabase)
 				{
 					ctx.response.status = 403
 					return;
 				}
+				postItem(resdsatabase.data);
 				res.status = conf.res.success;
 				ctx.response.type = "application/json";
 				ctx.response.body = JSON.stringify(res)

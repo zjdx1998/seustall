@@ -11,9 +11,8 @@ import { UserInterface, ItemInterface } from './role';
 import conf from './conf';
 export async function postUser(user: UserInterface)
 {
-	const res = await postData(conf.resend.host.root + conf.resend.host.user,
+	const res = await postData(conf.resend.host.root + conf.resend.host.user+user.uuid,
 		{
-			uuid: user.uuid,
 			address: user.address,
 			idcard: user.idcard,
 			info: user.info,
@@ -21,17 +20,17 @@ export async function postUser(user: UserInterface)
 			studentid: user.studentid,
 			username: user.username
 		});
-	// console.log(res);
+	console.log(res);
 }
 export async function postItem(item: ItemInterface)
 {
-	const res = await postData(conf.resend.host.root + conf.resend.host.item,
+	const res = await postData(conf.resend.host.root + conf.resend.host.item+item.itemid,
 		{
 			note: item.note,
 			price: item.price,
 			title: item.title,
 		});
-	// console.log(res);
+	console.log(res);
 }
 export async function search(method: string, src: any)
 {

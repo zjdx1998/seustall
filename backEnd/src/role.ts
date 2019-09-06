@@ -67,10 +67,6 @@ export class Item
 	constructor(data: ItemInterface)
 	{
 		this.data = data as any;
-		// for (var key in data)
-		// {
-		// 	// console.log(key);
-		// }
 	}
 	json(): ItemInterface
 	{
@@ -82,7 +78,7 @@ export interface UserInterface
 	uuid: number,
 	password?: string,
 	username?: string,
-	phonenumber?: number,
+	phonenumber?: string,
 	idcard?: string,
 	studentid?: number,
 	address?: string,
@@ -103,7 +99,8 @@ export interface ItemInterface
 	depreciatione: number,
 	note: string,
 	sold: number,
-	to:number,
+	to: number,
+	hash: string,
 }
 export interface favoritesInterface
 {

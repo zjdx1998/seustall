@@ -82,8 +82,8 @@ export default {
 		host:
 		{
 			root: "http://hanyuu.top:9200",
-			item: "/index-goods/goods/itemid",
-			user: "/index-users/users/uuid",
+			item: "/index-goods/goods/",
+			user: "/index-users/users/",
 		},
 		search:
 		{

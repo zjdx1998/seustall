@@ -112,19 +112,20 @@ export default class data
 	 */
 	public async writeItem(item: ItemInterface)
 	{
-		var response = new Object() as any;
+		var res = new Object() as any;
 		try
 		{
 			item.to = 0;
-			await this.items.create(item);
-			response.status = conf.res.success;
-			return response;
+			const data = await this.items.create(item);
+			res.status = conf.res.success;
+			res.data = data;
+			return res;
 		} catch (error)
 		{
 			console.error(`[ERROR] failed while writing item\n${error}`);
-			response.status = conf.res.failure;
-			response.info = "invaild request";
-			return response;
+			res.status = conf.res.failure;
+			res.info = "invaild request";
+			return res;
 		}
 	}
 	/**
@@ -132,25 +133,26 @@ export default class data
 	 */
 	public async writeUser(user: UserInterface)
 	{
-		var response = new Object() as any;
+		var res = new Object() as any;
 		try
 		{
-			const res = await this.queryPhoneNumber(user.phonenumber as number);
-			if (res.data != null)
+			const resquery = await this.queryPhoneNumber(user.phonenumber as string);
+			if (resquery.data != null)
 			{
-				response.status = conf.res.failure;
-				response.info = "phone number already token"
-				return response;
+				res.status = conf.res.failure;
+				res.info = "phone number already token"
+				return res;
 			}
-			await this.users.create(user);
-			response.status = conf.res.success;
-			return response;
+			const data = await this.users.create(user);
+			res.status = conf.res.success;
+			res.data = data;
+			return res;
 		} catch (error)
 		{
 			console.error("[ERROR] Database connect failed.\n" + error);
-			response.status = conf.res.failure;
-			response.info = "invaild request";
-			return response;
+			res.status = conf.res.failure;
+			res.info = "invaild request";
+			return res;
 		}
 	}
 	/**
@@ -220,9 +222,29 @@ export default class data
 		}
 	}
 	/**
+	 * @description 查询用户自身信息
+	 */
+	public async queryUserRaw(uuid: number)
+	{
+		try
+		{
+			const res = await this.users.findOne({
+				where:
+				{
+					uuid
+				}
+			})
+			const userRes = new User(res);
+			return userRes;
+		} catch (error)
+		{
+			throw new Error("[ERROR] Database connect failed.\n" + error);
+		}
+	}
+	/**
 	 * @description 查询电话号码
 	 */
-	public async queryPhoneNumber(phonenumber: number)
+	public async queryPhoneNumber(phonenumber: string)
 	{
 		var res = new Object() as any;
 		try
@@ -314,16 +336,19 @@ export default class data
 	 */
 	public async updateUser(src: UserInterface)
 	{
+		var res = new Object() as any;
 		try
 		{
-			const queryres: any = await this.queryUser(src.uuid)
-			if (queryres.status == conf.res.failure)
+			const resquery: any = await this.queryUser(src.uuid)
+			if (resquery.status == conf.res.failure)
 			{
-				return false;
+				res.status = conf.res.failure;
+				res.info = resquery.info;
+				return res;
 			}
 			if (src.password)
 			{
-				const res = await this.users.update(
+				const resupdate = await this.users.update(
 					{
 						password: src.password,
 						username: src.username,
@@ -340,9 +365,12 @@ export default class data
 						}
 					}
 				);
+				res.status = conf.res.success;
+				res.data = resupdate;
+				return res;
 			} else
 			{
-				const res = await this.users.update(
+				const resupdate = await this.users.update(
 					{
 						username: src.username,
 						idcard: src.idcard,
@@ -358,13 +386,16 @@ export default class data
 						}
 					}
 				);
-
+				res.status = conf.res.success;
+				res.data = resupdate;
+				return res;
 			}
-			return true;
 		} catch (error)
 		{
 			console.error(error)
-			return false;
+			res.status = conf.res.failure;
+			res.info = error;
+			return res;
 		}
 	}
 	/**
@@ -406,14 +437,17 @@ export default class data
 	 */
 	public async updateItem(src: ItemInterface)
 	{
+		var res = new Object() as any;
 		try
 		{
 			const queryres: any = await this.queryItem(src.itemid as number)
 			if (queryres.status === "none")
 			{
-				return false;
+				res = conf.res.failure;
+				res.info = "no item";
+				return res;
 			}
-			const res = await this.items.update(
+			const resupdate = await this.items.update(
 				{
 					"title": src.title,
 					"type": src.type,
@@ -429,10 +463,15 @@ export default class data
 					}
 				}
 			)
-			return true;
+			res.status = conf.res.success;
+			res.data = resupdate;
+			return res;
 		} catch (error)
 		{
 			console.error(error)
+			res.status = conf.res.failure;
+			res.info = error;
+			return res;
 		}
 	}
 	/**
