@@ -1,5 +1,5 @@
 $imagename = "hanyuufurude/foofserver"
-$tag = "v6.5"
+$tag = Get-Content "./tag"
 $name = $imagename+":"+$tag
 Write-Host($name)
 docker build -t $name .

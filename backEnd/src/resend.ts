@@ -7,36 +7,77 @@ import nodefetch from 'node-fetch';
  * @description 消息重传插件
  */
 
+import { UserInterface, ItemInterface } from './role';
+import conf from './conf';
+export async function postUser(user: UserInterface)
+{
+	const res = await postData(conf.resend.host.root + conf.resend.host.user,
+		{
+			uuid: user.uuid,
+			address: user.address,
+			idcard: user.idcard,
+			info: user.info,
+			score: user.score,
+			studentid: user.studentid,
+			username: user.username
+		});
+	// console.log(res);
+}
+export async function postItem(item: ItemInterface)
+{
+	const res = await postData(conf.resend.host.root + conf.resend.host.item,
+		{
+			note: item.note,
+			price: item.price,
+			title: item.title,
+		});
+	// console.log(res);
+}
+export async function search(method: string, src: any)
+{
+	try
+	{
+		var res = new Object() as any;
+		if (method == conf.resend.search.method.item)
+		{
+			res = await postData(conf.resend.search.root + conf.resend.search.item,
+				{
+					"query": {
+						"multi_match": {
+							"query": src,
+							"fields": ["note", "title"]
+						}
+					}
+				});
+			return res;
+		}
+		else if (method == conf.resend.search.method.user)
+		{
+			res = await postData(conf.resend.search.root + conf.resend.search.user,
+				{
+					"query": {
+						"multi_match": {
+							"query": src,
+							"fields": ["username", "info"]
+						}
+					}
 
-// import fetch from 'node-fetch';
-// const config =
-// {
-// 	host: `http://localhost:9200/index-users/_search`,
-
-// }
-
-// function listen()
-// {
-// 	return async function (ctx: any, next: any)
-// 	{
-// 		console.log(`middle wire ${ctx.body}`);
-// 		postData(config.host,
-// 			{
-// 				"query": {
-// 					"match_all":
-// 					{
-
-// 					}
-// 				}
-// 			})
-// 			.then((data:any) => console.log(data.hits.hits[1])) // JSON from `response.json()` call
-// 			.catch((error:ErrorEvent) => console.error(error))
-// 		await next();
-// 	};
-// }
-
-
-export default async function postData(url:string, data:any)
+				});
+			return res;
+		}
+		else
+		{
+			return {
+				status: conf.res.failure,
+				info: conf.except.invaildReq
+			};
+		}
+	} catch (error)
+	{
+		console.error(error);
+	}
+}
+async function postData(url: string, data: any)
 {
 	// Default options are marked with *
 	return (nodefetch as any)(url, {
@@ -47,10 +88,10 @@ export default async function postData(url:string, data:any)
 			'user-agent': 'Mozilla/4.0 MDN Example',
 			'content-type': 'application/json'
 		},
-		method: 'POST', // *GET, POST, PUT, DELETE, etc.
+		method: 'POST', // *GET, PST, PUT, DELETE, etc.
 		mode: 'cors', // no-cors, cors, *same-origin
 		redirect: 'follow', // manual, *follow, error
 		referrer: 'no-referrer', // *client, no-referrer
 	})
-		.then((response:any) => response.json()) // parses response to JSON
+		.then((response: any) => response.json()) // parses response to JSON
 }

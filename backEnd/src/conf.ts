@@ -34,7 +34,7 @@ export default {
 		databaseexception: "database exception",
 		invaildReq: "invaild request",
 		noUser: "no such user",
-		badverifycode:"bad verify code",
+		badverifycode: "bad verify code",
 	},
 	SMSConfig:
 	{
@@ -76,5 +76,27 @@ export default {
 		sold: 2,
 		want: -1,
 		got: -2,
+	},
+	resend:
+	{
+		host:
+		{
+			root: "http://hanyuu.top:9200",
+			item: "/index-goods/goods/itemid",
+			user: "/index-users/users/uuid",
+		},
+		search:
+		{
+			root: "http://hanyuu.top:9200",
+			item: "/index-goods/_search",
+			user: "/index-users/_search",
+			method:
+			{
+				user: "user",
+				item: "good",
+			}
+		}
+
 	}
+
 }

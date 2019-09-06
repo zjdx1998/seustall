@@ -3,8 +3,8 @@
 [TOC]
 ## Version
 
-* version: v6.5.0 alpha
-* updated: 2019/09/05 17:12
+* version: v6.6.2 alpha
+* updated: 2019/09/06 16:42
 * author: Hanyuu Furude
 
 ## Characteristics
@@ -858,7 +858,49 @@ Content-Type: application/x-www-form-urlencoded
 }
 ```
 
-
 ## Search
 
-- todo
+```
+POST /item/search
+```
+
+```
+Content-Type: application/x-www-form-urlencoded
+```
+
+```json
+//method:item
+{"表单数据":{"method":"good","query":"jd"}}
+//method:user
+{"表单数据":{"method":"user","query":"jd"}}
+```
+
+```json
+//success
+{
+  "took":7,
+  "timed_out":false,
+  "_shards":
+  {
+    "total":5,
+    "successful":5,
+    "skipped":0,
+    "failed":0
+    },
+  "hits":
+  {
+    "total":0,
+    "max_score":null,
+        "hits":[
+        ]
+    }
+}
+//invaild request
+{
+  "status": "failure",
+  "info": "invaild request"
+}
+```
+
+
+

@@ -616,7 +616,7 @@ export default class data
 
 			for (var i in src)
 			{
-				const itemid = i;
+				const itemid = src[i];
 				await this.favorites.create(
 					{
 						uuid,
@@ -642,7 +642,7 @@ export default class data
 		{
 			for (var i in res)
 			{
-				const itemid: any = i;
+				const itemid: any = res[i];
 				const waittodelete = await this.favorites.destroy
 					(
 						{

@@ -53,7 +53,7 @@ export default async function (src: UserInterface)
 			res = false;
 		} else
 		{
-			// console.log('Message sent: ' + info.response);
+			console.log('Message sent: ' + info.response);
 			res = true;
 		}
 	});

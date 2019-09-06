@@ -15,7 +15,7 @@ import { User, Item, UserInterface, ItemInterface } from './role';
 import conf from './conf';
 import data from "./database";
 import mail from './mailpush';
-import resend from './resend';
+import { postItem, postUser, search } from './resend';
 import { requireCode, verifyCode } from './SMSVerify';
 
 const router = new koaRouter();
@@ -122,6 +122,7 @@ function webServer()
 					newUser.verified = false;
 					newUser.avatarurl = path.join(conf.avatar, "default.jpg")
 					const resdatabase = await database.writeUser(newUser);
+					postUser(newUser);
 					if (resdatabase.status === "success")
 					{
 						res.status = conf.res.success
@@ -181,7 +182,7 @@ function webServer()
 					database.updatepassword(
 						{
 							uuid: userInfo.data.uuid,
-							password:ctx.request.body.password
+							password: ctx.request.body.password
 						}
 
 					)
@@ -195,7 +196,7 @@ function webServer()
 					res.info = resverify.info;
 					ctx.response.body = JSON.stringify(res);
 					ctx.response.type = "application/json";
-					}
+				}
 			} catch (error)
 			{
 				res.status = conf.res.failure;
@@ -265,6 +266,7 @@ function webServer()
 				}
 				ctx.request.body.uuid = verifyres.uuid;
 				const databaseres = await database.updateUser(ctx.request.body)
+				postUser(ctx.request.body)
 				if (!databaseres)
 				{
 					ctx.response.status = 403
@@ -439,6 +441,7 @@ function webServer()
 			newGood = ctx.request.body;
 			newGood.uuid = verify.uuid;
 			const res = await database.writeItem(newGood);
+			postItem(newGood);
 			ctx.response.body = JSON.stringify(res);
 			ctx.response.type = 'application/json';
 		})
@@ -517,6 +520,7 @@ function webServer()
 					return;
 				}
 				const databaseres = await database.updateItem(ctx.request.body)
+				postItem(ctx.request.body);
 				if (!databaseres)
 				{
 					ctx.response.status = 403
@@ -571,39 +575,11 @@ function webServer()
 		/**
 		 * @description 用户搜索功能
 		 */
-		router.get('/item/search/:str', async (ctx, next) =>
+		router.post('/item/search/', async (ctx, next) =>
 		{
-			const res = await resend(conf.searchConfig.host,
-				{
-					// "source": "_id",
-					"query": {
-						"multi_match": {
-							"query": ctx.params.str,
-							"fields": ["username", "info"]
-						}
-					}
-				}
-			)
-			ctx.response.body = JSON.stringify(res);
-			ctx.response.type = "application/json";
-			return;
-		})
-		/**
-		 * @description 商品搜索功能
-		 */
-		router.get('/item/search/:str', async (ctx, next) =>
-		{
-			const res = await resend(conf.searchConfig.host,
-				{
-					// "source": "_id",
-					"query": {
-						"multi_match": {
-							"query": ctx.params.str,
-							"fields": ["username", "info"]
-						}
-					}
-				}
-			)
+			const method = ctx.request.body.method;
+			const query = ctx.request.body.query;
+			const res = await search(method, query);
 			ctx.response.body = JSON.stringify(res);
 			ctx.response.type = "application/json";
 			return;
