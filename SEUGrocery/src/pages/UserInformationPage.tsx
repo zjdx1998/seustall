@@ -4,13 +4,14 @@
   @date: 2019-8-28
 */
 import React, {Component} from 'react';
-import {View, ScrollView, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, ScrollView, StyleSheet, TouchableOpacity,ImageBackground} from 'react-native';
 import {Avatar, Text} from 'react-native-elements';
 
 import LocalBackHeader from '../Components/LocalBackHeader';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import GoodsPanel from '../Components/GoodsPanel';
 import RecommendationArea from '../Components/RecommendationArea';
+import UserInfo from '../Common/UserInfo';
 
 export default class UserInformationPage extends Component {
   private props: any;
@@ -19,7 +20,31 @@ export default class UserInformationPage extends Component {
     //this.state.uuid = props;
     this.state = {
       showGoodsWay: '0',
+      uuid : '',
+      password :'',
+      username :'',
+      phonenumber:'',
+      idcard:'',
+      studentid:'',
+      address:'',
+      avatarurl:'',
+      verified:'',
+      score:'',
+      token:'',
+      itemList : '',
+      info : '',
     };
+    UserInfo.get('username').then(data=>{this.setState({username:data})});
+    UserInfo.get('info').then(data=>{this.setState({info:data})});
+    UserInfo.get('verified').then(data=>{this.setState({verified:data})});
+    UserInfo.get('avatarurl').then(data=>{this.setState({avatarurl:data})});
+  }
+  getVerify(){
+    if(this.state.verified=='0'){
+      return'未认证'
+    }else{
+      return'已认证'
+    }
   }
 
   render() {
@@ -28,90 +53,87 @@ export default class UserInformationPage extends Component {
         <View style={styles.headerContainer}>
           <LocalBackHeader navigation={this.props.navigation} />
         </View>
-        <View style={styles.headerContainer}>
+        {/*<View style={styles.headerContainer}>*/}
           <View style={styles.headerArea}>
             <View style={styles.viewUserTop}>
+              <ImageBackground source={require('../Common/img/userinfoB.png')} style={{alignItems:'center',justifyContent:'center',width: '100%', height: '100%'}}>
               <Avatar
-                size={120}
+                size={210}
                 rounded
-                source={require('../Common/img/avatar.png')}
+                source={{uri:this.state.avatarurl}}
               />
+              </ImageBackground>
             </View>
             <View style={styles.txtArea}>
-              <Text style={styles.txtTitle}>这里是名字</Text>
+              <Text style={styles.txtTitle}>{this.state.username}</Text>
               <View style={styles.viewId}>
                 <View style={styles.viewIfId}>
                   <Text style={{color: '#cc6688', fontSize: 10, padding: 1}}>
-                    已认证
+                    {this.getVerify()}
                   </Text>
-                </View>
-                <Text style={styles.txtId}>1234567</Text>
               </View>
               <Text numberOfLines={2} style={styles.txtInfo}>
-                这里是个人简介How can you benefit with a certificate from the
-                American Certification Institute
+                {this.state.info}
               </Text>
               <TouchableOpacity style={styles.viewEdit}
               onPress={()=>this.props.navigation.navigate('release_info')}>
                 <Icon
                   name="pencil-square-o"
                   style={{color: '#cc6699'}}
-                  size={15}
+                  size={20}
                 />
                 <Text style={styles.txtEdit}>编辑个人资料</Text>
               </TouchableOpacity>
             </View>
           </View>
-        </View>
+        {/*</View>*/}
         <View style={styles.selectContainer}>
           <TouchableOpacity
-            onPress={() => {
-              this.setState({showGoodsWay: '0'});
-            }}
+              onPress={()=>this.props.navigation.navigate('page1')}
             activeOpacity={0.2}
             focusedOpacity={0.5}>
             <View
               style={{
                 justifyContent: 'center',
                 alignItems: 'center',
-                backgroundColor: '#ffffff',
+                backgroundColor: '#cc6699',
+                marginLeft:10,
+                borderRadius:10
               }}>
-              <Text style={{color: '#cc6699'}}>全部</Text>
+              <Text style={styles.selectText}> TA的铺子 </Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => {
-              this.setState({showGoodsWay: '1'});
-            }}
+              onPress={()=>this.props.navigation.navigate('page2')}
             activeOpacity={0.2}
             focusedOpacity={0.5}>
             <View
               style={{
                 justifyContent: 'center',
                 alignItems: 'center',
-                backgroundColor: '#ffffff',
+                backgroundColor: '#cc6699',
+                //marginLeft:10,
+                borderRadius:10
               }}>
-              <Text style={{color: '#cc6699'}}>未卖出</Text>
+              <Text style={styles.selectText}> TA想买的 </Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => {
-              this.setState({showGoodsWay: '2'});
-            }}
+              onPress={()=>this.props.navigation.navigate('chatP')}
             activeOpacity={0.2}
             focusedOpacity={0.5}>
             <View
               style={{
                 justifyContent: 'center',
                 alignItems: 'center',
-                backgroundColor: '#ffffff',
+                backgroundColor: '#cc6699',
+                //marginTop:10,
+                marginRight:10,
+                borderRadius:10
               }}>
-              <Text style={{color: '#cc6699'}}>已卖出</Text>
+              <Text style={styles.selectText}> 与TA聊天 </Text>
             </View>
           </TouchableOpacity>
-        </View>
-        <View style={styles.recommendationAreaContainer}>
-          <RecommendationArea navigation={this.props.navigation} />
         </View>
       </ScrollView>
     );
@@ -126,80 +148,81 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     flex: 5,
-    backgroundColor: '#cc6699',
+    //backgroundColor: '#cc6699',
   },
   viewUserTop: {
-    padding: 10,
-    margin: 10,
-    height: 150,
+    //flex:1,
+   /* padding: 10,*/
+
+    height: 360,
+    alignItems:'center',
+    justifyContent:'center',
+    //backgroundColor:'#cc6699',
   },
   txtArea: {
-    marginLeft: 10,
-    padding: 10,
-    marginBottom: 10,
+    marginTop:15,
+    //padding: 10,
+    backgroundColor:'#fff',
+    alignItems:'center',
+    alignSelf: 'stretch',
+    //height:250
   },
   headerArea: {
-    alignItems: 'center',
-    backgroundColor: '#cc6699',
-    flexDirection: 'row',
+    //margin:5,
+    backgroundColor: '#fff0f5',
+    //flexDirection: 'row',
   },
   selectContainer: {
     flex: 1,
-    height: 25,
-    backgroundColor: '#ffffff',
+    //height: 35,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-around',
-  },
-  GoodsAreaContainer: {
-    flex: 20,
+    justifyContent: 'space-between',
+
   },
   selectText: {
-    color: '#cc6699',
+    color: '#ffffff',
+    fontSize: 27,
+    margin:10
+
   },
   txtTitle: {
-    fontSize: 30,
-    marginTop: 10,
-    color: '#ffffff',
-  },
-  viewId: {
-    width: 100,
-    marginTop: 5,
-    flexDirection: 'row',
-    alignItems: 'center',
+    fontSize: 35,
+    margin: 15,
+    color: '#cc6699',
+    backgroundColor:'#fff'
   },
   viewIfId: {
-    margin: 5,
-    backgroundColor: '#ffffff',
+    marginHorizontal: 15,
+    backgroundColor: '#cc6699',
     justifyContent: 'center',
+    width:100,
+    flex:1,
     alignItems: 'center',
     borderRadius: 5,
   },
-  txtId: {
-    fontSize: 15,
-    color: '#ffffff',
-  },
   txtInfo: {
-    fontSize: 13,
-    marginTop: 5,
-    color: '#ffffff',
-    width: 250,
+    fontSize: 20,
+    margin: 15,
+    marginBottom:25,
+    color: '#cc6699',
+    backgroundColor:'#fff0f5',
+    borderRadius:10,
   },
   viewEdit: {
-    width: 90,
-    marginTop: 10,
-    height: 20,
+    margin: 15,
     flexDirection: 'row',
-    backgroundColor: '#FFF0F5',
+    //backgroundColor: '',
     opacity: 0.85,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
+    alignSelf:'flex-end',
   },
   txtEdit: {
     marginLeft: 3,
     alignSelf: 'center',
     color: '#cc6699',
-    fontSize: 10,
+    fontSize: 15,
   },
 });

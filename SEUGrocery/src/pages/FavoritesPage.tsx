@@ -9,6 +9,7 @@ import {Text, Avatar} from 'react-native-elements';
 import GoodsPanel from '../Components/GoodsPanel';
 import LocalBackHeader from '../Components/LocalBackHeader';
 import UserInfo from '../Common/UserInfo';
+import ItemList from '../Common/ItemList';
 
 const favQueryURL = "fav/query";
 
@@ -16,8 +17,10 @@ export default class FavoritesPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showGoodsWay: '2',
+      showGoodsWay: '0',
+      avatarurl:'',
     };
+    UserInfo.get('avatarurl').then(data=>{this.setState({avatarurl:data})})
   }
 
   fetchData = () => {
@@ -36,7 +39,7 @@ export default class FavoritesPage extends Component {
               <Avatar
                 size={120}
                 rounded
-                source={require('../Common/img/avatar.png')}
+                source={{uri:this.state.avatarurl}}
               />
             </View>
             <View style={styles.txtArea}>
@@ -89,11 +92,18 @@ export default class FavoritesPage extends Component {
         <View style={styles.GoodsAreaContainer}>
           <GoodsPanel
             showGoodsWay={this.state.showGoodsWay}
+            ref={goodsPanel => (this.goodsPanel = goodsPanel)}
             navigation={this.props.navigation}
           />
         </View>
       </ScrollView>
     );
+  }
+  componentDidMount() {
+    // alert('rua12421312');
+    var list = ItemList.getFavList();
+    this.goodsPanel.setState({ goodsList: list });
+    alert(JSON.stringify(list))
   }
 }
 

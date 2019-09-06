@@ -265,36 +265,7 @@ export default class ReleaseIWantPage extends Component {
               />
             </View>
           </View>
-          <View style={styles.container_row}>
-            <Text style={styles.h4}>密码：</Text>
-            <View style={styles.inputContainer}>
-              <TextInput
-                placeholder={'请输入密码'}
-                value={this.state.password}
-                editable={true}
-                onChangeText={password => this.setState({password})}
-                keyboardType={'numeric'}
-                maxLength={20}
-                secureTextEntry={true}
-                style={styles.h4}
-              />
-            </View>
-          </View>
-          <View style={styles.container_row}>
-            <Text style={styles.h4}>确认密码：</Text>
-            <View style={styles.inputContainer}>
-              <TextInput
-                placeholder={'请再次输入密码'}
-                value={this.state.password2}
-                editable={true}
-                onChangeText={password2 => this.setState({password2})}
-                keyboardType={'numeric'}
-                maxLength={20}
-                secureTextEntry={true}
-                style={styles.h4}
-              />
-            </View>
-          </View>
+
           <View style={styles.container_row}>
             <Text style={styles.h4}>校区：</Text>
             <View style={styles.inputContainer}>
@@ -338,6 +309,17 @@ export default class ReleaseIWantPage extends Component {
               {50 - this.state.detail.length}/50
             </Text>
           </View>
+          <View style={{flexDirection:'row'}}>
+          <View style={styles.buttonContainer}>
+            <Button
+                title="修改密码"
+                type="clear"
+                color={'#cc6699'}
+                onPress={() => {
+
+                }}
+            />
+          </View>
           <View style={styles.buttonContainer}>
             <Button
               title="确 认"
@@ -347,6 +329,7 @@ export default class ReleaseIWantPage extends Component {
                 return this.checkInput();
               }}
             />
+          </View>
           </View>
           <Loading
               ref={r => {
@@ -405,17 +388,23 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     flex: 1,
     flexDirection: 'row',
+    alignSelf:'flex-end',
   },
 
   container_row: {
     flexDirection: 'row',
     //justifyContent: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     marginBottom: 5,
     marginLeft: 15,
     marginRight: 15,
 
     //flex: 1,
+  },
+  h4Container:{
+    width:SP.WB(15),
+    margin: 5,
+    alignItems:'center'
   },
   h4: {
     alignSelf: 'center',

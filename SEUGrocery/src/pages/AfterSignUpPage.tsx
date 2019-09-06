@@ -29,6 +29,7 @@ import ImagePicker from 'react-native-image-picker'
 import UserInfo from '../Common/UserInfo';
 import {sha1}from '../Common/SHA-1Encryptor';
 
+
 var photoOptions = {
     //底部弹出框选项
     title: '请选择',
@@ -54,6 +55,7 @@ export default class AfterSignUpPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            token:'',
             userName: '',
             major: '',
             majorNum:'',
@@ -62,6 +64,10 @@ export default class AfterSignUpPage extends Component {
             imgURL: {uri:commonURL+'image/avatar/default.jpg'},
             avatarChanged:false,
         };
+        UserInfo.get('token')
+        .then(data=>{
+            this.setState({token:data})
+        })
     }
 
     checkUserName = () => {
@@ -94,9 +100,7 @@ export default class AfterSignUpPage extends Component {
         // const [uid, token] = await ItemList.getIdAndToken();
             let uploadAvatarURL=commonURL+'user/avatar';
             let paras={
-                token:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1d' +
-                    'WlkIjo0LCJnZW5lcmF0ZSI6MTU2NzU2NTQzODAxMSwiaWF0I' +
-                    'joxNTY3NTY1NDM4fQ.fW-80s4Biex9Cxl-0mIhacz5lgkZLD7kzXVz4Y8dc1c',
+                token:this.state.token,
                 path:this.state.imgURL.uri,
             }
             uploadImage(uploadAvatarURL,paras)
@@ -114,9 +118,7 @@ export default class AfterSignUpPage extends Component {
 
 
         let data = {
-            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjo0L' +
-                'CJnZW5lcmF0ZSI6MTU2NzU2NTQzODAxMSwiaWF0IjoxNTY3NTY' +
-                '1NDM4fQ.fW-80s4Biex9Cxl-0mIhacz5lgkZLD7kzXVz4Y8dc1c',
+            token: this.state.token,
             username:this.state.userName,
             idcard:'1',
             studentid:this.state.majorNum,

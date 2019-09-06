@@ -31,6 +31,7 @@ import ClassificationPage from '../pages/ClassificationPage';
 import SearchGoodsPage from "../pages/SearchGoodsPage";
 import NoticesPage from "../pages/NoticesPage";
 import SearchUsersPage from "../pages/searchUsersPage";
+import UserInfo from '../Common/UserInfo';
 
 // const customComponent = props => (
 //   <ScrollView style={{backgroundColor: '#FFE4E1', flex: 1}}>
@@ -39,6 +40,14 @@ import SearchUsersPage from "../pages/searchUsersPage";
 //     </SafeAreaView>
 //   </ScrollView>
 // );
+var username = '';
+var info = '';
+var avatarurl = '';
+UserInfo.get('username').then(data=>{username = data});
+UserInfo.get('info').then(data=>{info = data});
+UserInfo.get('avatarurl').then(data=>{avatarurl = data});
+
+
 
 const customComponents = props => (
     <View style={styles.baseContainer}>
@@ -54,15 +63,15 @@ const customComponents = props => (
                     }}
                     source={{
                         uri:
-                            'http://img5.duitang.com/uploads/item/201512/18/20151218165511_AQW4B.jpeg',
+                            avatarurl,
                     }}
                 />
             </TouchableOpacity>
             <View style={styles.roleInfoContainer}>
                 <TouchableOpacity
                     onPress={() =>props.navigation.navigate('userInformation')}>
-                    <Text style={styles.roleInfoNameText}>韩愈</Text>
-                    <Text style={styles.roleInfoText}>"我是韩愈。"</Text>
+                    <Text style={styles.roleInfoNameText}>{username}</Text>
+                    <Text style={styles.roleInfoText}>{info}</Text>
                 </TouchableOpacity>
             </View>
         </View>
