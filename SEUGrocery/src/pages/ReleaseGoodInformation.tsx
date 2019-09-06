@@ -122,7 +122,7 @@ export default class ReleaseInformation extends Component {
       title: this.state.title,
       type: '1',
       price: this.computeValue(),
-      imgurl: commonURL+'image/item/0.9321619878296834.jpg',
+      imgurl: 'image/item/0.9321619878296834.jpg',
       depreciatione: this.state.newDegree,
       note: this.state.campus+this.state.detail,
       sold:1,
@@ -157,7 +157,7 @@ export default class ReleaseInformation extends Component {
           .then(responseData => {
             console.log('uploadImage', responseData);
             if (responseData.status == 'success') {
-              data.imgurl = commonURL+responseData.imgurl[0];
+              data.imgurl = responseData.imgurl;
               postData(addItemURL, data)
                   .then(response => {
                     console.log('uploadData', response);

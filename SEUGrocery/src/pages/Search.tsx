@@ -25,7 +25,7 @@ export default class Search extends Component {
             isLoading: false,
             searchVal: "",// 搜索文字
             searchHistory: [],// 搜索历史数组
-            search: '',
+            searchFor:'good',
             sgbc:'#fff',
             subc:'#cc6699',
             sgs:10,
@@ -34,12 +34,10 @@ export default class Search extends Component {
             sutc:'#fff',
         }
     }
-    updateSearch = search => {
-        this.setState({ search });
-    };
     changeSearchGoal=(index)=>{
         if(index==1){
             this.setState({
+                  searchFor:'good',
                 sgbc:'#fff',
                 subc:'#cc6699',
                 sgs:10,
@@ -50,6 +48,7 @@ export default class Search extends Component {
         }
         if(index==2){
             this.setState({
+                  searchFor:'user',
                 subc:'#fff',
                 sgbc:'#cc6699',
                 sus:10,
@@ -164,8 +163,25 @@ export default class Search extends Component {
                             keyboardType="default"
                             onSubmitEditing={() => {
                                 // 保存搜索内容
+                                if(this.state.searchVal===''){
+                                    alert('你还没有输入搜索条件哦');
+                                    return;
+                                }
                                 this.insertSearch(this.state.searchVal);
-                                this.props.navigation.navigate('searchR')
+                                if(this.state.searchFor=='good') {
+                                    this.props.navigation.navigate('searchGP', {
+                                        keyword: this.state.searchVal,
+                                    });
+                                }
+                                else{
+                                     this.props.navigation.navigate('searchUP', {
+                                        keyword: this.state.searchVal,
+                                    });
+                                }
+                                this.setState({
+                                    searchVal: ''
+                                });
+
                             }}// 确定事件
                             defaultValue={this.state.searchVal}
                             onChangeText={(text) => {

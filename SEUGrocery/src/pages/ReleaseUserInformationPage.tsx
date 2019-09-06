@@ -45,20 +45,6 @@ var photoOptions = {
 
 var {height, width} = Dimensions.get('window');
 
-/*export default class Loading extends Component{
-    state={
-        show:true
-    }
-    render(){
-        if(this.state.show){
-            return (
-                <View style={{width:width,height:height}}>
-                    <ActivityIndicator size="large" color="#0000ff" />
-                </View>
-            )
-        }
-    }
-}*/
 const majorNum = [
   '01',
   '02',

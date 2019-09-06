@@ -28,6 +28,9 @@ import UserInformationPage from "../pages/UserInformationPage";
 import AfterSignUpPage from '../pages/AfterSignUpPage';
 import IDVerifyPage from '../pages/IDVerifyPage';
 import ClassificationPage from '../pages/ClassificationPage';
+import SearchGoodsPage from "../pages/SearchGoodsPage";
+import NoticesPage from "../pages/NoticesPage";
+import SearchUsersPage from "../pages/searchUsersPage";
 
 // const customComponent = props => (
 //   <ScrollView style={{backgroundColor: '#FFE4E1', flex: 1}}>
@@ -40,7 +43,9 @@ import ClassificationPage from '../pages/ClassificationPage';
 const customComponents = props => (
     <View style={styles.baseContainer}>
         <View style={styles.roleBaseContainer}>
-            <View style={styles.roleAvatorContainer}>
+            <TouchableOpacity
+                style={styles.roleAvatorContainer}
+                onPress={() =>props.navigation.navigate('userInformation')}>
                 <Image
                     style={{
                         width: SP.WB(23),
@@ -52,7 +57,7 @@ const customComponents = props => (
                             'http://img5.duitang.com/uploads/item/201512/18/20151218165511_AQW4B.jpeg',
                     }}
                 />
-            </View>
+            </TouchableOpacity>
             <View style={styles.roleInfoContainer}>
                 <TouchableOpacity
                     onPress={() =>props.navigation.navigate('userInformation')}>
@@ -210,6 +215,35 @@ const customComponents = props => (
                 ]}
                 onPress={() => {
                     props.navigation.closeDrawer();
+                    props.navigation.navigate('page5', {
+                        go_back_key: props.navigation.state.key,
+                        refresh: () => {
+                            that.setState({currentIndex: 1});
+                        },
+                    });
+                    that.setState({currentIndex: 5});
+                }}>
+                <Text
+                    style={[
+                        styles.menuTitleStyle,
+                        {color: that.state.currentIndex === 5 ? '#CC6699' : '#fff'},
+                        {
+                            marginHorizontal:
+                                that.state.currentIndex === 5 ? SP.WB(10) : SP.WB(3),
+                        },
+                    ]}>
+                    消息中心
+                </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={[
+                    styles.menuSingleContainer,
+                    {
+                        backgroundColor: that.state.currentIndex === 5 ? '#fff' : '#CC6699',
+                    },
+                ]}
+                onPress={() => {
+                    props.navigation.closeDrawer();
                     props.navigation.navigate('page4', {
                         go_back_key: props.navigation.state.key,
                         refresh: () => {
@@ -268,6 +302,12 @@ const TotalNav = createDrawerNavigator(
         },
         page4: {
             screen: FavoritesPage,
+            navigationOptions: {
+                drawerLabel: '收藏夹',
+            },
+        },
+        page5: {
+            screen: NoticesPage,
             navigationOptions: {
                 drawerLabel: '收藏夹',
             },
@@ -350,6 +390,18 @@ const TotalNav = createDrawerNavigator(
                 drawerlabel: () => null,
             },
         },
+        searchGP: {
+            screen: SearchGoodsPage,
+            navigationOptions: {
+                drawerlabel: () => null,
+            },
+        },
+        searchUP: {
+            screen: SearchUsersPage,
+            navigationOptions: {
+                drawerlabel: () => null,
+            },
+        },
         userInformation: {
             screen: UserInformationPage,
             navigationOptions: {
@@ -366,6 +418,7 @@ const TotalNav = createDrawerNavigator(
             'page2',
             'page3',
             'page4',
+            'page5',
             'startP',
             'loginP',
             'signUpP',
@@ -377,6 +430,8 @@ const TotalNav = createDrawerNavigator(
             'verifyP',
             'chatP',
             'searchP',
+            'searchGP',
+             'searchUP',
             'userInformation',
             'classificationP',
         ],

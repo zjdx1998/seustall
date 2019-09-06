@@ -113,6 +113,7 @@ export default class ReleaseIWantPage extends Component {
   uploadItemData = async () => {
     this.Loading.show();
     const [uid, token] = await ItemList.getIdAndToken();
+    const commonURL='http://inari.ml:8080/';
 
     let data = {
       token:token,
@@ -120,10 +121,10 @@ export default class ReleaseIWantPage extends Component {
       title: this.state.title,
       type: '1',
       price: this.computeValue(),
-      imgurl: 'null',
+      imgurl: commonURL+'image/item/0.9321619878296834.jpg',
       depreciatione: this.state.newDegree,
       note: this.state.campus+this.state.detail,
-      sold:-1,
+      sold:'-1',
     };
     console.log(data);
     const addItemURL = 'http://inari.ml:8080/item/add';
