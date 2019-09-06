@@ -12,7 +12,7 @@ import {
     Dimensions,
     Button,
     Picker,
-    TextInput,
+    TextInput, FlatList, TouchableOpacity,
 } from 'react-native';
 import LocalBackHeader from '../Components/LocalBackHeader';
 import * as SP from '../Common/ScreenProperty';
@@ -25,22 +25,26 @@ const list = [
     {
         name: 'Amy Farha',
         avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-        subtitle: 'Vice President'
+        subtitle: 'Vice President',
+        news:0,
     },
     {
         name: 'Chris Jackson',
         avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-        subtitle: 'Vice Chairman'
+        subtitle: 'Vice Chairman',
+          news:3,
     },
     {
         name: 'Chris Jackson',
         avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-        subtitle: 'Vice Chairman'
+        subtitle: 'Vice Chairman',
+          news:2,
     },
     {
         name: 'Chris Jackson',
         avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-        subtitle: 'Vice Chairman'
+        subtitle: 'Vice Chairman',
+          news:99,
     },
 ]
 
@@ -59,24 +63,36 @@ export default class NoticesPage extends Component {
         this.setState(data);
     };
 
+    keyExtractor = (item, index) => index.toString()
+
+    renderItem = ({ item }) => (
+        <TouchableOpacity
+            onPress={()=>this.props.navigation.navigate('chatP')}
+        >
+        <ListItem
+            title={item.name}
+            subtitle={item.subtitle}
+            leftAvatar={{ source: { uri: item.avatar_url } }}
+            badge={{ value:item.news, textStyle: { color: 'orange' }, containerStyle: { opacity:item.news==0?0:1 } }}
+            bottomDivider
+            chevron
+        />
+        </TouchableOpacity>
+    )
+
     render() {
         return (
             <View style={styles.baseContainer}>
                 <ScrollView style={styles.test}>
-                        <LocalBackHeader navigation={this.props.navigation} />
+                    <LocalBackHeader navigation={this.props.navigation} />
                     <Text h4 style={{alignSelf:'center',top:-SP.HB(5)}}>消息中心</Text>
                     <View style={{top:-SP.HB(4)}}>
-                        {
-                            list.map((l, i) => (
-                                <ListItem
-                                    key={i}
-                                    leftAvatar={{ source: { uri: l.avatar_url } }}
-                                    title={l.name}
-                                    subtitle={l.subtitle}
-                                    bottomDivider
-                                />
-                            ))
-                        }
+                        <FlatList
+                            keyExtractor={this.keyExtractor}
+                            data={list}
+                            renderItem={this.renderItem}
+                        />
+
                     </View>
 
 

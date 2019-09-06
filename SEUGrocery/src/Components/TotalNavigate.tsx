@@ -318,7 +318,7 @@ const TotalNav = createDrawerNavigator(
         page5: {
             screen: NoticesPage,
             navigationOptions: {
-                drawerLabel: '收藏夹',
+                drawerLabel: '消息中心',
             },
         },
         release_good: {

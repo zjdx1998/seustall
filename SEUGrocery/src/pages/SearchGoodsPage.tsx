@@ -10,7 +10,7 @@ import {
     ScrollView,
     StyleSheet,
     Dimensions,
-    Alert,
+    Alert, FlatList,
 
 } from 'react-native';
 import {
@@ -20,13 +20,14 @@ import {
     Image,
     Avatar,
     Header,
-    Icon, SearchBar, Divider,
+    Icon, SearchBar, Divider, ListItem,
 } from 'react-native-elements';
 import * as SP from '../Common/ScreenProperty';
 import {TouchableOpacity} from "react-native-gesture-handler";
 import {postData} from '../Common/FetchHelper';
 import UserInfo from '../Common/UserInfo';
 import Good from "../Common/ItemBlock";
+import Swipeout from 'react-native-swipeout';
 
 
 export default class SearchGoodsPage extends Component {
@@ -39,6 +40,7 @@ export default class SearchGoodsPage extends Component {
     state = {
         search:'',
         goalType:0,
+        left:0,
         list:[
             {
                 itemid: 1,
@@ -71,6 +73,50 @@ export default class SearchGoodsPage extends Component {
                 price: '40',
                 classify: '食物',
                 info: 'balabalablab',
+            },
+        ],
+        testData :[
+            {
+                goodName: "铅笔",
+                note: "彩虹色",
+                price: 1,
+                time: "2019-8-27"
+            },
+            {
+                goodName: "洗衣机",
+                note: "全自动，能烘干，小巧轻便，必须九成新以上，提供上门送货并且要帮忙搬进宿舍",
+                price: 700,
+                time: "2019-8-27"
+            },
+            {
+                goodName: "铅笔",
+                note: "彩虹色",
+                price: 1,
+                time: "2019-8-27"
+            },
+            {
+                goodName: "铅笔",
+                note: "彩虹色",
+                price: 1,
+                time: "2019-8-27"
+            },
+            {
+                goodName: "铅笔",
+                note: "彩虹色",
+                price: 1,
+                time: "2019-8-27"
+            },
+            {
+                goodName: "铅笔",
+                note: "彩虹色",
+                price: 1,
+                time: "2019-8-27"
+            },
+            {
+                goodName: "铅笔",
+                note: "彩虹色",
+                price: 1,
+                time: "2019-8-27"
             },
         ],
     };
@@ -161,29 +207,65 @@ export default class SearchGoodsPage extends Component {
                         )
                     })}
                 </View>
-                <View style={styles.body}>
-                    <Button
-                        onPress={this.getInfo}
-                        title={'请求数据'}
-                    />
-                    <ScrollView>
-                    <View style={styles.goodsList}>
-                        {this.state.list.map(i => (
-                            <Good
-                                itemid={i.itemid}
-                                image={{uri: i.icon_url}}
-                                name={i.name}
-                                price={i.price}
-                                text={i.info}
-                                navigation={this.props.navigation}
-                            />
-                        ))}
+                <Button
+                    onPress={this.getInfo}
+                    title={'请求数据'}
+                />
+                <View style={[styles.body,{left:this.state.left}]}>
+                    <View>
+                        <ScrollView style={{width:SP.WB(100)}}>
+                            <View style={styles.goodsList}>
+                                {this.state.list.map(i => (
+                                    <Good
+                                        itemid={i.itemid}
+                                        image={{uri: i.icon_url}}
+                                        name={i.name}
+                                        price={i.price}
+                                        text={i.info}
+                                        navigation={this.props.navigation}
+                                    />
+                                ))}
+                            </View>
+                        </ScrollView>
                     </View>
-                    </ScrollView>
+                    <View>
+                        <ScrollView style={{width:SP.WB(100)}}>
+                            <FlatList
+                                style={{marginTop: 12}}
+                                data={this.state.testData}
+                                renderItem={this.renderRowList}
+                            />
+                        </ScrollView>
+                    </View>
                 </View>
             </View>
 
         );
+    }
+
+    //flatlist导入数据到控件
+    renderRowList = (item) => {
+        //文字内容
+        return (
+            <TouchableOpacity>
+                <ListItem
+                    title={item.goodName}
+                    subtitle={
+                        <View>
+                            <View style={{}}>
+                                <Text numberOfLines={2} style={styles.txtDetail}>{item.note}</Text>
+                                <Text numberOfLines={1} style={styles.txtDetail}>最高接受价：￥{item.price}</Text>
+                                <Text numberOfLines={1} style={styles.txtTime}>{item.time}</Text>
+                            </View>
+                        </View>
+                    }
+                    leftAvatar={{ source: require('../Common/img/need.png') }}
+                    bottomDivider
+                    chevron
+                />
+            </TouchableOpacity>
+
+        )
     }
 }
 
@@ -222,17 +304,15 @@ const styles = StyleSheet.create({
         fontSize:20,
     },
     goodsList: {
-    // flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent:'center',
-  },
+        // flex: 1,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent:'center',
+    },
 
-    lists:{
-
-    }
-
-
-
+    body:{
+        flexDirection:'row',
+        width:SP.WB(200),
+    },
 
 });
