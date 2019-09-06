@@ -187,6 +187,7 @@ export default class ReleaseInformation extends Component {
   };
   render() {
     return (
+        <View style={styles.baseContainer}>
       <ScrollView style={styles.test}>
         {/*顶端返回和确认按钮*/}
         <View style={{height: SP.HB(12)}}>
@@ -297,11 +298,16 @@ export default class ReleaseInformation extends Component {
           hide={true}
         />
       </ScrollView>
+        </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  baseContainer: {
+    backgroundColor: '#FFF0F5',
+    flex: 1,
+  },
   buttonContainer: {
     top: -50,
     left: width * 0.7,
