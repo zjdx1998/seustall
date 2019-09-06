@@ -39,10 +39,8 @@ export default async function (src: UserInterface)
 	// setup e-mail data with unicode symbols
 	var mailOptions = {
 		from: conf.mailConfig.user,
-		to: `${src.studentid}@seu.edu.cn`,
+		to: `${src.idcard}@seu.edu.cn`,
 		subject: "foof",
-		// text: 'Hello world ?', // 标题
-		// html: '<b>Hello world ?</b>' // html 内容
 		text: token,
 	};
 

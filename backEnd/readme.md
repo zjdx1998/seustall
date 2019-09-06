@@ -3,7 +3,7 @@
 [TOC]
 ## Version
 
-* version: v6.4.2 alpha
+* version: v6.5.0 alpha
 * updated: 2019/09/05 17:12
 * author: Hanyuu Furude
 
@@ -50,7 +50,7 @@ docker run --network host -d -v /home/.../avatar:/foof/avatar hanyuufurude/foofs
    };
    ```
 
-   
+
 
 ## SQL table fields
 #### users
@@ -764,7 +764,7 @@ Content-Type:application/x-www-form-urlencoded
 
 ### send message
 
-``` 
+```
 POST /user/chat/push
 ```
 
@@ -787,7 +787,7 @@ Content-Type:application/x-www-form-urlencoded
 
 * we suggest that you use this to check whether you have a new message or not.
 
-``` 
+```
 POST /user/chat/fetchnew
 ```
 

@@ -107,9 +107,9 @@ function webServer()
 			var res = new Object() as any;
 			try
 			{
-				const resverify = verifyCode(ctx.request.body.phoneNumber, ctx.request.body.verifycode);
+				const resverify = verifyCode(ctx.request.body.phonenumber, ctx.request.body.verifycode);
 				if (resverify.status == conf.res.success)
-				if (true)
+				// if (true)
 				{
 					var newUser = new Object() as UserInterface;
 					newUser = ctx.request.body;
@@ -143,6 +143,10 @@ function webServer()
 			} catch (error)
 			{
 				console.error(error);
+				res.status = conf.res.failure;
+				res.info = error;
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = 'application/json';
 			}
 		})
 		/**

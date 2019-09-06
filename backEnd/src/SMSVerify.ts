@@ -27,7 +27,7 @@ function generateCode(phoneNumber: string)
 		generate: (new Date()).valueOf() / 3600
 	}
 	const token = jwt.sign(payload, conf.secretkey);
-	const ts = crypto.createHash('md5').update('token').digest('hex')
+	const ts = crypto.createHash('md5').update(token).digest('hex')
 	var codeStr = ts.substr(ts.length - 4);
 	var code = parseInt(codeStr, 16) % 1000;
 	if (code <= 1000)
@@ -45,10 +45,12 @@ export function requireCode(phoneNumber: string)
 	var code = generateCode(phoneNumber);
 	if (code)
 	{
-		const respush = (SMSVerify as any)(phoneNumber, code);
+		// const respush = (SMSVerify as any)(phoneNumber, code);
 		res.status = conf.res.success;
 		// todo 上线时删除此调试信息
-		res.info = respush;
+		// res.info = respush;
+		res.info = code;
+		return res;
 	}
 	else
 	{
@@ -60,12 +62,12 @@ export function requireCode(phoneNumber: string)
 /**
  * @description 校验验证码
  */
-export function verifyCode(phoneNumber: string, verifyCode: string)
+export function verifyCode(phonenumber: string, verifyCode: string)
 {
 	var res = new Object() as any;
 	try
 	{
-		const resrequire = generateCode(phoneNumber);
+		const resrequire = generateCode(phonenumber);
 		if (resrequire)
 		{
 			if (resrequire.toString() == verifyCode)

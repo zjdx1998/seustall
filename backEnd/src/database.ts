@@ -136,7 +136,7 @@ export default class data
 		try
 		{
 			const res = await this.queryPhoneNumber(user.phonenumber as number);
-			if (res)
+			if (res.data != null)
 			{
 				response.status = conf.res.failure;
 				response.info = "phone number already token"
