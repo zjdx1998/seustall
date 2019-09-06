@@ -11,7 +11,6 @@ export default {
 	},
 	table:
 	{
-
 		users: "users",
 		items: "items",
 		favorites: "favourites",
@@ -35,30 +34,12 @@ export default {
 		invaildReq: "invaild request",
 		noUser: "no such user",
 		badverifycode: "bad verify code",
+		reqtoofreq:"request too frequent"
 	},
 	SMSConfig:
 	{
-		appkey: "5d3689b4c39a53ce7526fdeace54d9e3",
-		appid: 1400253561,
-		templateId: 233504,
-		zone: 86,
-		host: "",
-		smsSign: "东大杂货铺",
-		sign: "东大杂货铺"
-
-		// host: "https://webapi.sms.mob.com/sms/verify",
-		// appkey: "2c3bb00a9ca40",
-		// error:
-		// {
-		// 	200: "验证成功",
-		// 	405: "AppKey为空",
-		// 	456: "国家代码或手机号码为空",
-		// 	457: "手机号码格式错误",
-		// 	466: "请求校验的验证码为空",
-		// 	467: "请求校验验证码频繁",
-		// 	468: "验证码错误",
-		// 	474: "没有打开服务端验证开关",
-		// }
+		minInterval:60000,
+		livetime: 1800000,
 	},
 	mailConfig:
 	{
@@ -96,7 +77,5 @@ export default {
 				item: "good",
 			}
 		}
-
 	}
-
 }
