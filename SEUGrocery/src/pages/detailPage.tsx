@@ -23,9 +23,12 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import LocalBackHeader from '../Components/LocalBackHeader';
 import * as SP from '../Common/ScreenProperty';
 import {TouchableOpacity} from "react-native-gesture-handler";
+import UserInfo from '../Common/UserInfo';
+import { postData } from '../Common/FetchHelper';
 
 const itemURL = 'http://inari.ml:8080/item/';
 const userURL = 'http://inari.ml:8080/user/';
+const addFavUrl = 'http://inari.ml:8080/fav/add';
 
 var {height, width} = Dimensions.get('window');
 export default class DetailPage extends Component {
@@ -108,6 +111,16 @@ export default class DetailPage extends Component {
         avatorurl: 'https://avatars2.githubusercontent.com/u/45632558?s=400&v=4',
     };
 
+    addFav(){
+        UserInfo.get('token').then(toke=>{
+            postData(addFavUrl,
+                {
+                    token:toke,
+                    data:[this.state.itemid]
+                })
+        })
+    }
+
     render() {
         return (
             <ScrollView style={styles.test}>
@@ -168,6 +181,7 @@ export default class DetailPage extends Component {
                         <TouchableOpacity
                             style={styles.favoriteStyle}
                             onPress={() => {
+                                this.addFav();
                                 this.setState({isFavorite: !this.state.isFavorite})
                                 //
                             }}>

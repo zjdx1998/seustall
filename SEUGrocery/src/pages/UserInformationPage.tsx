@@ -11,6 +11,7 @@ import LocalBackHeader from '../Components/LocalBackHeader';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import GoodsPanel from '../Components/GoodsPanel';
 import RecommendationArea from '../Components/RecommendationArea';
+import UserInfo from '../Common/UserInfo';
 
 export default class UserInformationPage extends Component {
   private props: any;
@@ -19,7 +20,31 @@ export default class UserInformationPage extends Component {
     //this.state.uuid = props;
     this.state = {
       showGoodsWay: '0',
+      uuid : '',
+      password :'',
+      username :'',
+      phonenumber:'',
+      idcard:'',
+      studentid:'',
+      address:'',
+      avatarurl:'',
+      verified:'',
+      score:'',
+      token:'',
+      itemList : '',
+      info : '',
     };
+    UserInfo.get('username').then(data=>{this.setState({username:data})});
+    UserInfo.get('info').then(data=>{this.setState({info:data})});
+    UserInfo.get('verified').then(data=>{this.setState({verified:data})});
+    UserInfo.get('avatarurl').then(data=>{this.setState({avatarurl:data})});
+  }
+  getVerify(){
+    if(this.state.verified=='0'){
+      return'未认证'
+    }else{
+      return'已认证'
+    }
   }
 
   render() {
@@ -34,22 +59,21 @@ export default class UserInformationPage extends Component {
               <Avatar
                 size={120}
                 rounded
-                source={require('../Common/img/avatar.png')}
+                source={{uri:this.state.avatarurl}}
               />
             </View>
             <View style={styles.txtArea}>
-              <Text style={styles.txtTitle}>这里是名字</Text>
+              <Text style={styles.txtTitle}>{this.state.username}</Text>
               <View style={styles.viewId}>
                 <View style={styles.viewIfId}>
                   <Text style={{color: '#cc6688', fontSize: 10, padding: 1}}>
-                    已认证
+                    {this.getVerify()}
                   </Text>
                 </View>
                 <Text style={styles.txtId}>1234567</Text>
               </View>
               <Text numberOfLines={2} style={styles.txtInfo}>
-                这里是个人简介How can you benefit with a certificate from the
-                American Certification Institute
+                {this.state.info}
               </Text>
               <TouchableOpacity style={styles.viewEdit}
               onPress={()=>this.props.navigation.navigate('release_info')}>

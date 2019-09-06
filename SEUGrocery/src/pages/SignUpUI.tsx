@@ -84,17 +84,19 @@ export default class SignUpUI extends Component {
             return;
         }
         console.log(this.state);
+        alert(this.state.inputedCode);
         postData(registerURL, {
             // phonenumber: '17551046561', 
             // password: sha1('13315585158zz'), 
             phonenumber: this.state.inputNum,
-            verifiycode: this.state.inputedCode,
+            verifycode: this.state.inputedCode,
             password: sha1(this.state.inputedPW),
         })
             .then(data => {
+                // alert(data);
                 if(data.status=="success"){
                     alert("注册成功")
-                    this.props.navigation.navigate('signin');
+                    this.props.navigation.navigate('afterSignUp');
                     }
                     else{
                       alert(data.info);
@@ -230,8 +232,8 @@ export default class SignUpUI extends Component {
 
                     {/*//注册按钮*/}
                     <TouchableOpacity
-                        // onPress={this.buttonPressed}
-                        onPress={()=>this.props.navigation.navigate('afterSignUp')}
+                        onPress={this.buttonPressed}
+                        // onPress={()=>this.buttonPressed}
                         style={styles.bigButton}>
                         <Text style={styles.bigTextPrompt}>{this.state.bigButtonText}</Text>
                     </TouchableOpacity>
