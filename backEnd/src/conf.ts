@@ -17,7 +17,7 @@ export default {
 		chat: "chat",
 	},
 	port: 4000,
-	host: "localhost",
+	host: process.env.SEUSTALL || 'localhost',
 	datatable: "foof",
 	username: "app",
 	password: "foof",
@@ -34,11 +34,11 @@ export default {
 		invaildReq: "invaild request",
 		noUser: "no such user",
 		badverifycode: "bad verify code",
-		reqtoofreq:"request too frequent"
+		reqtoofreq: "request too frequent"
 	},
 	SMSConfig:
 	{
-		minInterval:60000,
+		minInterval: 60000,
 		livetime: 1800000,
 	},
 	mailConfig:
