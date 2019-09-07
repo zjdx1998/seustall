@@ -18,7 +18,7 @@ export default class Good extends Component {
         <View style={styles.block}>
           <Image
             source={this.props.image}
-            style={{width: SP.WB(45), height: SP.WB(45), flex: 4}}
+            style={{width: SP.WB(45), height: SP.WB(45)}}
           />
           <Text style={styles.name}>{this.props.name}</Text>
           <Text style={styles.textdes} numberOfLines={2}>
@@ -34,12 +34,11 @@ export default class Good extends Component {
 const styles = StyleSheet.create({
   block: {
     backgroundColor: '#ffffff',
-    borderRadius: 10,
+    // borderRadius: 10,
     width: SP.WB(45),
     height: SP.HB(35),
     alignItems: 'center',
     margin: SP.WB(1),
-    padding: SP.WB(1),
     flexDirection: 'column',
     flex: 1,
   },

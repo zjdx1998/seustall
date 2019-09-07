@@ -11,9 +11,9 @@ import {
     StyleSheet,
     Dimensions,
     Alert,
+    Text,
 } from 'react-native';
 import {
-    Text,
     Button,
     ThemeProvider,
     Image,
@@ -25,6 +25,7 @@ import * as SP from '../Common/ScreenProperty';
 import {TouchableOpacity} from "react-native-gesture-handler";
 import {postData} from '../Common/FetchHelper';
 import UserInfo from '../Common/UserInfo';
+import * as DataBase from '../Common/DataBase';
 
 const commonURL='http://inari.ml:8080/';
 export default class SearchUsersPage extends Component {
@@ -34,78 +35,111 @@ export default class SearchUsersPage extends Component {
         super(props);
     }
     componentDidMount() {
-
-    }
-
-    componentDidUpdate() {
-
+        this.getHistory();
+        this.getInfo(this.props.navigation.state.params.keyword);
     }
 
     state = {
-        search:'',
+        search:this.props.navigation.state.params.keyword,
         goalType:0,
         left:0,
-        list:[
-            {
-                name: 'Amy Farha',
-                avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-                subtitle: 'Vice President'
-            },
-            {
-                name: 'Chris Jackson',
-                avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-                subtitle: 'Vice Chairman'
-            },
-        ]
+        searchHistory: [],// 搜索历史数组
+        list:[],
     };
 
     updateSearch = search => {
         this.setState({ search });
     };
 
-    changelist(hits){
-        let list=[];
-        for (i of hits){
-            list.push({
-                name:i._source.username,
-                // 这里没写完
-            })
+    //获取历史记录
+    getHistory() {
+        // 查询本地历史
+        DataBase.getItem("searchHistory").then(data => {
+            if (data == null) {
+                this.setState({
+                    searchHistory: [],
+                })
+            } else {
+                this.setState({
+                    searchHistory: data,
+                })
+            }
+        })
+    }
+    // 保存搜索标签
+    insertSearch(text) {
+        if (this.state.searchHistory.indexOf(text) != -1) {
+            // 本地历史 已有 搜索内容
+            let index = this.state.searchHistory.indexOf(text);
+            let tempArr = DataBase.arrDelete(this.state.searchHistory, index)
+            tempArr.unshift(text);
+            DataBase.setItem("searchHistory", tempArr);
+        } else {
+            // 本地历史 无 搜索内容
+            let tempArr = this.state.searchHistory;
+            tempArr.unshift(text);
+            DataBase.setItem("searchHistory", tempArr);
         }
     }
 
-    changeName(list,index,name){
-        list[index].name=name;
-        return list;
+    getAvatar=(uuid,index)=>{
+        const fetch = require('node-fetch');
+        fetch('http://inari.ml:8080/user/'+uuid)
+            .then((response) => response.json())
+            .then(response=>{
+                    if(response.status=="success" ){
+                        console.log(response.avatarurl);
+                        this.setState({list: this.changeAvatar(this.state.list,index,response.avatarurl)})
+                    }
+                }
+            )
     }
+    changelist(hits){
+        let list=[];
+        for (let item of hits) {
+            let tempObj = {
+                uuid:item._id,
+                name: item._source.username,
+                info:item._source.info,
+                add:item._source.address,
+                avatar_url:'',
+            };
+            list.push(tempObj);
+
+        }
+        this.setState({list:list})
+    }
+
     changeAvatar(list,index,uri){
         list[index].avatar_url=commonURL+uri;
         return list;
     }
-    changeSubtitle(list,index,info){
-        list[index].subtitle=info;
-        return list;
-    }
 
-    getInfo=()=>{
-        console.log(this.props.navigation.state.params.keyword);
-        this.setState({list:this.changeName(this.state.list,0,'hanyuu')
+    getInfo=(keyword)=>{
+        console.log(keyword);
+        this.setState({list:[]});
+        let url='http://inari.ml:8080/item/search';
+        let data={
+            method:'user',
+            query:keyword,
+        }
+        postData(url,data)
+            .then(response=>{
+                if(response.status=='failure'){
+                    alert('请求错误')
+                }
+                else{
+                    console.log(response);
+                    this.changelist(response.hits.hits);
+                    for(let i in this.state.list){
+                        this.getAvatar(this.state.list[i].uuid,i);
+                    }
+                }
+
             })
-        // let url='http://inari.ml:8080/item/search';
-        // let data={
-        //     method:'user',
-        //     query:this.props.navigation.state.params.keyword,
-        // }
-        // postData(url,data)
-        //     .then(response=>{
-        //         if(response.status=='failure'){
-        //             alert('请求错误')
-        //         }
-        //         console.log(response);
-        //         this.state.list=response.hits.hits;
-        //     })
-        //     .catch(err => {
-        //         console.error(err);
-        //     });
+            .catch(err => {
+                console.error(err);
+            });
     }
 
 
@@ -140,30 +174,53 @@ export default class SearchUsersPage extends Component {
                                 lightTheme={true}
                                 containerStyle={styles.searchBar}
                                 inputContainerStyle={styles.input}
-                                showLoading={true}
-                                underlineColorAndroid={'#fff'}
                             />
                         </View>
+                    }
+                    rightComponent={
+                        <Button
+                            buttonStyle={{backgroundColor:'#cc6699',borderRadius:15}}
+                            onPress={()=>{
+                                // alert(this.state.search)
+                                this.setState({loading:true});
+                                this.insertSearch(this.state.search);
+                                this.getInfo(this.state.search);
+                                // this.setState({loading:false})
+                            }}
+                            title={'搜索'}
+                        />
                     }
                 />
 
                 <View style={styles.body}>
                     <Button
-                        onPress={this.getInfo}
-                        title={'发送请求'}
+                        buttonStyle={{backgroundColor:'#cc6699'}}
+                        onPress={()=>{this.getInfo(this.state.search)}}
+                        title={'刷新'}
                     />
                     {
-                        this.state.list.map((l, i) => (
-                            <TouchableOpacity>
-                            <ListItem
-                                key={i}
-                                leftAvatar={{ source: { uri: l.avatar_url } }}
-                                title={l.name}
-                                subtitle={l.subtitle}
-                                bottomDivider
-                            />
+                        this.state.list.map((l, i) => {
+                            return(
+                            <TouchableOpacity
+                                onPress={()=> {
+                                    this.props.navigation.navigate('showUser',{
+                                        uuid:this.state.list[i].uuid,
+                                    })
+                                }}
+                            >
+                                <ListItem
+                                    leftAvatar={{ source: { uri: l.avatar_url } }}
+                                    title={l.name}
+                                    subtitle={
+                                        <View>
+                                                <Text>{l.address}</Text>
+                                                <Text>{l.info}</Text>
+                                        </View>
+                                    }
+                                    bottomDivider
+                                />
                             </TouchableOpacity>
-                        ))
+                        )})
                     }
                 </View>
 
@@ -183,14 +240,14 @@ const styles = StyleSheet.create({
         justifyContent:'center',
     },
     searchBar:{
-        width:SP.WB(80),
+        width:SP.WB(70),
         backgroundColor:'#eee',
         borderTopWidth:0,
         borderBottomWidth:0,
 
     },
     input:{
-        backgroundColor:'#000',
+        backgroundColor:'#ddd',
     },
     mode:{
         justifyContent:'center',
@@ -198,11 +255,6 @@ const styles = StyleSheet.create({
         marginBottom:SP.HB(2),
         marginLeft:SP.WB(5),
         marginRight:SP.WB(5),
-    },
-    line:{
-        backgroundColor:'#000',
-        height:3,
-
     },
     typeTip:{
         fontSize:20,

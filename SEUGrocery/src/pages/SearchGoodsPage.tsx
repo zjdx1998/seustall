@@ -25,10 +25,9 @@ import {
 import * as SP from '../Common/ScreenProperty';
 import {TouchableOpacity} from "react-native-gesture-handler";
 import {postData} from '../Common/FetchHelper';
-import UserInfo from '../Common/UserInfo';
 import Good from "../Common/ItemBlock";
-import Swipeout from 'react-native-swipeout';
-
+import {goodsInfo} from "../Common/GoodsInfo";
+import * as DataBase from '../Common/DataBase';
 
 export default class SearchGoodsPage extends Component {
     private props: any;
@@ -38,128 +37,139 @@ export default class SearchGoodsPage extends Component {
     }
 
     state = {
-        search:'',
-        goalType:0,
-        left:0,
-        list:[
-            {
-                itemid: 1,
-                name: 'name1',
-                icon_url: ' ',
-                price: '10',
-                classify: '书',
-                info: '这还是一本书，一本很好的书，是一本非常好的书',
-            },
-            {
-                itemid: 2,
-                name: 'name2',
-                icon_url: ' ',
-                price: '20',
-                classify: '体育器材',
-                info: 'balabalablab',
-            },
-            {
-                itemid: 3,
-                name: 'name3',
-                icon_url: ' ',
-                price: '30',
-                classify: '电子产品',
-                info: 'balabalablab',
-            },
-            {
-                itemid: 4,
-                name: 'name4',
-                icon_url: ' ',
-                price: '40',
-                classify: '食物',
-                info: 'balabalablab',
-            },
-        ],
-        testData :[
-            {
-                goodName: "铅笔",
-                note: "彩虹色",
-                price: 1,
-                time: "2019-8-27"
-            },
-            {
-                goodName: "洗衣机",
-                note: "全自动，能烘干，小巧轻便，必须九成新以上，提供上门送货并且要帮忙搬进宿舍",
-                price: 700,
-                time: "2019-8-27"
-            },
-            {
-                goodName: "铅笔",
-                note: "彩虹色",
-                price: 1,
-                time: "2019-8-27"
-            },
-            {
-                goodName: "铅笔",
-                note: "彩虹色",
-                price: 1,
-                time: "2019-8-27"
-            },
-            {
-                goodName: "铅笔",
-                note: "彩虹色",
-                price: 1,
-                time: "2019-8-27"
-            },
-            {
-                goodName: "铅笔",
-                note: "彩虹色",
-                price: 1,
-                time: "2019-8-27"
-            },
-            {
-                goodName: "铅笔",
-                note: "彩虹色",
-                price: 1,
-                time: "2019-8-27"
-            },
-        ],
+        loading:false,
+        search: this.props.navigation.state.params.keyword,
+        goalType: 0,
+        left: 0,
+        list: [ ],
+        wantList: [],
+        searchHistory: [],// 搜索历史数组
     };
+
     componentDidMount() {
-
+        this.getHistory();
+        this.getInfo(this.props.navigation.state.params.keyword);
     }
 
-    componentDidUpdate() {
-
-    }
-
-    getInfo=()=>{
-        console.log(this.props.navigation.state.params.keyword);
-        console.log(this.state.list);
+    getInfo = (keyword) => {
+        // console.log('keyword',this.props.navigation.state.params.keyword);
+        // console.log('list',this.state.list);
+        this.setState({list:[],wantList:[]});
 
         //千万别删
-        //  let url='http://inari.ml:8080/item/search';
-        // let data={
-        //     method:'good',
-        //     query:this.props.navigation.state.params.keyword,
-        // }
-        // postData(url,data)
-        //     .then(response=>{
-        //         if(response.status=='failure'){
-        //             alert('请求错误')
-        //         }
-        //         console.log(response);
-        //     })
-        //   .catch(err => {
-        //     console.error(err);
-        //   });
+        let url='http://inari.ml:8080/item/search';
+        let data={
+            method:'good',
+            query:keyword,
+        }
+        postData(url,data)
+            .then(response=>{
+                if(response.status=='failure'){
+                    alert('请求错误')
+                }
+                console.log('response1',response);
+                this.updateLists(response.hits.hits);
+                this.setState({loading:false});
+            })
+            .catch(err => {
+                console.error(err);
+            });
     }
 
+    isOldItem=(id)=>{
+        for (let i of this.state.list){
+            if(i.id==id){
+                return true;
+            }
+        }
+        for (let i of this.state.wantList){
+            if(i.id==id){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    updateLists= (list) => {
+        for (let item of list) {
+            if(this.isOldItem(item._id)){
+                continue;
+            }
+            let tempObj={
+                id:item._id,
+                name: item._source.title,
+                icon_url: ' ',
+                price: item._source.price,
+                info: item._source.note,
+            };
+            goodsInfo(item._id)
+                .then((response)=> {
+                        console.log('imgurl',response.imgurl);
+                        if(response.status=='success') {
+                            if(response.imgurl==''){
+                                tempObj.icon_url = 'http://inari.ml:8080/'+'image/item/0.9321619878296834.jpg';
+                            }else {
+                                tempObj.icon_url = 'http://inari.ml:8080/' + response.imgurl.split("++");
+                            }
+                            if (response.sold === 1) {
+                                let tempList = this.state.list;
+                                tempList.push(tempObj);
+                                this.setState({list: tempList});
+                            }
+                            if (response.sold === -1) {
+                                let tempList = this.state.wantList;
+                                tempList.push(tempObj);
+                                this.setState({wantList: tempList});
+                            }
+                        }
+                    }
+                )
+        }
+    }
+
+
+
     updateSearch = search => {
-        this.setState({ search });
+        this.setState({search});
     };
+
+    //获取历史记录
+    getHistory() {
+        // 查询本地历史
+        DataBase.getItem("searchHistory").then(data => {
+            if (data == null) {
+                this.setState({
+                    searchHistory: [],
+                })
+            } else {
+                this.setState({
+                    searchHistory: data,
+                })
+            }
+        })
+    }
+    // 保存搜索标签
+    insertSearch(text) {
+        if (this.state.searchHistory.indexOf(text) != -1) {
+            // 本地历史 已有 搜索内容
+            let index = this.state.searchHistory.indexOf(text);
+            let tempArr = DataBase.arrDelete(this.state.searchHistory, index)
+            tempArr.unshift(text);
+            DataBase.setItem("searchHistory", tempArr);
+        } else {
+            // 本地历史 无 搜索内容
+            let tempArr = this.state.searchHistory;
+            tempArr.unshift(text);
+            DataBase.setItem("searchHistory", tempArr);
+        }
+    }
 
 
     render() {
-        const { search } = this.state;
-        const tips=['商品信息','求购信息'];
+        const {search} = this.state;
+        const tips = ['商品信息', '求购信息'];
         return (
-            <View >
+            <ScrollView>
                 <Header
                     containerStyle={{
                         backgroundColor: '#eee',
@@ -179,45 +189,60 @@ export default class SearchGoodsPage extends Component {
                     centerComponent={
                         <View style={styles.container}>
                             <SearchBar
-                                placeholder="Type Here..."
+                                placeholder={'Type here...'}
                                 onChangeText={this.updateSearch}
                                 value={search}
                                 round={true}
                                 lightTheme={true}
                                 containerStyle={styles.searchBar}
                                 inputContainerStyle={styles.input}
-                                showLoading={true}
-                                underlineColorAndroid={'#cc6699'}
+                                showLoading={this.state.loading}
+                                // underlineColorAndroid={'#cc6699'}
                             />
                         </View>
                     }
+                    rightComponent={
+                        <Button
+                            buttonStyle={{backgroundColor:'#cc6699',borderRadius:15}}
+                            onPress={()=>{
+                                // alert(this.state.search)
+                                this.setState({loading:true});
+                                this.insertSearch(this.state.search);
+                                this.getInfo(this.state.search);
+                                // this.setState({loading:false})
+                            }}
+                            title={'搜索'}
+                        />
+
+                    }
                 />
                 <View style={styles.container_row}>
-                    {tips.map((i,j)=>{
-                        return(
+                    {tips.map((i, j) => {
+                        return (
                             <View style={styles.mode}>
                                 <Text
                                     style={styles.typeTip}
-                                    onPress={()=>{
-                                        this.setState({goalType:j,left:-1*SP.WB(100)*j});
+                                    onPress={() => {
+                                        this.setState({goalType: j, left: -1 * SP.WB(100) * j});
                                     }}
                                 >{i}</Text>
-                                <Divider style={[styles.line,{opacity:j===this.state.goalType?1:0}]}/>
+                                <Divider style={[styles.line, {opacity: j === this.state.goalType ? 1 : 0}]}/>
                             </View>
                         )
                     })}
                 </View>
                 <Button
-                    onPress={this.getInfo}
-                    title={'请求数据'}
+                    buttonStyle={{backgroundColor:'#cc6699'}}
+                    onPress={()=>this.getInfo(search)}
+                    title={'刷 新'}
                 />
-                <View style={[styles.body,{left:this.state.left}]}>
-                    <View>
-                        <ScrollView style={{width:SP.WB(100)}}>
+                <View style={[styles.body, {left: this.state.left}]}>
+                    <ScrollView>
+                        <View style={{width: SP.WB(100)}}>
                             <View style={styles.goodsList}>
                                 {this.state.list.map(i => (
                                     <Good
-                                        itemid={i.itemid}
+                                        itemid={i.id}
                                         image={{uri: i.icon_url}}
                                         name={i.name}
                                         price={i.price}
@@ -226,48 +251,38 @@ export default class SearchGoodsPage extends Component {
                                     />
                                 ))}
                             </View>
-                        </ScrollView>
-                    </View>
+                        </View>
+                    </ScrollView>
                     <View>
-                        <ScrollView style={{width:SP.WB(100)}}>
-                            <FlatList
-                                style={{marginTop: 12}}
-                                data={this.state.testData}
-                                renderItem={this.renderRowList}
-                            />
+                        <ScrollView style={{width: SP.WB(100)}}>
+                            {this.state.wantList.map((item, index) => {
+                                return (
+                                    <TouchableOpacity>
+                                        <ListItem
+                                            title={item.name}
+                                            subtitle={
+                                                <View>
+                                                    <View style={{}}>
+                                                        <Text>{item.info}</Text>
+                                                        <Text style={{color:'#cc6699'}}>最高接受价：￥{item.price}</Text>
+                                                    </View>
+                                                </View>
+                                            }
+                                            leftAvatar={{source: require('../Common/img/need.png')}}
+                                            bottomDivider
+                                        />
+                                    </TouchableOpacity>
+                                )
+                            })}
                         </ScrollView>
                     </View>
                 </View>
-            </View>
+            </ScrollView>
 
         );
     }
-
-    //flatlist导入数据到控件
-    renderRowList = (item) => {
-        //文字内容
-        return (
-            <TouchableOpacity>
-                <ListItem
-                    title={item.goodName}
-                    subtitle={
-                        <View>
-                            <View style={{}}>
-                                <Text numberOfLines={2} style={styles.txtDetail}>{item.note}</Text>
-                                <Text numberOfLines={1} style={styles.txtDetail}>最高接受价：￥{item.price}</Text>
-                                <Text numberOfLines={1} style={styles.txtTime}>{item.time}</Text>
-                            </View>
-                        </View>
-                    }
-                    leftAvatar={{ source: require('../Common/img/need.png') }}
-                    bottomDivider
-                    chevron
-                />
-            </TouchableOpacity>
-
-        )
-    }
 }
+
 
 const styles = StyleSheet.create({
     container_row:{
@@ -279,11 +294,10 @@ const styles = StyleSheet.create({
         justifyContent:'center',
     },
     searchBar:{
-        width:SP.WB(80),
+        width:SP.WB(70),
         backgroundColor:'#eee',
         borderTopWidth:0,
         borderBottomWidth:0,
-
     },
     input:{
         backgroundColor:'#ddd',
@@ -313,6 +327,7 @@ const styles = StyleSheet.create({
     body:{
         flexDirection:'row',
         width:SP.WB(200),
+        marginBottom: SP.HB(25),
     },
 
 });

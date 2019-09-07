@@ -22,7 +22,6 @@ export default class Search extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoading: false,
             searchVal: "",// 搜索文字
             searchHistory: [],// 搜索历史数组
             searchFor:'good',
@@ -60,9 +59,7 @@ export default class Search extends Component {
     }
     componentDidMount() {
 
-        this.setState({
-            isLoading: true,
-        })
+      this.getHistory();
     }
     //获取历史记录
     getHistory() {
@@ -102,6 +99,7 @@ export default class Search extends Component {
                     containerStyle={{
                         backgroundColor: '#cc6699',
                         justifyContent: 'space-around',
+                        borderBottomWidth:0,
                     }}
                     leftComponent={
                         <Icon

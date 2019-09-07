@@ -88,31 +88,31 @@ export default class SignInUI extends Component {
     });
   }
   buttonPressed() {
-    // postData(loginURL, {
-    //   phonenumber: '17551046561',
-    //   password: sha1('13315585158zz'),
-    //   // phonenumber: this.state.inputedNum,
-    //   // password:sha1(this.state.inputedPW),
-    // })
-    //   .then(data => {
-    //     if (data.status == "success") {
-    //       UserInfo.saveUserInfo(data);
-          this.props.navigation.navigate('home');
-    //     }
-    //     else {
-    //       alert("账号或密码错误");
-    //     }
-    //             // alert(data.info.username+'\n'+UserInfo.get('username'));
-    //     // UserInfo.get('idcard').then(name => {
-    //     //   alert(name);
-    //     // });
-    //   }) // JSON from `response.json()` call
-    //   .catch(error => console.error(error));
-    // // this.setState(state => {
-    // //   return {
-    // //     inputedPW: '',
-    // //   };
-    // // });
+    postData(loginURL, {
+      phonenumber: '15950550436',
+      password: '123',
+      // phonenumber: this.state.inputedNum,
+      // password:sha1(this.state.inputedPW),
+    })
+      .then(data => {
+        if (data.status == "success") {
+          UserInfo.saveUserInfo(data);
+         this.props.navigation.navigate('home');
+        }
+        else {
+          alert("账号或密码错误");
+        }
+                // alert(data.info.username+'\n'+UserInfo.get('username'));
+        // UserInfo.get('idcard').then(name => {
+        //   alert(name);
+        // });
+      }) // JSON from `response.json()` call
+      .catch(error => console.error(error));
+    // this.setState(state => {
+    //   return {
+    //     inputedPW: '',
+    //   };
+    // });
   }
 
   sendVerifyCode=(event)=>{

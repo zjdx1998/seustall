@@ -157,7 +157,11 @@ export default class ReleaseInformation extends Component {
           .then(responseData => {
             console.log('uploadImage', responseData);
             if (responseData.status == 'success') {
-              data.imgurl = responseData.imgurl;
+              let str='';
+              for (let item of responseData.imgurl){
+               str+=item+'++';
+              }
+               data.imgurl = str;
               postData(addItemURL, data)
                   .then(response => {
                     console.log('uploadData', response);
@@ -252,7 +256,7 @@ export default class ReleaseInformation extends Component {
             style={{width: width * 0.35, fontSize: 20}}
             onValueChange={itemValue => this.setState({classes: itemValue})}>
             {classes.map((i,j) => (
-              <Picker.Item label={i} value={j} />
+              <Picker.Item label={i} value={j+1} />
             ))}
           </Picker>
         </View>
