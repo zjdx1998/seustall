@@ -355,7 +355,6 @@ export default class data
 						idcard: src.idcard,
 						studentid: src.studentid,
 						address: src.address,
-						avatarurl: src.avatarurl,
 						info: src.info,
 					},
 					{
