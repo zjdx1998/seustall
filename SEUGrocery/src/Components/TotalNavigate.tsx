@@ -28,7 +28,11 @@ import UserInformationPage from "../pages/UserInformationPage";
 import AfterSignUpPage from '../pages/AfterSignUpPage';
 import IDVerifyPage from '../pages/IDVerifyPage';
 import ClassificationPage from '../pages/ClassificationPage';
+import SearchGoodsPage from "../pages/SearchGoodsPage";
+import NoticesPage from "../pages/NoticesPage";
+import SearchUsersPage from "../pages/searchUsersPage";
 import UserInfo from '../Common/UserInfo';
+import ShowUserInfoPage from "../pages/ShowUserInfoPage";
 
 // const customComponent = props => (
 //   <ScrollView style={{backgroundColor: '#FFE4E1', flex: 1}}>
@@ -49,7 +53,9 @@ UserInfo.get('avatarurl').then(data=>{avatarurl = data});
 const customComponents = props => (
     <View style={styles.baseContainer}>
         <View style={styles.roleBaseContainer}>
-            <View style={styles.roleAvatorContainer}>
+            <TouchableOpacity
+                style={styles.roleAvatorContainer}
+                onPress={() =>props.navigation.navigate('userInformation')}>
                 <Image
                     style={{
                         width: SP.WB(23),
@@ -58,10 +64,10 @@ const customComponents = props => (
                     }}
                     source={{
                         uri:
-                            avatarurl,
+                           avatarurl,
                     }}
                 />
-            </View>
+            </TouchableOpacity>
             <View style={styles.roleInfoContainer}>
                 <TouchableOpacity
                     onPress={() =>props.navigation.navigate('userInformation')}>
@@ -219,6 +225,35 @@ const customComponents = props => (
                 ]}
                 onPress={() => {
                     props.navigation.closeDrawer();
+                    props.navigation.navigate('page5', {
+                        go_back_key: props.navigation.state.key,
+                        refresh: () => {
+                            that.setState({currentIndex: 1});
+                        },
+                    });
+                    that.setState({currentIndex: 5});
+                }}>
+                <Text
+                    style={[
+                        styles.menuTitleStyle,
+                        {color: that.state.currentIndex === 5 ? '#CC6699' : '#fff'},
+                        {
+                            marginHorizontal:
+                                that.state.currentIndex === 5 ? SP.WB(10) : SP.WB(3),
+                        },
+                    ]}>
+                    消息中心
+                </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={[
+                    styles.menuSingleContainer,
+                    {
+                        backgroundColor: that.state.currentIndex === 5 ? '#fff' : '#CC6699',
+                    },
+                ]}
+                onPress={() => {
+                    props.navigation.closeDrawer();
                     props.navigation.navigate('page4', {
                         go_back_key: props.navigation.state.key,
                         refresh: () => {
@@ -279,6 +314,12 @@ const TotalNav = createDrawerNavigator(
             screen: FavoritesPage,
             navigationOptions: {
                 drawerLabel: '收藏夹',
+            },
+        },
+        page5: {
+            screen: NoticesPage,
+            navigationOptions: {
+                drawerLabel: '消息中心',
             },
         },
         release_good: {
@@ -359,8 +400,26 @@ const TotalNav = createDrawerNavigator(
                 drawerlabel: () => null,
             },
         },
+        searchGP: {
+            screen: SearchGoodsPage,
+            navigationOptions: {
+                drawerlabel: () => null,
+            },
+        },
+        searchUP: {
+            screen: SearchUsersPage,
+            navigationOptions: {
+                drawerlabel: () => null,
+            },
+        },
         userInformation: {
             screen: UserInformationPage,
+            navigationOptions: {
+                drawerlabel: () => null,
+            },
+        },
+        showUser: {
+            screen: ShowUserInfoPage,
             navigationOptions: {
                 drawerlabel: () => null,
             },
@@ -375,6 +434,7 @@ const TotalNav = createDrawerNavigator(
             'page2',
             'page3',
             'page4',
+            'page5',
             'startP',
             'loginP',
             'signUpP',
@@ -386,8 +446,11 @@ const TotalNav = createDrawerNavigator(
             'verifyP',
             'chatP',
             'searchP',
+            'searchGP',
+             'searchUP',
             'userInformation',
             'classificationP',
+            'showUser',
         ],
         initialRouteName: 'startP',
         backBehavior: 'initialRoute',

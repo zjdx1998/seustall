@@ -13,7 +13,7 @@ import GoodsPanel from '../Components/GoodsPanel';
 import RecommendationArea from '../Components/RecommendationArea';
 import UserInfo from '../Common/UserInfo';
 
-export default class UserInformationPage extends Component {
+export default class ShowUserInfoPage extends Component {
     private props: any;
     constructor(props) {
         super(props);
@@ -34,11 +34,37 @@ export default class UserInformationPage extends Component {
             itemList : '',
             info : '',
         };
-        UserInfo.get('username').then(data=>{this.setState({username:data})});
-        UserInfo.get('info').then(data=>{this.setState({info:data})});
-        UserInfo.get('verified').then(data=>{this.setState({verified:data})});
-        UserInfo.get('avatarurl').then(data=>{this.setState({avatarurl:data})});
+
     }
+
+    fetchData=()=>{
+        const fetch = require('node-fetch');
+        fetch('http://inari.ml:8080/user/'+this.props.navigation.state.params.uuid)
+            .then((response) => response.json())
+            .then(response=>{
+                    if(response.status=="success" ){
+                        console.log(response.avatarurl);
+                        this.setState({
+                            uuid : this.props.navigation.state.params.uuid,
+                            username :response.username,
+                            address:'',
+                            avatarurl:'http://inari.ml:8080/'+response.avatarurl,
+                            verified:response.verified,
+                            score:response.score,
+                            info : response.info,
+                        })
+                    }
+                }
+            )
+    }
+
+    componentDidMount() {
+         this.fetchData();
+    }
+    componentDidUpdate() {
+        this.fetchData();
+    }
+
     getVerify(){
         if(this.state.verified=='0'){
             return'未认证'
@@ -47,7 +73,7 @@ export default class UserInformationPage extends Component {
         }
     }
 
-    render() {
+   render() {
     return (
       <ScrollView style={styles.baseContainer}>
         <View style={styles.headerContainer}>
@@ -102,7 +128,7 @@ export default class UserInformationPage extends Component {
                 marginLeft:10,
                 borderRadius:10
               }}>
-              <Text style={styles.selectText}> 我的铺子 </Text>
+              <Text style={styles.selectText}> TA的铺子 </Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity
@@ -117,7 +143,23 @@ export default class UserInformationPage extends Component {
                 //marginLeft:10,
                 borderRadius:10
               }}>
-              <Text style={styles.selectText}> 我想买的 </Text>
+              <Text style={styles.selectText}> TA想买的 </Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+              onPress={()=>this.props.navigation.navigate('chatP')}
+            activeOpacity={0.2}
+            focusedOpacity={0.5}>
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: '#cc6699',
+                //marginTop:10,
+                marginRight:10,
+                borderRadius:10
+              }}>
+              <Text style={styles.selectText}> 与TA聊天 </Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -163,12 +205,12 @@ const styles = StyleSheet.create({
     //height: 35,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
 
   },
   selectText: {
     color: '#ffffff',
-    fontSize: 27,
+    fontSize: 18,
     margin:10
 
   },
@@ -212,4 +254,3 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
 });
-

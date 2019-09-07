@@ -9,6 +9,7 @@ import * as SP from '../Common/ScreenProperty';
 //import { Image,Text} from 'react-native-elements';
 import React, {Component} from 'react';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import Good from '../Common/ItemBlock';
 const {width} = Dimensions.get('window'); //解构赋值 获取屏幕宽度
 
 const Goods = [
@@ -75,32 +76,7 @@ export default class RecommendationArea extends Component {
   }
 }
 
-class Good extends Component {
-  private props: any;
-  render() {
-    return (
-      <TouchableOpacity
-        onPress={() =>
-          this.props.navigation.navigate('detailPage', {
-            itemid: this.props.itemid,
-            go_back_key: this.props.navigation.state.key,
-          })
-        }>
-        <View style={styles.block}>
-          <Image
-            source={this.props.image}
-            style={{width: width / 2 - 20, height: width / 2 - 20, flex: 4}}
-          />
-          <Text style={styles.name}>{this.props.name}</Text>
-          <Text style={styles.textdes} numberOfLines={2}>
-            {' ' + this.props.text}
-          </Text>
-          <Text style={styles.price}>￥ {this.props.price}</Text>
-        </View>
-      </TouchableOpacity>
-    );
-  }
-}
+
 
 const styles = StyleSheet.create({
   block: {
@@ -118,6 +94,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
+    justifyContent:'center',
   },
   price: {
     fontSize: 20,

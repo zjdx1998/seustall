@@ -89,15 +89,15 @@ export default class SignInUI extends Component {
   }
   buttonPressed() {
     postData(loginURL, {
-      phonenumber: '17551046561', 
-      password: sha1('13315585158zz'), 
+      phonenumber: '15950550436',
+      password: '123',
       // phonenumber: this.state.inputedNum,
       // password:sha1(this.state.inputedPW),
     })
       .then(data => {
         if (data.status == "success") {
           UserInfo.saveUserInfo(data);
-          this.props.navigation.navigate('home');
+         this.props.navigation.navigate('home');
         }
         else {
           alert("账号或密码错误");
