@@ -17,6 +17,7 @@ import data from "./database";
 import mail from './mailpush';
 import { postItem, postUser, search } from './resend';
 import { requireCode, verifyCode } from './SMSVerify';
+import { imgClear } from './storge';
 
 const router = new koaRouter();
 function webServer()
@@ -440,6 +441,7 @@ function webServer()
 			var newGood = new Object() as ItemInterface;
 			newGood = ctx.request.body;
 			newGood.uuid = verify.uuid;
+			newGood.imgurl = conf.imgurl + "default.jpg";
 			const res = await database.writeItem(newGood);
 			postItem(res.data);
 			ctx.response.body = JSON.stringify(res);
@@ -450,47 +452,63 @@ function webServer()
 		 */
 		router.post('/item/image', async (ctx, next) =>
 		{
-			const verify: any = verifyToken(ctx.request.body.token);
-			if (!verify)
-			{
-				ctx.response.status = 403;
-				return;
-			}
-			var response = new Object() as any;
+			var res = new Object() as any;
 			try
 			{
-				const files: any = ctx.request.files;
-				var count = 0;
-				var imgList = new Array();
-				var imgListfs = new Array();
-				for (var file in files)
+				const verify: any = verifyToken(ctx.request.body.token);
+				if (!verify)
 				{
-					const filename = `${Math.random()}.jpg`
-					const urlfs = path.join(conf.imgurlfs, filename);
-					const url = path.join(conf.imgurl, filename);
-					imgListfs.push(urlfs);
-					imgList.push(url);
-					++count;
+					ctx.response.status = 403;
+					return;
 				}
-				count = 0
-				for (var file in files)
+				const item = await database.queryItem(ctx.request.body.itemid);
+				const itemid = item.itemid;
+				const uuid = verify.uuid;
+				if (item.status == conf.res.success)
 				{
-					const reader = fs.createReadStream(files[file].path);
-					const stream = fs.createWriteStream(imgListfs[count]);
-					reader.pipe(stream);
-					++count;
+					const files: any = ctx.request.files;
+					var count = 0;
+					var imgList = new Array();
+					var imgListfs = new Array();
+					var imgstring = "";
+					imgClear(uuid, itemid);
+					for (var file in files)
+					{
+						const filename = `${uuid}-${itemid}-${count}.jpg`
+						const urlfs = path.join(conf.imgurlfs, filename);
+						const url = path.join(conf.imgurl, filename);
+						imgstring += `${url}++`;
+						imgListfs.push(urlfs);
+						imgList.push(url);
+						++count;
+					}
+					count = 0
+					for (var file in files)
+					{
+						const reader = fs.createReadStream(files[file].path);
+						const stream = fs.createWriteStream(imgListfs[count]);
+						reader.pipe(stream);
+						++count;
+					}
+					database.updateImageURL(itemid, imgstring);
+					res.status = conf.res.success
+					res.imgurl = imgList;
+					ctx.response.body = JSON.stringify(res);
+					ctx.response.type = "application/json";
+				} else
+				{
+					res.status = conf.res.failure;
+					res.info = conf.except.invaildReq;
+					ctx.response.body = JSON.stringify(res);
+					ctx.response.type = "application/json";
 				}
-				response.status = conf.res.success
-				response.imgurl = imgList;
-				ctx.response.body = JSON.stringify(response);
-				ctx.response.type = "application/json";
 
 			} catch (error)
 			{
 				console.error(`[ERROR] ${error}`);
-				response.status = conf.res.failure;
-				response.info = conf.except.invaildReq;
-				ctx.response.body = JSON.stringify(response);
+				res.status = conf.res.failure;
+				res.info = conf.except.noItem;
+				ctx.response.body = JSON.stringify(res);
 				ctx.response.type = "application/json";
 			}
 		});

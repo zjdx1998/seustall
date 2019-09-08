@@ -160,19 +160,22 @@ export default class data
 	 */
 	public async queryItem(itemid: number)
 	{
+		var res = new Object() as any;
 		try
 		{
-
-			const res = await this.items.findOne({
+			const resquery = await this.items.findOne({
 				where:
 				{
 					itemid
 				}
 			})
+			res = resquery;
 			return this.responseFix(res);
 		} catch (error)
 		{
-			throw new Error("[ERROR] Database connect failed.\n" + error);
+			res.status = "failure";
+			res.info = error;
+			return res;
 		}
 	}
 	/**
@@ -824,7 +827,7 @@ export default class data
 	{
 		if (res && res.dataValues)
 		{
-			res.dataValues.status = 'success';
+			res.dataValues.status = conf.res.success;
 			return res.dataValues;
 		}
 		const noneRes: any = new Object();

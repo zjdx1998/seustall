@@ -471,9 +471,13 @@ none
 	sold:
 	{
 		sale: 1,
-		sold: 2,
+    sold: 2,
+    deleted :3,
 		want: -1,
-		got: -2,
+    got: -2,
+    deleted: -3,
+
+
 	}
 ```
 

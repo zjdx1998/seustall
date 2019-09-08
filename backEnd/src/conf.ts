@@ -30,11 +30,12 @@ export default {
 		reset: "fetal error,reseting server",
 		dbConnT: "database connect success",
 		dbConnF: "database connect failed",
-		databaseexception: "database exception",
+		databaseException: "database exception",
 		invaildReq: "invaild request",
 		noUser: "no such user",
-		badverifycode: "bad verify code",
-		reqtoofreq: "request too frequent"
+		noItem: "no such item",
+		badVerifycode: "bad verify code",
+		reqtoofreq: "request too frequent",
 	},
 	SMSConfig:
 	{

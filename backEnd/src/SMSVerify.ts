@@ -77,7 +77,7 @@ export function verifyCode(phonenumber: string, verifyCode: string)
 			else
 			{
 				res.status = conf.res.failure;
-				res.info = conf.except.badverifycode;
+				res.info = conf.except.badVerifycode;
 			}
 			return res;
 		}
