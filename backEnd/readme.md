@@ -2,9 +2,9 @@
 
 [TOC]
 ## Version
-
-* version: v6.6.2 alpha
-* updated: 2019/09/06 16:42
+* server version: v6.7
+* doc version: v6.7.0 alpha
+* updated: 2019/09/08 18:42
 * author: Hanyuu Furude
 
 ## Characteristics
@@ -498,11 +498,11 @@ None
   "title": "432",
   "type": 798,
   "price": 987,
-  "imgurl": "987",
+  "imgurl": "image\\item\\1-1-0.jpg++image\\item\\1-1-1.jpg++image\\item\\1-1-2.jpg++image\\item\\1-1-3.jpg++",
   "depreciatione": 798,
   "note": "987",
-  "sold": 987,
-  "to": 0,
+  "sold": 2,
+  "to": null,
   "status": "success"
 }
 //no item
@@ -519,12 +519,26 @@ Content-Type:application/x-www-form-urlencoded
 ```
 
 ``` json
-{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzU5NjMwMjIwMCwiaWF0IjoxNTY3NTk2MzAyfQ.ijUssByflHjPqWOMMcJMvqroJCaS1PKOBXUYYaS6dYU","title":"未命名商品1","type":"1","price":"1.23","imgurl":"[+++++\"image\\\\item\\\\0.35113526938054584.jpg\",+++++\"image\\\\item\\\\0.5106340873338395.jpg\",+++++\"image\\\\item\\\\0.37461623290026935.jpg\",+++++\"image\\\\item\\\\0.887643214342515.jpg\"+++]","depreciatione":"99","note":"然而并没什么描述","sold":"-1"}}
+{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzU5NjMwMjIwMCwiaWF0IjoxNTY3NTk2MzAyfQ.ijUssByflHjPqWOMMcJMvqroJCaS1PKOBXUYYaS6dYU","title":"未命名商品1","type":"1","price":"1.23","depreciatione":"99","note":"然而并没什么描述","sold":"-1"}}
 ```
 
 ``` json
 //success
-{"status":"success"}
+{
+  "status": "success",
+  "data": {
+    "itemid": 15,
+    "title": "1",
+    "type": "1",
+    "price": "1",
+    "depreciatione": "1",
+    "note": "1",
+    "sold": "1",
+    "uuid": 1,
+    "imgurl": "./image/itemdefault.jpg",
+    "to": 0
+  }
+}
 //no item
 {"status":"none"}
 //wrong token
@@ -555,6 +569,11 @@ Content-Disposition: form-data; name="token"
 
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzI0ODU5OTI4OSwiaWF0IjoxNTY3MjQ4NTk5fQ.ezvX48rpjAAzd6Bwr3eFrSCnrQT_3SGoXID1NSWAa_8
 
+-----------------------------5005412110300
+Content-Disposition: form-data; name="itemid"
+
+
+1
 -----------------------------5005412110300
 
 Content-Disposition: form-data; name="file0"; filename="Hoshikawa_Hotaru.png"
@@ -587,10 +606,10 @@ Content-Type: image/png
 {
   "status": "success",
   "imgurl": [
-    "image\\item\\0.35113526938054584.jpg",
-    "image\\item\\0.5106340873338395.jpg",
-    "image\\item\\0.37461623290026935.jpg",
-    "image\\item\\0.887643214342515.jpg"
+    "image\\item\\1-1-0.jpg",
+    "image\\item\\1-1-1.jpg",
+    "image\\item\\1-1-2.jpg",
+    "image\\item\\1-1-3.jpg"
   ]
 }
 // file too large

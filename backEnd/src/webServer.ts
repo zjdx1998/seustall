@@ -441,9 +441,27 @@ function webServer()
 			var newGood = new Object() as ItemInterface;
 			newGood = ctx.request.body;
 			newGood.uuid = verify.uuid;
-			newGood.imgurl = conf.imgurl + "default.jpg";
+			newGood.imgurl = path.join(conf.imgurl,"default.jpg");
 			const res = await database.writeItem(newGood);
 			postItem(res.data);
+
+			ctx.response.body = JSON.stringify(res);
+			ctx.response.type = 'application/json';
+		})
+		/**
+		 * @description token 用户删除商品
+		 */
+		router.post('/item/delete', async (ctx, next) =>
+		{
+			const verify: any = verifyToken(ctx.request.body.token);
+			if (!verify)
+			{
+				ctx.response.status = 403;
+				return;
+			}
+			const res = await database.writeItem(newGood);
+			postItem(res.data);
+
 			ctx.response.body = JSON.stringify(res);
 			ctx.response.type = 'application/json';
 		})

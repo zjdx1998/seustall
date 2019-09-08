@@ -128,6 +128,7 @@ export default class data
 			return res;
 		}
 	}
+
 	/**
 	 * @description 写入用户信息
 	 */
@@ -192,9 +193,17 @@ export default class data
 					uuid
 				}
 			})
-			const userRes = new User(resquery);
-			res = this.responseFix(userRes.public());
-			res.status = conf.res.success;
+			if (resquery)
+			{
+				const userRes = new User(resquery);
+				res = this.responseFix(userRes.public());
+				res.status = conf.res.success;
+			} else
+			{
+				res.status = conf.res.failure;
+				res.info = conf.except.noUser;
+			}
+
 			return res;
 		} catch (error)
 		{
@@ -304,6 +313,44 @@ export default class data
 			response.status = conf.res.failure;
 			response.info = "bad request";
 			return response;
+		}
+	}
+
+	/**
+	 * @description 删除物品
+	 */
+	public async deleteItem(itemid: number)
+	{
+		var res = new Object() as any;
+		try
+		{
+			const resquery = await this.queryItem(itemid);
+			if (resquery.status == conf.res.success)
+			{
+				if (resquery.sold > 0)
+				{
+					res = await this.items.update(
+						{ sold: 3 },
+						{ where: { itemid } }
+					)
+				}
+				else
+				{
+					res = await this.items.update(
+						{ sold: 3 },
+						{ where: { itemid } }
+					)
+				}
+			};
+			res.status = conf.res.success;
+			res.data = data;
+			return res;
+		} catch (error)
+		{
+			console.error(`[ERROR] failed while writing item\n${error}`);
+			res.status = conf.res.failure;
+			res.info = "invaild request";
+			return res;
 		}
 	}
 	/**
@@ -454,7 +501,6 @@ export default class data
 					"title": src.title,
 					"type": src.type,
 					"price": src.price,
-					"imgurl": src.imgurl,
 					"depreciatione": src.depreciatione,
 					"note": src.note,
 				},
