@@ -4,7 +4,9 @@
 
 ```json
 {
-	"query": {
+	"from": 0,
+    "size": 1000,
+    "query": {
   	"multi_match": {
     	"query": 这里是传入的参数,
   		"fields":["username","info"]
@@ -17,6 +19,8 @@
 
 ```json
 {
+    "from": 0,
+    "size":1000,
 	"query": {
   	"multi_match": {
     	"query": 这里是传入的参数,
@@ -58,7 +62,7 @@ Good 信息:
 
 ```json
 {
-	"note": a,
+  "note": a,
   "price": b,
   "title": c,
 }
