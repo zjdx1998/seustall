@@ -2,6 +2,7 @@ export default
 	{
 		// root: "hanyuu.top:8080",
 		root: "http://localhost",
+		dataFile:"data.xlsx",
 		addItem: "/item/add",
 		type:
 		{
