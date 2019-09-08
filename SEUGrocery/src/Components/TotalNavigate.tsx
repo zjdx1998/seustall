@@ -452,7 +452,7 @@ const TotalNav = createDrawerNavigator(
             'classificationP',
             'showUser',
         ],
-        initialRouteName: 'startP',
+        initialRouteName: 'home',
         backBehavior: 'initialRoute',
         // initialRouteParams: {
         //   jumpHomeCallBack: index => {
