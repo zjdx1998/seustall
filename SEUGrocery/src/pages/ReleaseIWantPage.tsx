@@ -32,7 +32,7 @@ const classes = [
   '运动健身',
   '其他',
 ];
-const addItemURL = 'http://inari.ml:8080/item/add';
+const addItemURL = 'http://hanyuu.top:8080/item/add';
 // const addItemURL = 'http://10.203.252.131/item/add';
 let imgurl;
 
@@ -113,7 +113,7 @@ export default class ReleaseIWantPage extends Component {
   uploadItemData = async () => {
     this.Loading.show();
     const [uid, token] = await ItemList.getIdAndToken();
-    const commonURL='http://inari.ml:8080/';
+    const commonURL='http://hanyuu.top:8080/';
 
     let data = {
       token:token,
@@ -127,7 +127,7 @@ export default class ReleaseIWantPage extends Component {
       sold:'-1',
     };
     console.log(data);
-    const addItemURL = 'http://inari.ml:8080/item/add';
+    const addItemURL = 'http://hanyuu.top:8080/item/add';
 
     postData(addItemURL, data)
         .then(response => {
