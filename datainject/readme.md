@@ -3,9 +3,9 @@
 
 * 格式
 
-  | uuid | title | type | price | imgurl | depreciatione | depreciatione | depreciatione |
-  | ---- | ----- | ---- | ----- | ------ | ------------- | ------------- | ------------- |
-  |      |       |      |       |        |               |               |               |
+  | uuid | title | type | price | imgurl | depreciatione | note | sold |
+  | ---- | ----- | ---- | ----- | ------ | ------------- | ---- | ---- |
+  |      |       |      |       |        |               |      |      |
 
 * 初始化
 

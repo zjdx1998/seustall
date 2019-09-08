@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = {
     // root: "hanyuu.top:8080",
-    root: "http://localhost",
+    root: "http://hanyuu.top:8080",
     dataFile: "data.xlsx",
     addItem: "/item/add",
     type: {
