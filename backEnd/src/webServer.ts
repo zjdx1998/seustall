@@ -13,17 +13,19 @@ import path from 'path';
 import jwt, { decode } from 'jsonwebtoken';
 import { User, Item, UserInterface, ItemInterface } from './role';
 import conf from './conf';
-import data from "./database";
+import Database from "./database";
 import mail from './mailpush';
+import VerifyCenter from './verifyCodeCenter';
 import { postItem, postUser, search } from './resend';
-import { requireCode, verifyCode } from './SMSVerify';
+import sendSMS from './SMSVerify';
 import { imgClear } from './storge';
 
 const router = new koaRouter();
 function webServer()
 {
 	//尝试连接数据库，若失败则抛出异常重新尝试连接
-	const database = new data();;
+	const database = new Database();
+	var verifyCenter = new VerifyCenter();
 	try
 	{
 		const app = new Koa();
@@ -108,8 +110,10 @@ function webServer()
 			var res = new Object() as any;
 			try
 			{
-				const resverify = verifyCode(ctx.request.body.phonenumber, ctx.request.body.verifycode);
+				// const resverify = verifyCode(ctx.request.body.phonenumber, ctx.request.body.verifycode);
 				// if (resverify.status == conf.res.success)
+				const resverify = verifyCenter.query(ctx.request.body.phonenumber, ctx.request.body.verifycode);
+				res.data = resverify;
 				if (true)
 				{
 					var newUser = new Object() as UserInterface;
@@ -156,7 +160,14 @@ function webServer()
 		 */
 		router.post('/user/requirecode', async (ctx, next) =>
 		{
-			var res = requireCode(ctx.request.body.phonenumber);
+			var res = new Object() as any;
+			// var res = requireCode(ctx.request.body.phonenumber);
+			var rescode = verifyCenter.push(ctx.request.body.phonenumber);
+			res = rescode.data.code;
+			if (rescode.status == conf.res.success)
+			{
+				// sendSMS(ctx.request.body.phonenumber, rescode.data.code)
+			}
 			ctx.response.body = JSON.stringify(res);
 			ctx.response.type = "application/json";
 		})
@@ -177,7 +188,8 @@ function webServer()
 					ctx.response.type = "application/json";
 					return;
 				}
-				var resverify = verifyCode(ctx.request.body.phonenumber, ctx.request.body.verifycode);
+				//todo
+				var resverify = verifyCenter.query(ctx.request.body.phonenumber, ctx.request.body.verifycode);
 				if (resverify.status == conf.res.success)
 				{
 					database.updatepassword(

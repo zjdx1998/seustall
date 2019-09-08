@@ -13,6 +13,10 @@ import crypto from 'crypto';
  * @description https://cloud.tencent.com/document/product/382/3772
 
  */
+export default function sendSMS(phoneNumber:string,code:string)
+{
+	const respush = (SMSVerify as any)(phoneNumber, code);
+}
 /**
  * @description 生成验证码
  */
@@ -39,13 +43,13 @@ function generateCode(phoneNumber: string)
 /**
  * @description 请求验证码短信
  */
-export function requireCode(phoneNumber: string)
+function requireCode(phoneNumber: string)
 {
 	var res = new Object() as any;
 	var code = generateCode(phoneNumber);
 	if (code)
 	{
-		// const respush = (SMSVerify as any)(phoneNumber, code);
+		const respush = (SMSVerify as any)(phoneNumber, code);
 		res.status = conf.res.success;
 		// todo 上线时删除此调试信息
 		// res.info = respush;
@@ -62,7 +66,7 @@ export function requireCode(phoneNumber: string)
 /**
  * @description 校验验证码
  */
-export function verifyCode(phonenumber: string, verifyCode: string)
+function verifyCode(phonenumber: string, verifyCode: string)
 {
 	var res = new Object() as any;
 	try
