@@ -58,9 +58,12 @@ export default class Search extends Component {
         }
     }
     componentDidMount() {
-
       this.getHistory();
     }
+    componentDidUpdate(){
+        // this.getHistory();
+    }
+
     //获取历史记录
     getHistory() {
         // 查询本地历史
@@ -167,15 +170,21 @@ export default class Search extends Component {
                                 }
                                 this.insertSearch(this.state.searchVal);
                                 if(this.state.searchFor=='good') {
+
                                     this.props.navigation.navigate('searchGP', {
                                         keyword: this.state.searchVal,
+                                        update:()=>this.getHistory()
                                     });
+                                    this.props.navigation.state.params.refresh(this.state.searchFor,this.state.searchVal);
                                 }
                                 else{
                                      this.props.navigation.navigate('searchUP', {
                                         keyword: this.state.searchVal,
+                                         update:()=>this.getHistory()
                                     });
+                                    this.props.navigation.state.params.refresh(this.state.searchFor,this.state.searchVal);
                                 }
+
                                 this.setState({
                                     searchVal: ''
                                 });

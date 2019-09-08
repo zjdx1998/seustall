@@ -32,24 +32,6 @@ const classes = [
   '运动健身',
   '其他',
 ];
-const addItemURL = 'http://inari.ml:8080/item/add';
-// const addItemURL = 'http://10.203.252.131/item/add';
-let imgurl;
-
-/*export default class Loading extends Component{
-    state={
-        show:true
-    }
-    render(){
-        if(this.state.show){
-            return (
-                <View style={{width:width,height:height}}>
-                    <ActivityIndicator size="large" color="#0000ff" />
-                </View>
-            )
-        }
-    }
-}*/
 
 export default class ReleaseIWantPage extends Component {
   private state: any;
@@ -63,7 +45,7 @@ export default class ReleaseIWantPage extends Component {
       newDegree: '',
       firstValue: '',
       secondValue: '',
-      classes: '电子产品',
+      classes: '1',
     };
   }
 
@@ -99,14 +81,11 @@ export default class ReleaseIWantPage extends Component {
             }*/
     }
   };
-  updateFirstValue = value => {
-    this.setState({firstValue: value});
-  };
-  updateSecondValue = value => {
-    this.setState({secondValue: value});
-  };
+
   computeValue = () => {
-    return this.state.firstValue + this.state.secondValue / 100;
+      console.log(this.state.firstValue);
+
+    return Number(this.state.firstValue) + Number(this.state.secondValue) / 100;
   };
 
   // @ts-ignore
@@ -119,15 +98,15 @@ export default class ReleaseIWantPage extends Component {
       token:token,
       uuid: uid,
       title: this.state.title,
-      type: '1',
+      type: Number(this.state.classes),//1-8
       price: this.computeValue(),
-      imgurl: commonURL+'image/item/0.9321619878296834.jpg',
       depreciatione: this.state.newDegree,
-      note: this.state.campus+this.state.detail,
-      sold:'-1',
+      note: this.state.campus+','+this.state.detail,
+      sold:-1,
+       imgurl:'',
     };
     console.log(data);
-    const addItemURL = 'http://inari.ml:8080/item/add';
+    const addItemURL = 'http://inari.ml:8080/item/add/';
 
     postData(addItemURL, data)
         .then(response => {
@@ -216,7 +195,7 @@ export default class ReleaseIWantPage extends Component {
                   this.setState({classes: itemValue})
                 }>
                 {classes.map((i,j) => (
-                  <Picker.Item label={i} value={j} />
+                  <Picker.Item label={i} value={String(j+1)} />
                 ))}
               </Picker>
             </View>
@@ -226,7 +205,7 @@ export default class ReleaseIWantPage extends Component {
               <Text style={styles.value}>￥</Text>
               <TextInput
                 placeholder="0"
-                onChangeText={newText => this.updateFirstValue({newText})}
+                onChangeText={firstValue => this.setState({firstValue:firstValue})}
                 keyboardType={'numeric'}
                 style={styles.value}
                 value={this.state.firstValue}
@@ -234,7 +213,7 @@ export default class ReleaseIWantPage extends Component {
               <Text style={styles.value}> . </Text>
               <TextInput
                 placeholder="00"
-                onChangeText={newText => this.updateSecondValue({newText})}
+                onChangeText={secondValue => this.setState({secondValue:secondValue})}
                 keyboardType={'numeric'}
                 maxLength={2}
                 style={styles.value}

@@ -120,7 +120,7 @@ export default class ReleaseInformation extends Component {
       token:token,
       uuid: uid,
       title: this.state.title,
-      type: '1',
+      type:this.state.classes,
       price: this.computeValue(),
       imgurl: 'image/item/0.9321619878296834.jpg',
       depreciatione: this.state.newDegree,
@@ -158,9 +158,11 @@ export default class ReleaseInformation extends Component {
             console.log('uploadImage', responseData);
             if (responseData.status == 'success') {
               let str='';
+              console.log('r.img',responseData.imgurl);
               for (let item of responseData.imgurl){
                str+=item+'++';
               }
+              console.log(str);
                data.imgurl = str;
               postData(addItemURL, data)
                   .then(response => {

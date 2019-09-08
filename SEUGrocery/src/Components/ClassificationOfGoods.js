@@ -19,18 +19,19 @@ export default class GoodsClassification extends Component {
       <View style={styles.container_col}>
         <View style={styles.block}>
           <View style={styles.container_row}>
-            {classes1.map(x => (
+            {classes1.map((x,j) => (
               <Item
                 iconName={x.iconName}
                 type={x.type}
                 color={x.color}
                 goodsName={x.goodsName}
                 navigation={this.props.navigation}
+                typeid={j+1}
               />
             ))}
           </View>
           <View style={styles.container_row}>
-            {classes2.map(x => (
+            {classes2.map((x,j) => (
               <Item
                 iconName={x.iconName}
                 type={x.type}
@@ -38,6 +39,7 @@ export default class GoodsClassification extends Component {
                 goodsName={x.goodsName}
                 pageName={x.pageName}
                 navigation={this.props.navigation}
+                typeid={5+j}
               />
             ))}
           </View>
@@ -61,7 +63,8 @@ class Item extends Component {
           onPress={() =>
               this.props.navigation.navigate('classificationP', {
                 go_back_key: this.props.navigation.state.key,
-                  classification: this.props.goodsName,
+                classification: this.props.goodsName,
+                type:this.props.typeid,
               })
           }
         />

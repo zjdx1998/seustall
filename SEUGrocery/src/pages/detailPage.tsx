@@ -128,7 +128,7 @@ export default class DetailPage extends Component {
                     <LocalBackHeader navigation={this.props.navigation}/>
                 </View>
                 <Image
-                    source={{uri: this.state.imgurl}}
+                    source={{uri: this.state.imgurl.split("++")[0]}}
                     style={styles.img}
                     PlaceholderContent={<ActivityIndicator/>}
                 />

@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   price: {
-    fontSize: 20,
+    fontSize: 16,
     color: '#cc6699',
     flex: 1,
   },
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   name: {
-    fontSize: 28,
+    fontSize: 20,
     color: '#cc6699',
     flex: 1,
   },

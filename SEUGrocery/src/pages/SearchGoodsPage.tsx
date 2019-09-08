@@ -51,6 +51,10 @@ export default class SearchGoodsPage extends Component {
         this.getInfo(this.props.navigation.state.params.keyword);
     }
 
+    componentDidUpdate() {
+        // this.getInfo(this.props.navigation.state.params.keyword);
+    }
+
     getInfo = (keyword) => {
         // console.log('keyword',this.props.navigation.state.params.keyword);
         // console.log('list',this.state.list);
@@ -109,7 +113,7 @@ export default class SearchGoodsPage extends Component {
                             if(response.imgurl==''){
                                 tempObj.icon_url = 'http://inari.ml:8080/'+'image/item/0.9321619878296834.jpg';
                             }else {
-                                tempObj.icon_url = 'http://inari.ml:8080/' + response.imgurl.split("++");
+                                tempObj.icon_url = 'http://inari.ml:8080/' + response.imgurl.split("++")[0];
                             }
                             if (response.sold === 1) {
                                 let tempList = this.state.list;
@@ -166,7 +170,7 @@ export default class SearchGoodsPage extends Component {
 
 
     render() {
-        const {search} = this.state;
+        // const {search} = this.state;
         const tips = ['商品信息', '求购信息'];
         return (
             <ScrollView>
@@ -182,8 +186,13 @@ export default class SearchGoodsPage extends Component {
                             type={'antdesign'}
                             color={"#030303"}
                             onPress={() => {
-                                this.props.navigation.navigate('searchP');
-                            }}
+                                this.props.navigation.navigate('searchP',{
+                                    refresh:(f,keyword)=> {
+                                        if(f!='good'){return;}
+                                        this.setState({search: keyword});
+                                        this.getInfo(keyword);
+                                    }
+                                })}}
                         />
                     }
                     centerComponent={
@@ -191,7 +200,7 @@ export default class SearchGoodsPage extends Component {
                             <SearchBar
                                 placeholder={'Type here...'}
                                 onChangeText={this.updateSearch}
-                                value={search}
+                                value={this.state.search}
                                 round={true}
                                 lightTheme={true}
                                 containerStyle={styles.searchBar}
@@ -233,7 +242,7 @@ export default class SearchGoodsPage extends Component {
                 </View>
                 <Button
                     buttonStyle={{backgroundColor:'#cc6699'}}
-                    onPress={()=>this.getInfo(search)}
+                    onPress={()=>this.getInfo(this.state.search)}
                     title={'刷 新'}
                 />
                 <View style={[styles.body, {left: this.state.left}]}>
@@ -321,7 +330,7 @@ const styles = StyleSheet.create({
         // flex: 1,
         flexDirection: 'row',
         flexWrap: 'wrap',
-        justifyContent:'center',
+        justifyContent:'flex-start',
     },
 
     body:{

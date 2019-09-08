@@ -190,7 +190,7 @@ export default class SignInUI extends Component {
             <View
               style={[styles.idButton, {opacity: this.state.idButtonAlpha}]}
             >
-              <Text style={{color: '#cc6699', size: 30}} onPress={this.sendVerifyCode}>
+              <Text style={{color: '#cc6699'}} onPress={this.sendVerifyCode}>
                 {this.state.sendIDText}
               </Text>
             </View>
