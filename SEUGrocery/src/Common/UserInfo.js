@@ -22,6 +22,7 @@ const keys = [
   'score',
   'token',
   'itemList',
+  'info',
 ];
 
 const publisherdUrl = 'http://inari.ml:8080/user/published'
@@ -39,6 +40,7 @@ class UserInfo {
   score=''
   token=''
   itemList = ''
+  info = ''
 
   /**
    * 获取
@@ -71,10 +73,11 @@ class UserInfo {
     this.save('idcard', userInfo.info.idcard);
     this.save('studentid', userInfo.info.studentid);
     this.save('address', userInfo.info.address);
-    this.save('avatarurl', userInfo.info.avatarurl);
+    this.save('avatarurl', "http://inari.ml:8080/"+userInfo.info.avatarurl);
     this.save('verified', userInfo.info.verified);
     this.save('score', userInfo.info.score);
     this.save('token',userInfo.token);
+    this.save('info',userInfo.info.info);
   }
 
   /**

@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		028817DF231C4B820089AB26 /* SEUGroceryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* SEUGroceryTests.m */; };
 		028817E0231C4B830089AB26 /* SEUGroceryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* SEUGroceryTests.m */; };

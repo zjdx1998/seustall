@@ -75,18 +75,11 @@ export default class GoodsPanel extends Component {
       showGoodsWay: nextProps.showGoodsWay,
     });
   }
+
   getOnSaleList() {
     var list = this.state.goodsList.filter(function(e) {
-      return e.sold == 0;
+      return e.sold == 1;
     });
-
-    // var allList = JSON.stringify(this.state.goodsList);
-    // for(i = 0;i<num;i++){
-    //   if(this.state.goodsList[i].sold==0){
-    //     list = list+JSON.parse(allList[i]);
-    //   }
-    // }
-    // alert(JSON.stringify(list));
 
     return list;
   }
@@ -115,7 +108,7 @@ export default class GoodsPanel extends Component {
         {this.state.CurrentGoods.map(i => (
           <Good
             itemid={i.itemid}
-            image={{uri: i.imgurl}}
+            image={{uri: 'http://inari.ml:8080/'+i.imgurl.split("++")[0]}}
             name={i.title}
             price={i.price}
             howNew={i.depreciatione}
@@ -144,7 +137,7 @@ class Good extends Component {
           <ImageBackground
             style={{flex: 1, height: 150, flexDirection: 'row'}}
             source={
-              this.props.isSold
+              this.props.isSold==2
                 ? require('../Common/img/isSold.png')
                 : require('../Common/img/notSold.png')
             }>
@@ -157,7 +150,7 @@ class Good extends Component {
                 {this.props.name}
               </Text>
               <Text numberOfLines={1} style={styles.howNewAndCampus}>
-                {this.props.howNew}成新
+                {this.props.howNew/10}成新
               </Text>
               <Text numberOfLines={1} style={styles.howNewAndCampus}>
                 {this.props.campus}

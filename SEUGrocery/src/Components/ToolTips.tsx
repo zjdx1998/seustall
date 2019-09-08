@@ -5,6 +5,7 @@
 */
 import React, { Component } from "react";
 import { Modal, Text, TouchableHighlight, View, Dimensions,StyleSheet } from "react-native";
+import * as SP from '../Common/ScreenProperty';
 
 export default class ToolTips extends Component {
     private props: any;
@@ -24,7 +25,7 @@ export default class ToolTips extends Component {
                 }}
             >
                 <View style={styles.container}>
-                    <View style={{height:250,  width:300, margin:20, backgroundColor:'white'}}>
+                    <View style={{height:SP.HB(33),  width:SP.WB(80), margin:SP.H(50), backgroundColor:'white'}}>
                         <View style={{flex:1, justifyContent:'center', alignItems:'center', borderWidth:1, borderColor:'#eee'}}>
                                 <Text>点击“发送验证码”按钮后</Text>
                                 <Text>我们将会给你的seu邮箱</Text>
@@ -38,9 +39,9 @@ export default class ToolTips extends Component {
                             onPress={() => {
                                 this._setModalVisible(!this.props.modalVisible);
                             }}
-                            style={{height:50, justifyContent:'center', alignItems:'center'}}
+                            style={{height:SP.H(80), justifyContent:'center', alignItems:'center'}}
                         >
-                            <Text>关 闭</Text>
+                            <Text style={{fontSize:20}}>关 闭</Text>
                         </TouchableHighlight>
                     </View>
                 </View>

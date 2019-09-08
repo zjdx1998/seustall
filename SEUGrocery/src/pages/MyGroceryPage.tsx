@@ -101,8 +101,11 @@ export default class MyGroceryPage extends Component {
     componentDidMount() {
         // alert('rua12421312');
         ItemList.getItemList().then(list => {
-            this.myGroceryHeader.getPublishedNum(list);
-            this.goodsPanel.setState({goodsList: list});
+            var pList = list.filter(function (e){
+                return e.sold>0;
+            })
+            this.myGroceryHeader.getPublishedNum(pList);
+            this.goodsPanel.setState({goodsList: pList});
         });
     }
 }

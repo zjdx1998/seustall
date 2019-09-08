@@ -23,6 +23,9 @@ import Loading from "../Components/Loading";
 import {postData} from '../Common/FetchHelper';
 import ItemList from '../Common/ItemList';
 import ImagePicker from "react-native-image-picker";
+import * as SP from '../Common/ScreenProperty';
+import {sha1} from "../Common/SHA-1Encryptor";
+import UserInfo from '../Common/UserInfo';
 
 var photoOptions = {
     //底部弹出框选项
@@ -42,20 +45,6 @@ var photoOptions = {
 
 var {height, width} = Dimensions.get('window');
 
-/*export default class Loading extends Component{
-    state={
-        show:true
-    }
-    render(){
-        if(this.state.show){
-            return (
-                <View style={{width:width,height:height}}>
-                    <ActivityIndicator size="large" color="#0000ff" />
-                </View>
-            )
-        }
-    }
-}*/
 const majorNum = [
   '01',
   '02',
@@ -116,12 +105,33 @@ export default class ReleaseIWantPage extends Component {
       userName: '',
       password: '',
       password2: '',
+      idcard: '',
       major: '',
       detail: '',
-      campus: '九龙湖',
-      imgURL: {uri:'http://hanyuu.top:8080/image/avatar/4.jpg'},
+      campus: '',
+      imgURL: '',
     };
+    UserInfo.get('username').then(data=>{
+      this.setState({userName:data});
+    })
+    UserInfo.get('idcard').then(data=>{
+      this.setState({idcard:data});
+    })
+    UserInfo.get('studentid').then(data=>{
+      this.setState({major:data});
+    })
+    UserInfo.get('info').then(data=>{
+      this.setState({detail:data});
+    })
+    UserInfo.get('avatarurl').then(data=>{
+      this.setState({imgURL:data});
+    })
+    UserInfo.get('address').then(data=>{
+      this.setState({campus:data});
+    })
+
   }
+
 
   /*updateState = (data) => {
         this.setState(data);
@@ -147,45 +157,49 @@ export default class ReleaseIWantPage extends Component {
 
   checkMajor = () => {
     let ma = String(this.state.major);
-    if (!(ma in majorNum)) {
-      alert('请输入正确的院系编号！');
+    if (majorNum.indexOf(ma)==-1) {
+      alert('请输入正确的院系编号');
       return false;
     }
     return true;
   };
 
   checkInput = () => {
-    if (this.checkUserName() && this.checkPassWord() && this.checkMajor()) {
+    // if (this.checkUserName() && this.checkPassWord() && this.checkMajor()) {
+    if (this.checkUserName() && this.checkPassWord()) {
+      this.uploadUserData();
       return true;
     }
     return false;
   };
 
   uploadUserData = async () => {
-      this.Loading.show();
+      // var Loading = new Loading();
+      // Loading.show();
       const [uid, token] = await ItemList.getIdAndToken();
 
       let data = {
           token: token,
-          uuid: uid,
-          title: this.state.title,
-          type: this.state.classes,
-          imgurl: 'url',
-          depreciatione: this.state.newDegree,
-          note: this.state.detail,
+          username: this.state.userName,
+          password: sha1(this.state.password),
+          idcard: this.state.idcard,
+          studentid:this.state.major,
+          address: this.state.campus,
+          info: this.state.detail,
       };
-      console.log(data);
+      // console.log(data);
       const commonURL='http://inari.ml:8080/';
       const modifyURL=commonURL+'user/modify';
+      // alert(data);
 
       postData(modifyURL, data)
           .then(response => {
-              this.Loading.close();
+              // Loading.close();
               alert('发布成功');
           })
           .catch(err => {
               console.error(err);
-              this.Loading.close();
+              // Loading.close();
               alert('上传数据失败');
           });
   };
@@ -214,14 +228,12 @@ export default class ReleaseIWantPage extends Component {
     return (
       <View style={styles.baseContainer}>
         <ScrollView style={styles.test}>
-          <View style={{height: 50}}>
             <LocalBackHeader navigation={this.props.navigation} />
-          </View>
           <View style={styles.viewUserTop}>
             <Avatar
               size={120}
               rounded
-              source={this.state.imgURL}
+              source={{uri:this.state.imgURL}}
             />
             <TouchableOpacity
               onPress={this.cameraAction}
@@ -248,42 +260,12 @@ export default class ReleaseIWantPage extends Component {
                 value={this.state.userName}
                 editable={true}
                 onChangeText={userName => this.setState({userName})}
-                keyboardType={'numeric'}
                 maxLength={15}
                 style={styles.h4}
               />
             </View>
           </View>
-          <View style={styles.container_row}>
-            <Text style={styles.h4}>密码：</Text>
-            <View style={styles.inputContainer}>
-              <TextInput
-                placeholder={'请输入密码'}
-                value={this.state.password}
-                editable={true}
-                onChangeText={password => this.setState({password})}
-                keyboardType={'numeric'}
-                maxLength={20}
-                secureTextEntry={true}
-                style={styles.h4}
-              />
-            </View>
-          </View>
-          <View style={styles.container_row}>
-            <Text style={styles.h4}>确认密码：</Text>
-            <View style={styles.inputContainer}>
-              <TextInput
-                placeholder={'请再次输入密码'}
-                value={this.state.password2}
-                editable={true}
-                onChangeText={password2 => this.setState({password2})}
-                keyboardType={'numeric'}
-                maxLength={20}
-                secureTextEntry={true}
-                style={styles.h4}
-              />
-            </View>
-          </View>
+
           <View style={styles.container_row}>
             <Text style={styles.h4}>校区：</Text>
             <View style={styles.inputContainer}>
@@ -327,6 +309,17 @@ export default class ReleaseIWantPage extends Component {
               {50 - this.state.detail.length}/50
             </Text>
           </View>
+          <View style={{flexDirection:'row'}}>
+          <View style={styles.buttonContainer}>
+            <Button
+                title="修改密码"
+                type="clear"
+                color={'#cc6699'}
+                onPress={() => {
+
+                }}
+            />
+          </View>
           <View style={styles.buttonContainer}>
             <Button
               title="确 认"
@@ -336,6 +329,7 @@ export default class ReleaseIWantPage extends Component {
                 return this.checkInput();
               }}
             />
+          </View>
           </View>
           <Loading
               ref={r => {
@@ -363,7 +357,7 @@ const styles = StyleSheet.create({
   },
   viewUserTop: {
     marginBottom: 5,
-    height: 200,
+    height: SP.HB(20),
     backgroundColor: '#cc6699',
     alignItems: 'center',
     justifyContent: 'flex-end',
@@ -389,22 +383,28 @@ const styles = StyleSheet.create({
 
   inputContainer: {
     //margin:1,
-    width: 200,
+    width: SP.WB(70),
     backgroundColor: 'white',
     borderRadius: 10,
     flex: 1,
     flexDirection: 'row',
+    alignSelf:'flex-end',
   },
 
   container_row: {
     flexDirection: 'row',
     //justifyContent: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     marginBottom: 5,
     marginLeft: 15,
     marginRight: 15,
 
     //flex: 1,
+  },
+  h4Container:{
+    width:SP.WB(15),
+    margin: 5,
+    alignItems:'center'
   },
   h4: {
     alignSelf: 'center',

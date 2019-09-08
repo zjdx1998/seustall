@@ -4,7 +4,7 @@
   @date: 2019-9-4
 */
 
-import {StyleSheet, View, Dimensions, Image, Text} from 'react-native';
+import {StyleSheet, View, Dimensions, Image, Text, ScrollView} from 'react-native';
 import * as SP from '../Common/ScreenProperty';
 //import { Image,Text} from 'react-native-elements';
 import React, {Component} from 'react';
@@ -12,6 +12,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import LocalBackHeader from "../Components/LocalBackHeader";
 import { ListItem } from 'react-native-elements';
 import ItemList from '../Common/ItemList';
+import Good from "../Common/ItemBlock";
 const {width} = Dimensions.get('window');
 const Goods = [
     {
@@ -47,7 +48,7 @@ export default class ClassificationPage extends Component {
     }
     render() {
         return (
-            <View style = {styles.baseContainer}>
+            <ScrollView style = {styles.baseContainer}>
                 <LocalBackHeader navigation={this.props.navigation} />
                 <View style={styles.titleContainer}>
                 <Text style={styles.titleText}>{this.props.navigation.state.params.classification}</Text>
@@ -88,7 +89,7 @@ export default class ClassificationPage extends Component {
                 {this.state.goodsList.map(i => (
                     <Good
                         itemid={i.itemid}
-                        image={{uri: i.imgurl}}
+                        image={{uri:'http://inari.ml:8080/'+ i.imgurl.split('++')}}
                         name={i.title}
                         price={i.price}
                         //text={i.info}
@@ -98,37 +99,11 @@ export default class ClassificationPage extends Component {
                 ))}
             </View>
 
-            </View>
+            </ScrollView>
         );
     }
 }
 
-class Good extends Component {
-    private props: any;
-    render() {
-        return (
-            <TouchableOpacity
-                onPress={() =>
-                    this.props.navigation.navigate('detailPage', {
-                        itemid: this.props.itemid,
-                        go_back_key: this.props.navigation.state.key,
-                    })
-                }>
-                <View style={styles.block}>
-                    <Image
-                        source={this.props.image}
-                        style={{width: width / 2 - 20, height: width / 2 - 20, flex: 4}}
-                    />
-                    <Text style={styles.name}>{this.props.name}</Text>
-                    <Text style={styles.textdes} numberOfLines={2}>
-                        {' ' + this.props.campus}
-                    </Text>
-                    <Text style={styles.price}>￥ {this.props.price}</Text>
-                </View>
-            </TouchableOpacity>
-        );
-    }
-}
 
 const styles = StyleSheet.create({
     baseContainer:{

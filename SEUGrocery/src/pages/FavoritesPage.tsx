@@ -8,35 +8,23 @@ import {View, ScrollView, StyleSheet, TouchableOpacity} from 'react-native';
 import {Text, Avatar} from 'react-native-elements';
 import GoodsPanel from '../Components/GoodsPanel';
 import LocalBackHeader from '../Components/LocalBackHeader';
+import UserInfo from '../Common/UserInfo';
+import ItemList from '../Common/ItemList';
+
+const favQueryURL = "fav/query";
 
 export default class FavoritesPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showGoodsWay: '2',
+      showGoodsWay: '0',
+      avatarurl:'',
     };
+    UserInfo.get('avatarurl').then(data=>{this.setState({avatarurl:data})})
   }
 
   fetchData = () => {
-    fetch(itemURL + this.props.navigation.state.params.itemid)
-      .then(response => response.json())
-      .then(rT => {
-        this.setState({
-          itemid: rT.itemid,
-          username: itemURL + this.props.navigation.state.params.itemid,
-          uuid: rT.uuid,
-          title: rT.title,
-          type: rT.type,
-          price: parseFloat(rT.price),
-          imgurl: rT.imgurl,
-          note: rT.note,
-          depreciatione: rT.depreciatione,
-        });
-        console.log(rT);
-      })
-      .catch(e => {
-        console.log('Oops, error');
-      });
+
   };
 
   render() {
@@ -51,7 +39,7 @@ export default class FavoritesPage extends Component {
               <Avatar
                 size={120}
                 rounded
-                source={require('../Common/img/avatar.png')}
+                source={{uri:this.state.avatarurl}}
               />
             </View>
             <View style={styles.txtArea}>
@@ -104,11 +92,18 @@ export default class FavoritesPage extends Component {
         <View style={styles.GoodsAreaContainer}>
           <GoodsPanel
             showGoodsWay={this.state.showGoodsWay}
+            ref={goodsPanel => (this.goodsPanel = goodsPanel)}
             navigation={this.props.navigation}
           />
         </View>
       </ScrollView>
     );
+  }
+  componentDidMount() {
+    // alert('rua12421312');
+    var list = ItemList.getFavList();
+    this.goodsPanel.setState({ goodsList: list });
+    alert(JSON.stringify(list))
   }
 }
 

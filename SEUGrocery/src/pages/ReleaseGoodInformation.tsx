@@ -122,7 +122,7 @@ export default class ReleaseInformation extends Component {
       title: this.state.title,
       type: '1',
       price: this.computeValue(),
-      imgurl: commonURL+'image/item/0.9321619878296834.jpg',
+      imgurl: 'image/item/0.9321619878296834.jpg',
       depreciatione: this.state.newDegree,
       note: this.state.campus+this.state.detail,
       sold:1,
@@ -157,7 +157,11 @@ export default class ReleaseInformation extends Component {
           .then(responseData => {
             console.log('uploadImage', responseData);
             if (responseData.status == 'success') {
-              data.imgurl = commonURL+responseData.imgurl[0];
+              let str='';
+              for (let item of responseData.imgurl){
+               str+=item+'++';
+              }
+               data.imgurl = str;
               postData(addItemURL, data)
                   .then(response => {
                     console.log('uploadData', response);
@@ -187,6 +191,7 @@ export default class ReleaseInformation extends Component {
   };
   render() {
     return (
+        <View style={styles.baseContainer}>
       <ScrollView style={styles.test}>
         {/*顶端返回和确认按钮*/}
         <View style={{height: SP.HB(12)}}>
@@ -251,7 +256,7 @@ export default class ReleaseInformation extends Component {
             style={{width: width * 0.35, fontSize: 20}}
             onValueChange={itemValue => this.setState({classes: itemValue})}>
             {classes.map((i,j) => (
-              <Picker.Item label={i} value={j} />
+              <Picker.Item label={i} value={j+1} />
             ))}
           </Picker>
         </View>
@@ -297,11 +302,16 @@ export default class ReleaseInformation extends Component {
           hide={true}
         />
       </ScrollView>
+        </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  baseContainer: {
+    backgroundColor: '#FFF0F5',
+    flex: 1,
+  },
   buttonContainer: {
     top: -50,
     left: width * 0.7,
