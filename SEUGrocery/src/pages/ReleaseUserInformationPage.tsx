@@ -188,7 +188,7 @@ export default class ReleaseIWantPage extends Component {
           info: this.state.detail,
       };
       // console.log(data);
-      const commonURL='http://inari.ml:8080/';
+      const commonURL='http://hanyuu.top:8080/';
       const modifyURL=commonURL+'user/modify';
       // alert(data);
 

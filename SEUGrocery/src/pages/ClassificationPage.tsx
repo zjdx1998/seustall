@@ -89,7 +89,7 @@ export default class ClassificationPage extends Component {
                 {this.state.goodsList.map(i => (
                     <Good
                         itemid={i.itemid}
-                        image={{uri:'http://inari.ml:8080/'+ i.imgurl.split('++')}}
+                        image={{uri:'http://hanyuu.top:8080/'+ i.imgurl.split('++')}}
                         name={i.title}
                         price={i.price}
                         //text={i.info}

@@ -109,7 +109,7 @@ export default class ReleaseInformation extends Component {
   uploadItemData = async () => {
     this.Loading.show();
     const [uid, token] = await ItemList.getIdAndToken();
-    const commonURL='http://inari.ml:8080/';
+    const commonURL='http://hanyuu.top:8080/';
 
     let params = {
       token:token,
@@ -128,8 +128,8 @@ export default class ReleaseInformation extends Component {
       sold:1,
     };
 
-    const addImageURL = 'http://inari.ml:8080/item/image';
-    const addItemURL = 'http://inari.ml:8080/item/add';
+    const addImageURL = 'http://hanyuu.top:8080/item/image';
+    const addItemURL = 'http://hanyuu.top:8080/item/add';
 
     console.log(params);
     console.log(data);

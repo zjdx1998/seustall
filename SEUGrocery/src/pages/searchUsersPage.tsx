@@ -27,7 +27,7 @@ import {postData} from '../Common/FetchHelper';
 import UserInfo from '../Common/UserInfo';
 import * as DataBase from '../Common/DataBase';
 
-const commonURL='http://inari.ml:8080/';
+const commonURL='http://hanyuu.top:8080/';
 export default class SearchUsersPage extends Component {
     private props: any;
 
@@ -84,7 +84,7 @@ export default class SearchUsersPage extends Component {
 
     getAvatar=(uuid,index)=>{
         const fetch = require('node-fetch');
-        fetch('http://inari.ml:8080/user/'+uuid)
+        fetch('http://hanyuu.top:8080/user/'+uuid)
             .then((response) => response.json())
             .then(response=>{
                     if(response.status=="success" ){
@@ -118,7 +118,7 @@ export default class SearchUsersPage extends Component {
     getInfo=(keyword)=>{
         console.log(keyword);
         this.setState({list:[]});
-        let url='http://inari.ml:8080/item/search';
+        let url='http://hanyuu.top:8080/item/search';
         let data={
             method:'user',
             query:keyword,

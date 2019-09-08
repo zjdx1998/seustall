@@ -57,7 +57,7 @@ export default class SearchGoodsPage extends Component {
         this.setState({list:[],wantList:[]});
 
         //千万别删
-        let url='http://inari.ml:8080/item/search';
+        let url='http://hanyuu.top:8080/item/search';
         let data={
             method:'good',
             query:keyword,
@@ -107,9 +107,9 @@ export default class SearchGoodsPage extends Component {
                         console.log('imgurl',response.imgurl);
                         if(response.status=='success') {
                             if(response.imgurl==''){
-                                tempObj.icon_url = 'http://inari.ml:8080/'+'image/item/0.9321619878296834.jpg';
+                                tempObj.icon_url = 'http://hanyuu.top:8080/'+'image/item/0.9321619878296834.jpg';
                             }else {
-                                tempObj.icon_url = 'http://inari.ml:8080/' + response.imgurl.split("++");
+                                tempObj.icon_url = 'http://hanyuu.top:8080/' + response.imgurl.split("++");
                             }
                             if (response.sold === 1) {
                                 let tempList = this.state.list;

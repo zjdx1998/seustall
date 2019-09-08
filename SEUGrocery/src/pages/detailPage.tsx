@@ -25,10 +25,13 @@ import * as SP from '../Common/ScreenProperty';
 import {TouchableOpacity} from "react-native-gesture-handler";
 import UserInfo from '../Common/UserInfo';
 import { postData } from '../Common/FetchHelper';
+import ItemList from '../Common/ItemList';
 
-const itemURL = 'http://inari.ml:8080/item/';
-const userURL = 'http://inari.ml:8080/user/';
-const addFavUrl = 'http://inari.ml:8080/fav/add';
+const itemURL = 'http://hanyuu.top:8080/item/';
+const userURL = 'http://hanyuu.top:8080/user/';
+const addFavUrl = 'http://hanyuu.top:8080/fav/add';
+const queryFavUrl = 'http://hanyuu.top:8080/fav/query';
+const deleteFavUrl = 'http://hanyuu.top:8080/fav/delete';
 
 var {height, width} = Dimensions.get('window');
 export default class DetailPage extends Component {
@@ -42,53 +45,69 @@ export default class DetailPage extends Component {
     }
 
     fetchData = () => {
-        fetch(itemURL + this.props.navigation.state.params.itemid)
-            .then(response => response.json())
-            .then(rT => {
-                // this.setState({
-                //   itemid: rT.itemid,
-                //   // username: itemURL + this.props.navigation.state.params.itemid,
-                //   uuid: rT.uuid,
-                //   title: rT.title,
-                //   type: rT.type,
-                //   price: parseFloat(rT.price),
-                //   imgurl: rT.imgurl,
-                //   note: rT.note,
-                //   depreciatione: rT.depreciatione,
-                // });
-                fetch(userURL + rT.uuid)
-                    .then(res => res.json())
-                    .then(user => {
-                        this.setState({
-                            username: user.username,
-                            avatorurl: "http://inari.ml:8080/"+user.avatarurl,
-                            itemid: rT.itemid,
-                            // username: itemURL + this.props.navigation.state.params.itemid,
-                            uuid: rT.uuid,
-                            title: rT.title,
-                            type: rT.type,
-                            price: parseFloat(rT.price),
-                            imgurl: "http://inari.ml:8080/"+rT.imgurl,
-                            note: rT.note,
-                            depreciatione: rT.depreciatione,
+        if(this.props.navigation.state.params.itemid==this.state.itemid){
+            return;
+        }else{
+            // alert("rua")
+            fetch(itemURL + this.props.navigation.state.params.itemid)
+                .then(response => response.json())
+                .then(rT => {
+                    // this.setState({
+                    //   itemid: rT.itemid,
+                    //   // username: itemURL + this.props.navigation.state.params.itemid,
+                    //   uuid: rT.uuid,
+                    //   title: rT.title,
+                    //   type: rT.type,
+                    //   price: parseFloat(rT.price),
+                    //   imgurl: rT.imgurl,
+                    //   note: rT.note,
+                    //   depreciatione: rT.depreciatione,
+                    // });
+                    fetch(userURL + rT.uuid)
+                        .then(res => res.json())
+                        .then(user => {
+                            ItemList.getFavList().then(list => {
+                                var isfav = false;
+                                for (var i of list.res) {
+                                    if (i.itemid == rT.itemid) {
+                                        isfav = true;
+                                    }
+                                }
+                                this.setState({
+                                    username: user.username,
+                                    avatorurl: "http://hanyuu.top:8080/" + user.avatarurl,
+                                    itemid: rT.itemid,
+                                    // username: itemURL + this.props.navigation.state.params.itemid,
+                                    uuid: rT.uuid,
+                                    title: rT.title,
+                                    type: rT.type,
+                                    price: parseFloat(rT.price),
+                                    imgurl: "http://hanyuu.top:8080/" + rT.imgurl,
+                                    note: rT.note,
+                                    depreciatione: rT.depreciatione,
+                                    isFavorite:isfav,
+                                });
+                            })
+                            //  alert("http://hanyuu.top:8080/"+rT.imgurl.value);
+                        })
+                        .catch(e => {
+                            console.log('Oops, error');
+                            // Alert.alert('cnm');
                         });
-                        //  alert("http://inari.ml:8080/"+rT.imgurl.value);
-                    })
-                    .catch(e => {
-                        console.log('Oops, error');
-                        // Alert.alert('cnm');
-                    });
 
-                console.log(rT);
-            })
-            .catch(e => {
-                console.log('Oops, error');
-                // Alert.alert('cnm');
-            });
+
+                    console.log(rT);
+                })
+                .catch(e => {
+                    console.log('Oops, error');
+                    // Alert.alert('cnm');
+                });
+        }
+
     };
 
     componentDidMount() {
-        this.fetchData();
+        this.fetchData()
     }
 
     componentDidUpdate() {
@@ -116,8 +135,24 @@ export default class DetailPage extends Component {
             postData(addFavUrl,
                 {
                     token:toke,
-                    data:[this.state.itemid]
+                    data:"["+this.state.itemid+"]"
                 })
+                .then(
+                    // info=>alert(JSON.stringify(info))
+                    )
+        })
+    }
+    
+    deleteFav(){
+        UserInfo.get('token').then(toke=>{
+            postData(deleteFavUrl,
+                {
+                    token:toke,
+                    data:"["+this.state.itemid+"]"
+                })
+                .then(
+                    // info=>alert(JSON.stringify(info))
+                    )
         })
     }
 
@@ -181,7 +216,11 @@ export default class DetailPage extends Component {
                         <TouchableOpacity
                             style={styles.favoriteStyle}
                             onPress={() => {
-                                this.addFav();
+                                if(!this.state.isFavorite){
+                                    this.addFav();
+                                }else{
+                                    this.deleteFav();
+                                }
                                 this.setState({isFavorite: !this.state.isFavorite})
                                 //
                             }}>
