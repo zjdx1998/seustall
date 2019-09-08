@@ -106,7 +106,7 @@ export default class UserInformationPage extends Component {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-              onPress={()=>this.props.navigation.navigate('page2')}
+              onPress={()=>this.props.navigation.navigate('page3')}
             activeOpacity={0.2}
             focusedOpacity={0.5}>
             <View

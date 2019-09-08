@@ -114,15 +114,14 @@ export default class ReleaseIWantPage extends Component {
 
     let data = {
       token:token,
-      uuid: uid,
       title: this.state.title,
-      type: Number(this.state.classes),//1-8
+      type: this.state.classes,//1-8
       price: this.computeValue(),
       depreciatione: this.state.newDegree,
       note: this.state.campus+','+this.state.detail,
-      sold:-1,
-       imgurl:'',
+      sold:'-1',
     };
+
     console.log(data);
     const addItemURL = 'http://hanyuu.top:8080/item/add';
 

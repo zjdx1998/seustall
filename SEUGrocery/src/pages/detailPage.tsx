@@ -110,9 +110,6 @@ export default class DetailPage extends Component {
         this.fetchData()
     }
 
-    componentDidUpdate() {
-        this.fetchData();
-    }
 
     state = {
         itemid: '',

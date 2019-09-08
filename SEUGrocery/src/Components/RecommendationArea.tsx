@@ -66,6 +66,12 @@ export default class RecommendationArea extends Component {
     );
   }
 
+  _onRefresh=()=>{
+    setTimeout(()=>{
+      this.setState({isRefreshing:false})
+    },5000);
+  };
+
   private props: any;
   render() {
     return (

@@ -131,9 +131,6 @@ export default class SignInUI extends Component {
     });
   };
 
-  changeToSignUp=()=>{
-
-  }
 
   render() {
     return (
