@@ -7,12 +7,15 @@ import sequelize, { Sequelize, ConnectionRefusedError, JSON, where } from 'seque
 // The bug of sequelize https://github.com/sequelize/sequelize/issues/9489
 let mysql2 = require('mysql2');
 import conf from './conf';
-import { UserInterface, ItemInterface, User } from './role';
-import { ResolvePlugin } from 'webpack';
-import { JsonWebTokenError } from 'jsonwebtoken';
+import
+{
+	UserInterface, ItemInterface, favoritesInterface, chatInterface,
+	User, Item,
+} from './role';
 import users from './users';
 import items from './items';
-import { stack } from 'sequelize/types/lib/utils';
+import favorites, { favoritesIndexes } from './favorites';
+import chat, { chatIndexes } from './chat';
 
 
 export default class data
@@ -20,6 +23,8 @@ export default class data
 	database: Sequelize;
 	users: any;
 	items: any;
+	favorites: any;
+	chat: any;
 	isConnected: boolean
 
 	constructor()
@@ -48,17 +53,18 @@ export default class data
 		this.database.authenticate()
 			.then(function (err: any)
 			{
-				console.log(conf.except.dbConnT);
+				// console.log(conf.except.dbConnT);
 			}).catch(function (err: any)
 			{
-				console.log(err);
+				console.error(err);
 				throw Error(conf.except.dbConnF);
 			});
 		try
 		{
 
 			this.users = this.database.define(
-				conf.userTableName, users,
+				conf.table.users,
+				users,
 				{
 					timestamps: false,
 					engine: "Innodb",
@@ -66,7 +72,7 @@ export default class data
 				}
 			);
 			this.items = this.database.define(
-				conf.itemTableName,
+				conf.table.items,
 				items,
 				{
 					timestamps: false,
@@ -74,6 +80,24 @@ export default class data
 					charset: "utf8",
 				}
 			);
+			this.favorites = this.database.define(
+				conf.table.favorites,
+				favorites,
+				{
+					timestamps: false,
+					engine: "Innodb",
+					charset: "utf8",
+				}
+			)
+			this.chat = this.database.define(
+				conf.table.chat,
+				chat,
+				{
+					timestamps: true,
+					engine: "Innodb",
+					charset: "utf8",
+				}
+			)
 			this.database.sync();
 		} catch (error)
 		{
@@ -88,18 +112,20 @@ export default class data
 	 */
 	public async writeItem(item: ItemInterface)
 	{
-		var response = new Object() as any;
+		var res = new Object() as any;
 		try
 		{
-			await this.items.create(item);
-			response.status = "success";
-			return response;
+			item.to = 0;
+			const data = await this.items.create(item);
+			res.status = conf.res.success;
+			res.data = data;
+			return res;
 		} catch (error)
 		{
 			console.error(`[ERROR] failed while writing item\n${error}`);
-			response.status = "faliure";
-			response.info = "invaild request";
-			return response;
+			res.status = conf.res.failure;
+			res.info = "invaild request";
+			return res;
 		}
 	}
 	/**
@@ -107,25 +133,26 @@ export default class data
 	 */
 	public async writeUser(user: UserInterface)
 	{
-		var response = new Object() as any;
+		var res = new Object() as any;
 		try
 		{
-			const res = await this.queryPhoneNumber(user.phonenumber as number);
-			if (res)
+			const resquery = await this.queryPhoneNumber(user.phonenumber as string);
+			if (resquery.data != null)
 			{
-				response.status = "failure";
-				response.info = "phone number already token"
-				return response;
+				res.status = conf.res.failure;
+				res.info = "phone number already token"
+				return res;
 			}
-			await this.users.create(user);
-			response.status = "success";
-			return response;
+			const data = await this.users.create(user);
+			res.status = conf.res.success;
+			res.data = data;
+			return res;
 		} catch (error)
 		{
 			console.error("[ERROR] Database connect failed.\n" + error);
-			response.status = "failure";
-			response.info = "invaild request";
-			return response;
+			res.status = conf.res.failure;
+			res.info = "invaild request";
+			return res;
 		}
 	}
 	/**
@@ -153,19 +180,25 @@ export default class data
 	 */
 	public async queryUser(uuid: number)
 	{
+		var res = new Object() as any;
 		try
 		{
-			const res = await this.users.findOne({
+			const resquery = await this.users.findOne({
 				where:
 				{
 					uuid
 				}
 			})
-			const userRes = new User(res);
-			return this.responseFix(userRes.public());
+			const userRes = new User(resquery);
+			res = this.responseFix(userRes.public());
+			res.status = conf.res.success;
+			return res;
 		} catch (error)
 		{
-			throw new Error("[ERROR] Database connect failed.\n" + error);
+			console.error(error);
+			res.status = conf.res.failure;
+			res.info = error;
+			return res;
 		}
 	}
 	/**
@@ -189,24 +222,48 @@ export default class data
 		}
 	}
 	/**
-	 * @description 查询电话号码
+	 * @description 查询用户自身信息
 	 */
-	private async queryPhoneNumber(phonenumber: number)
+	public async queryUserRaw(uuid: number)
 	{
 		try
 		{
 			const res = await this.users.findOne({
 				where:
 				{
-					phonenumber
+					uuid
 				}
 			})
 			const userRes = new User(res);
+			return userRes;
+		} catch (error)
+		{
+			throw new Error("[ERROR] Database connect failed.\n" + error);
+		}
+	}
+	/**
+	 * @description 查询电话号码
+	 */
+	public async queryPhoneNumber(phonenumber: string)
+	{
+		var res = new Object() as any;
+		try
+		{
+			const resquery = await this.users.findOne({
+				where:
+				{
+					phonenumber
+				}
+			})
+			res.status = conf.res.success;
+			res.data = resquery;
 			return res;
 		} catch (error)
 		{
-			console.error(`[ERROR] on query phone number ${error}"`);
-			return { status: "failure" };
+			console.error(error);
+			res.status = conf.res.success;
+			res.info = error;
+			return res;
 		}
 	}
 	/**
@@ -227,21 +284,21 @@ export default class data
 			{
 				if (res.password === password)
 				{
-					response.status = "success";
+					response.status = conf.res.success;
 					response.info = new User(res).protect();
 					return response;
 				}
-				response.status = "failure";
+				response.status = conf.res.failure;
 				response.info = "password incorrect";
 				return response;
 			}
-			response.status = "failure";
+			response.status = conf.res.failure;
 			response.info = "user not found";
 			return response;
 		} catch (error)
 		{
 			console.error("[ERROR] Database connect failed.\n" + error);
-			response.status = "failure";
+			response.status = conf.res.failure;
 			response.info = "bad request";
 			return response;
 		}
@@ -254,7 +311,7 @@ export default class data
 		try
 		{
 			const queryres: any = await this.queryUser(uuid)
-			if (queryres.status === "none")
+			if (queryres.status == conf.res.failure)
 			{
 				return false;
 			}
@@ -262,11 +319,11 @@ export default class data
 				{
 					"avatarurl": avatar
 				}, {
-					where:
-					{
-						uuid
-					}
+				where:
+				{
+					uuid
 				}
+			}
 			);
 			return true;
 		} catch (error)
@@ -279,22 +336,85 @@ export default class data
 	 */
 	public async updateUser(src: UserInterface)
 	{
+		var res = new Object() as any;
+		try
+		{
+			const resquery: any = await this.queryUser(src.uuid)
+			if (resquery.status == conf.res.failure)
+			{
+				res.status = conf.res.failure;
+				res.info = resquery.info;
+				return res;
+			}
+			if (src.password)
+			{
+				const resupdate = await this.users.update(
+					{
+						password: src.password,
+						username: src.username,
+						idcard: src.idcard,
+						studentid: src.studentid,
+						address: src.address,
+						info: src.info,
+					},
+					{
+						where:
+						{
+							"uuid": src.uuid
+						}
+					}
+				);
+				res.status = conf.res.success;
+				res.data = resupdate;
+				return res;
+			} else
+			{
+				const resupdate = await this.users.update(
+					{
+						username: src.username,
+						idcard: src.idcard,
+						studentid: src.studentid,
+						address: src.address,
+						avatarurl: src.avatarurl,
+						info: src.info,
+					},
+					{
+						where:
+						{
+							"uuid": src.uuid
+						}
+					}
+				);
+				res.status = conf.res.success;
+				res.data = resupdate;
+				return res;
+			}
+		} catch (error)
+		{
+			console.error(error)
+			res.status = conf.res.failure;
+			res.info = error;
+			return res;
+		}
+	}
+	/**
+	 * @description 更新用户密码 !危险操作，谨慎使用。
+	 */
+	public async updatepassword(src: UserInterface)
+	{
+		var res = new Object() as any;
 		try
 		{
 			const queryres: any = await this.queryUser(src.uuid)
-			if (queryres.status === "none")
+			if (queryres.status == conf.res.failure)
 			{
-				return false;
+				res.status = conf.res.failure;
+				res.info = queryres.info;
+				return res;
 			}
-			const res = await this.users.update(
+			const resupdate = await this.users.update(
 				{
-					"password": src.password,
-					"username": src.username,
-					"idcard": src.idcard,
-					"studentid": src.studentid,
-					"address": src.address,
-					"avatarurl": src.avatarurl,
-					"info": src.info,
+					password: src.password,
 				},
 				{
 					where:
@@ -303,10 +423,12 @@ export default class data
 					}
 				}
 			);
+
 			return true;
 		} catch (error)
 		{
 			console.error(error)
+			return false;
 		}
 	}
 	/**
@@ -314,14 +436,17 @@ export default class data
 	 */
 	public async updateItem(src: ItemInterface)
 	{
+		var res = new Object() as any;
 		try
 		{
 			const queryres: any = await this.queryItem(src.itemid as number)
 			if (queryres.status === "none")
 			{
-				return false;
+				res = conf.res.failure;
+				res.info = "no item";
+				return res;
 			}
-			const res = await this.items.update(
+			const resupdate = await this.items.update(
 				{
 					"title": src.title,
 					"type": src.type,
@@ -337,9 +462,15 @@ export default class data
 					}
 				}
 			)
-			return true;
+			res.status = conf.res.success;
+			res.data = resupdate;
+			return res;
 		} catch (error)
 		{
+			console.error(error)
+			res.status = conf.res.failure;
+			res.info = error;
+			return res;
 		}
 	}
 	/**
@@ -350,24 +481,47 @@ export default class data
 		try
 		{
 			const queryres: any = await this.queryItem(itemid as number)
-			if (queryres.status === "none")
+			if (queryres.status === "none" || queryres.sold == 2 || queryres.sold == -2)
 			{
 				return false;
 			}
-			const res = await this.items.update(
-				{
-					sold: uuid
-				},
-				{
-					where:
+			if (queryres.sold == -1)
+			{
+
+				const res = await this.items.update(
 					{
-						itemid: itemid
+						to: uuid,
+						sold: -2
+					},
+					{
+						where:
+						{
+							itemid: itemid
+						}
 					}
-				}
-			)
-			return true;
+				)
+				return true;
+			} else if (queryres.sold == 1)
+			{
+				const res = await this.items.update(
+					{
+						to: uuid,
+						sold: 2
+					},
+					{
+						where:
+						{
+							itemid: itemid
+						}
+					}
+				)
+				return true;
+			}
+			return false;
 		} catch (error)
 		{
+			console.error(error)
+			return false;
 		}
 	}
 	/**
@@ -386,11 +540,11 @@ export default class data
 				{
 					imgurl
 				}, {
-					where:
-					{
-						itemid
-					}
+				where:
+				{
+					itemid
 				}
+			}
 			);
 			return true;
 		} catch (error)
@@ -410,6 +564,28 @@ export default class data
 					where:
 					{
 						uuid
+					}
+				}
+			)
+			return res;
+		} catch (error)
+		{
+			console.error(`[ERROR] ${error}`);
+			return { status: "failure" };
+		}
+	}
+	/**
+	 * @description 查看用户完成交易（非自身发布）的商品
+	 */
+	public async queryFinished(uuid: string)
+	{
+		try
+		{
+			const res = await this.items.findAll(
+				{
+					where:
+					{
+						to: uuid
 					}
 				}
 			)
@@ -446,7 +622,200 @@ export default class data
 			return true;
 		}
 		return false;
+	}
+	/**
+	 * @description 收藏夹查询
+	 */
+	public async favoritesQuery(uuid: number)
+	{
+		try
+		{
+			const res = this.favorites.findAll({
+				where:
+				{
+					uuid
+				}
+			})
+			return res;
 
+		} catch (error)
+		{
+			return [];
+		}
+	}
+	/**
+	 * @description 收藏夹批量添加
+	 */
+	public async favoritesAdd(uuid: string, src: any)
+	{
+		var res = new Object() as any;
+		try
+		{
+
+			for (var i in src)
+			{
+				const itemid = src[i];
+				await this.favorites.create(
+					{
+						uuid,
+						itemid
+					}
+				)
+			}
+			res.status = conf.res.success;
+			return res
+		} catch (error)
+		{
+			res.status = conf.res.failure;
+			res.info = error;
+			return res;
+		}
+	}
+	/**
+	 * @description 收藏夹批量删除
+	*/
+	public async favoritesDelete(uuid: string, res: any)
+	{
+		try
+		{
+			for (var i in res)
+			{
+				const itemid: any = res[i];
+				const waittodelete = await this.favorites.destroy
+					(
+						{
+							where:
+							{
+								itemid: { [sequelize.Op.eq]: itemid },
+								uuid: { [sequelize.Op.eq]: uuid }
+							}
+
+						}
+					)
+			}
+			res.status = conf.res.success;
+			return res
+		} catch (error)
+		{
+			console.error(error);
+			res.status = conf.res.failure;
+			res.info = error;
+			return res
+		}
+	}
+	/**
+	 * @description 添加一个消息记录
+	 */
+	public async chatPush(from: number, to: number, data: string)
+	{
+		var res = new Object() as any;
+		try
+		{
+			const resquery = await this.queryUser(to);
+			if (resquery.status == conf.res.success)
+			{
+				const ins: chatInterface =
+				{
+					from,
+					to,
+					data,
+					fetched: false,
+				}
+				await this.chat.create(ins);
+				res.status = conf.res.success;
+				return res;
+			} else
+			{
+				res.status = conf.res.failure;
+				res.info = conf.except.noUser;
+				return res;
+			}
+		} catch (error)
+		{
+			console.error(error);
+			res.status = conf.res.failure;
+			res.info = error;
+			return res;
+		}
+	}
+	/**
+	 * @description 查询未读记录
+	 */
+	public async chatFetchNew(uuid: number)
+	{
+		var res = new Object() as any;
+		try
+		{
+			const resquery = await this.chat.findAll(
+				{
+					where:
+					{
+						to: uuid,
+						fetched: false,
+					}
+				}
+			)
+			await this.chat.update(
+				{
+					fetched: true,
+				},
+				{
+					where:
+					{
+						to: uuid,
+						fetched: false,
+					}
+				}
+			)
+			res.status = conf.res.success;
+			res.data = resquery;
+			return res;
+		} catch (error)
+		{
+			console.error(error);
+			res.status = conf.res.failure;
+			res.info = error;
+			return res;
+		}
+	}
+	/**
+	 * @description 查询所有记录
+	 */
+	public async chatFetchAll(uuid: number)
+	{
+		var res = new Object() as any;
+		try
+		{
+			const resquery = await this.chat.findAll(
+				{
+					where:
+					{
+						to: uuid,
+					}
+				}
+			)
+			await this.chat.update(
+				{
+					fetched: true,
+				},
+				{
+					where:
+					{
+						to: uuid,
+						fetched: false,
+					}
+				}
+			)
+			res.status = conf.res.success;
+			res.data = resquery;
+			return res;
+		} catch (error)
+		{
+			console.error(error);
+			res.status = conf.res.failure;
+			res.info = error;
+			return res;
+		}
 	}
 	/**
 	 * @description 响应修饰器

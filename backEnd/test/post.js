@@ -1,6 +1,14 @@
 const fetch = require('node-fetch');
-postData('http://10.203.218.113/user/login', { answer: 42 ,token: ""})
-	.then(data => console.log(data)) // JSON from `response.json()` call
+postData('http://hanyuu.top:9200/index-users/_search',
+{
+	"query": {
+		"match_all":
+		{
+
+		}
+	}
+})
+	.then(data => console.log(data.hits.hits[1])) // JSON from `response.json()` call
 	.catch(error => console.error(error))
 
 function postData(url, data)

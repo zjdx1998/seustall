@@ -160,7 +160,13 @@ export default class SearchUsersPage extends Component {
                             type={'antdesign'}
                             color={"#030303"}
                             onPress={() => {
-                                this.props.navigation.navigate('searchP');
+                                this.props.navigation.navigate('searchP',{
+                                    refresh:(f,keyword)=> {
+                                        if(f!='user'){return;}
+                                       this.setState({search:keyword})
+                                        this.getInfo(keyword);
+                                    }
+                                });
                             }}
                         />
                     }

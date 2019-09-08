@@ -31,8 +31,7 @@ var nodemailer = require('nodemailer');
 	{
 		if (error)
 		{
-			return console.log(error);
+			return console.error(error);
 		}
-		console.log('Message sent: ' + info.response);
 
 	});

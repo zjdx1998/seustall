@@ -55,13 +55,6 @@ export class User
 				return JSON.stringify(response);
 			}
 		}
-		//TODO,更新数据库列表
-		// for (var key in temp)
-		// {
-		// 	if (key.localeCompare('uuid') == 0)
-		// 	{ continue; }
-		// 	this.data[key] = temp[key];
-		// }
 		response['status'] = 'success';
 		return JSON.stringify(response);
 	}
@@ -74,10 +67,6 @@ export class Item
 	constructor(data: ItemInterface)
 	{
 		this.data = data as any;
-		for (var key in data)
-		{
-			console.log(key);
-		}
 	}
 	json(): ItemInterface
 	{
@@ -89,7 +78,7 @@ export interface UserInterface
 	uuid: number,
 	password?: string,
 	username?: string,
-	phonenumber?:number,
+	phonenumber?: string,
 	idcard?: string,
 	studentid?: number,
 	address?: string,
@@ -97,7 +86,7 @@ export interface UserInterface
 	verified?: boolean,
 	score?: number,
 	note?: string,
-	info?:string
+	info?: string
 }
 export interface ItemInterface
 {
@@ -109,6 +98,19 @@ export interface ItemInterface
 	imgurl: string,
 	depreciatione: number,
 	note: string,
-	sold: number
+	sold: number,
+	to: number,
+	hash: string,
 }
-console.log("role module loaded.")
+export interface favoritesInterface
+{
+	uuid: number,
+	itemid: number,
+}
+export interface chatInterface
+{
+	from: number,
+	to: number,
+	data: string,
+	fetched?: boolean,
+}

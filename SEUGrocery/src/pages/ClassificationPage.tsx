@@ -42,10 +42,30 @@ export default class ClassificationPage extends Component {
         }
     }
     componentDidMount() {
+        let typeid=this.props.navigation.state.params.type;
         ItemList.getItemList().then(list => {
-            this.setState({goodsList: list});
+            let newList=[];
+            for (let item of list){
+                if(item.type==typeid && item.sold==1){
+                    newList.push(item);
+                }
+            }
+            this.setState({goodsList: newList});
         });
     }
+    componentDidUpdate(){
+        let typeid=this.props.navigation.state.params.type;
+        ItemList.getItemList().then(list => {
+            let newList=[];
+            for (let item of list){
+                if(item.type==typeid && item.sold==1){
+                    newList.push(item);
+                }
+            }
+            this.setState({goodsList: newList});
+        });
+    }
+
     render() {
         return (
             <ScrollView style = {styles.baseContainer}>
@@ -123,6 +143,7 @@ const styles = StyleSheet.create({
         //flex: 1,
         flexDirection: 'row',
         flexWrap: 'wrap',
+        marginLeft:SP.WB(3),
     },
     price: {
         fontSize: 20,

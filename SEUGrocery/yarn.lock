@@ -3998,7 +3998,7 @@ jsx-ast-utils@^2.0.1:
 
 keymirror@^0.1.1:
   version "0.1.1"
-  resolved "https://registry.npm.taobao.org/keymirror/download/keymirror-0.1.1.tgz#918889ea13f8d0a42e7c557250eee713adc95c35"
+  resolved "https://registry.npmjs.org/keymirror/-/keymirror-0.1.1.tgz#918889ea13f8d0a42e7c557250eee713adc95c35"
   integrity sha1-kYiJ6hP40KQufFVyUO7nE63JXDU=
 
 kind-of@^1.1.0:
