@@ -163,12 +163,12 @@ const styles = StyleSheet.create({
     //height: 35,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
 
   },
   selectText: {
     color: '#ffffff',
-    fontSize: 27,
+    fontSize: 20,
     margin:10
 
   },

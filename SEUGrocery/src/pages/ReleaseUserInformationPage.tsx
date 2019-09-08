@@ -166,7 +166,7 @@ export default class ReleaseIWantPage extends Component {
 
   checkInput = () => {
     // if (this.checkUserName() && this.checkPassWord() && this.checkMajor()) {
-    if (this.checkUserName() && this.checkPassWord()) {
+    if (this.checkUserName()) {
       this.uploadUserData();
       return true;
     }
@@ -181,14 +181,14 @@ export default class ReleaseIWantPage extends Component {
       let data = {
           token: token,
           username: this.state.userName,
-          password: sha1(this.state.password),
+          password: '123',
           idcard: this.state.idcard,
           studentid:this.state.major,
           address: this.state.campus,
           info: this.state.detail,
       };
       // console.log(data);
-      const commonURL='http://inari.ml:8080/';
+      const commonURL='http://hanyuu.top:8080/';
       const modifyURL=commonURL+'user/modify';
       // alert(data);
 

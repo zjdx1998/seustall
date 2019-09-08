@@ -3,25 +3,22 @@
  * @version 1.0.0
  * @date 2019/08/31
  */
-console.log("[info] in dex loaded.");
+console.log("[info] web server loaded.");
 import Koa from 'koa';
 import koaBody from 'koa-body';
 import logger from 'koa-logger';
 import koaRouter from 'koa-router';
 import fs from 'fs';
 import path from 'path';
+import jwt, { decode } from 'jsonwebtoken';
+import { User, Item, UserInterface, ItemInterface } from './role';
 import conf from './conf';
 import data from "./database";
-import { User, Item, UserInterface, ItemInterface } from './role';
-import jwt, { decode } from 'jsonwebtoken';
 import mail from './mailpush';
-import { any } from 'bluebird';
+import { postItem, postUser, search } from './resend';
+import { requireCode, verifyCode } from './SMSVerify';
 
-console.log(conf);
-console.log(conf.avatar);
 const router = new koaRouter();
-// const staticPath = path.join(__dirname,'../src/asset')
-// const staticPath = '../src/asset';
 function webServer()
 {
 	//尝试连接数据库，若失败则抛出异常重新尝试连接
@@ -31,7 +28,6 @@ function webServer()
 		const app = new Koa();
 		app.use(logger());
 		app.use(koaBody({ multipart: true }));
-		// app.use(parser());
 		app.use(router.routes());
 		/**
 		 * @description public 根据uuid查询用户脱敏信息
@@ -67,6 +63,21 @@ function webServer()
 			ctx.response.type = 'application/json';
 		})
 		/**
+		 * @description public 查看用户完成交易（非自身发布）的商品
+		 */
+		router.post('/user/finished', async (ctx, next) =>
+		{
+			const verify: any = verifyToken(ctx.request.body.token);
+			if (!verify)
+			{
+				ctx.response.status = 403;
+				return;
+			}
+			const res = await database.queryFinished(verify.uuid);
+			ctx.response.body = JSON.stringify(res);
+			ctx.response.type = 'application/json';
+		})
+		/**
 		 * @description public->token 用户登录
 		 */
 		router.post('/user/login', async (ctx, next) =>
@@ -93,19 +104,107 @@ function webServer()
 		 */
 		router.post('/user/register', async (ctx, next) =>
 		{
-			var newUser = new Object() as UserInterface;
-			newUser = ctx.request.body;
-			newUser.username = "新手咸鱼人员";
-			newUser.idcard = "";
-			newUser.studentid = 0;
-			newUser.address = "";
-			newUser.score = 10;
-			newUser.info = "这家伙很懒，什么都没有写＞︿＜"
-			newUser.verified = false;
-			newUser.avatarurl = path.join(conf.avatar, "default.jpg")
-			const res = await database.writeUser(newUser);
+			var res = new Object() as any;
+			try
+			{
+				const resverify = verifyCode(ctx.request.body.phonenumber, ctx.request.body.verifycode);
+				// if (resverify.status == conf.res.success)
+				if (true)
+				{
+					var newUser = new Object() as UserInterface;
+					newUser = ctx.request.body;
+					newUser.username = "新手咸鱼人员";
+					newUser.idcard = "";
+					newUser.studentid = 0;
+					newUser.address = "";
+					newUser.score = 10;
+					newUser.info = "这家伙很懒，什么都没有写＞︿＜"
+					newUser.verified = false;
+					newUser.avatarurl = path.join(conf.avatar, "default.jpg")
+					const resdatabase = await database.writeUser(newUser);
+					postUser(resdatabase.data);
+					if (resdatabase.status === "success")
+					{
+						res.status = conf.res.success
+					}
+					else
+					{
+						res.status = conf.res.failure;
+						res.info = resdatabase.info;
+					}
+				}
+				else
+				{
+					res.status = conf.res.failure;
+					res.info = resverify.info;
+				}
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = 'application/json';
+
+			} catch (error)
+			{
+				console.error(error);
+				res.status = conf.res.failure;
+				res.info = error;
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = 'application/json';
+			}
+		})
+		/**
+		 * @description 请求手机号验证码
+		 */
+		router.post('/user/requirecode', async (ctx, next) =>
+		{
+			var res = requireCode(ctx.request.body.phonenumber);
 			ctx.response.body = JSON.stringify(res);
-			ctx.response.type = 'application/json';
+			ctx.response.type = "application/json";
+		})
+		/**
+		 * @description 手机号重置密码
+		 */
+		router.post('/user/reset', async (ctx, next) =>
+		{
+			var res = new Object() as any;
+			try
+			{
+				const userInfo = await database.queryPhoneNumber(ctx.request.body.phonenumber);
+				if (userInfo.data == undefined || userInfo.data == {})
+				{
+					res.status = conf.res.failure;
+					res.info = conf.except.invaildReq;
+					ctx.response.body = JSON.stringify(res);
+					ctx.response.type = "application/json";
+					return;
+				}
+				var resverify = verifyCode(ctx.request.body.phonenumber, ctx.request.body.verifycode);
+				if (resverify.status == conf.res.success)
+				{
+					database.updatepassword(
+						{
+							uuid: userInfo.data.uuid,
+							password: ctx.request.body.password
+						}
+
+					)
+					res.status = conf.res.success;
+					ctx.response.body = JSON.stringify(res);
+					ctx.response.type = "application/json";
+				}
+				else
+				{
+					res.status = conf.res.failure;
+					res.info = resverify.info;
+					ctx.response.body = JSON.stringify(res);
+					ctx.response.type = "application/json";
+				}
+			} catch (error)
+			{
+				res.status = conf.res.failure;
+				res.info = error;
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+				return;
+			}
 		})
 		/**
 		 * @description 更改用户头像
@@ -131,13 +230,13 @@ function webServer()
 					const reader = fs.createReadStream(file.path);
 					const stream = fs.createWriteStream(url);
 					reader.pipe(stream);
-					console.log(`${file.name} -> ${url}`);
-					response.status = "success"
+					// console.log(`${file.name} -> ${url}`);
+					response.status = conf.res.success
 					ctx.response.body = JSON.stringify(response);
 					ctx.response.type = "application/json";
 				} else
 				{
-					response.status = "failure";
+					response.status = conf.res.failure;
 					response.info = "invaild request";
 					ctx.response.body = JSON.stringify(response);
 					ctx.response.type = "application/json";
@@ -145,7 +244,7 @@ function webServer()
 			} catch (error)
 			{
 				console.error(`[ERROR] ${error}`);
-				response.status = "failure";
+				response.status = conf.res.failure;
 				response.info = "server failed";
 				ctx.response.body = JSON.stringify(response);
 				ctx.response.type = "application/json";
@@ -166,13 +265,14 @@ function webServer()
 					return;
 				}
 				ctx.request.body.uuid = verifyres.uuid;
-				const databaseres = await database.updateUser(ctx.request.body)
-				if (!databaseres)
+				const resupdate = await database.updateUser(ctx.request.body)
+				if (resupdate.status == conf.res.failure)
 				{
 					ctx.response.status = 403
 					return;
 				}
-				res.status = "success";
+				postUser(resupdate.data);
+				res.status = conf.res.success;
 				ctx.response.type = "application/json";
 				ctx.response.body = JSON.stringify(res)
 
@@ -185,33 +285,9 @@ function webServer()
 			}
 		})
 		/**
-		 * @description 邮箱验证
-		 */
-		router.get('/user/verify/:token', async (ctx, next) =>
-		{
-			const res = new Object() as any;
-			const userInfo = verifyToken(ctx.params.token);
-			if (userInfo.useage === "mail")
-			{
-				const verifyRes = database.verifyUser(userInfo.uuid);
-				if (verifyRes)
-				{
-					res.status = "success";
-					ctx.response.body = JSON.stringify(res);
-					ctx.response.type = "application/json";
-					return;
-				}
-			}
-			res.status = "failure";
-			res.info = "invaild request"
-			ctx.response.body = JSON.stringify(res);
-			ctx.response.type = "application/json";
-			return;
-		})
-		/**
-		 * @description 邮箱验证请求
-		 */
-		router.post('/user/verify', async (ctx, next) =>
+ 		 * @description 邮箱验证请求
+ 		 */
+		router.post('/user/mail/verify', async (ctx, next) =>
 		{
 			try
 			{
@@ -225,10 +301,10 @@ function webServer()
 				const queryres: any = await database.queryUserS(verify.uuid);
 				if (await mail(queryres as UserInterface))
 				{
-					res.status = "success";
+					res.status = conf.res.success;
 				} else
 				{
-					res.status = "failure";
+					res.status = conf.res.failure;
 				}
 				ctx.response.body = JSON.stringify(res);
 				ctx.response.type = 'application/json';
@@ -239,6 +315,115 @@ function webServer()
 				res.status = "server error";
 				ctx.response.body = JSON.stringify(res);
 				ctx.response.type = 'application/json';
+			}
+		})
+		/**
+		 * @description 邮箱验证
+		 */
+		router.get('/user/mail/verify/:token', async (ctx, next) =>
+		{
+			const res = new Object() as any;
+			const userInfo = verifyToken(ctx.params.token);
+			if (!userInfo)
+			{
+				res.status = conf.res.failure;
+				res.info = conf.except.invaildReq;
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+				return;
+			}
+			if (userInfo.useage === "mail")
+			{
+				const verifyRes = database.verifyUser(userInfo.uuid);
+				if (verifyRes)
+				{
+					res.status = conf.res.success;
+					ctx.response.body = JSON.stringify(res);
+					ctx.response.type = "application/json";
+					return;
+				}
+			}
+			res.status = conf.res.failure;
+			res.info = "invaild request"
+			ctx.response.body = JSON.stringify(res);
+			ctx.response.type = "application/json";
+			return;
+		})
+
+		/**
+		 * @description 聊天-发送消息
+		 */
+		router.post('/user/chat/push', async (ctx, next) =>
+		{
+			var res: any = new Object() as any;
+			try
+			{
+				const verify: any = verifyToken(ctx.request.body.token);
+				if (!verify)
+				{
+					ctx.response.status = 403;
+					return;
+				}
+				res = await database.chatPush(verify.uuid, ctx.request.body.to, ctx.request.body.data);
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			} catch (error)
+			{
+				console.error(error);
+				res.status = conf.res.failure;
+				res.info = error;
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			}
+		})
+		/**
+		 * @description 聊天-查询更新
+		 */
+		router.post('/user/chat/fetchnew', async (ctx, next) =>
+		{
+			var res = new Object() as any;
+			try
+			{
+				const verify: any = verifyToken(ctx.request.body.token);
+				if (!verify)
+				{
+					ctx.response.status = 403;
+					return;
+				}
+				res = await database.chatFetchNew(verify.uuid);
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			} catch (error)
+			{
+				res.status = conf.res.failure;
+				res.info = error;
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			}
+		})
+		/**
+		 * @description 聊天-获取所有记录
+		 */
+		router.post('/user/chat/fetchall', async (ctx, next) =>
+		{
+			var res = new Object() as any;
+			try
+			{
+				const verify: any = verifyToken(ctx.request.body.token);
+				if (!verify)
+				{
+					ctx.response.status = 403;
+					return;
+				}
+				res = await database.chatFetchAll(verify.uuid);
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			} catch (error)
+			{
+				res.status = conf.res.failure;
+				res.info = error;
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
 			}
 		})
 		/**
@@ -256,6 +441,7 @@ function webServer()
 			newGood = ctx.request.body;
 			newGood.uuid = verify.uuid;
 			const res = await database.writeItem(newGood);
+			postItem(res.data);
 			ctx.response.body = JSON.stringify(res);
 			ctx.response.type = 'application/json';
 		})
@@ -294,7 +480,7 @@ function webServer()
 					reader.pipe(stream);
 					++count;
 				}
-				response.status = "success"
+				response.status = conf.res.success
 				response.imgurl = imgList;
 				ctx.response.body = JSON.stringify(response);
 				ctx.response.type = "application/json";
@@ -302,7 +488,7 @@ function webServer()
 			} catch (error)
 			{
 				console.error(`[ERROR] ${error}`);
-				response.status = "failure";
+				response.status = conf.res.failure;
 				response.info = conf.except.invaildReq;
 				ctx.response.body = JSON.stringify(response);
 				ctx.response.type = "application/json";
@@ -333,13 +519,14 @@ function webServer()
 					ctx.response.status = 403;
 					return;
 				}
-				const databaseres = await database.updateItem(ctx.request.body)
-				if (!databaseres)
+				const resdsatabase = await database.updateItem(ctx.request.body)
+				if (!resdsatabase)
 				{
 					ctx.response.status = 403
 					return;
 				}
-				res.status = "success";
+				postItem(resdsatabase.data);
+				res.status = conf.res.success;
 				ctx.response.type = "application/json";
 				ctx.response.body = JSON.stringify(res)
 
@@ -349,6 +536,154 @@ function webServer()
 				res.status = "false"
 				ctx.response.type = "application/json";
 				ctx.response.body = JSON.stringify(res)
+			}
+		})
+		/**
+		 * @description 物品交易
+		 */
+		router.post('/item/trade', async (ctx, next) =>
+		{
+			try
+			{
+				var res = new Object() as any;
+				const verifyres = verifyToken(ctx.request.body.token)
+				if (!verifyres)
+				{
+					ctx.response.status = 403;
+					return;
+				}
+				const restrade = await database.tradeItem(ctx.request.body.itemid, verifyres.uuid);
+				if (restrade)
+				{
+					res.status = conf.res.success;
+				} else
+				{
+					res.status = conf.res.failure;
+					res.info = "item not availabe for trade"
+				}
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			} catch (error)
+			{
+				console.error(error)
+				res.status = "filure";
+				res.info = "invaild requests";
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			}
+		});
+		/**
+		 * @description 用户搜索功能
+		 */
+		router.post('/item/search/', async (ctx, next) =>
+		{
+			const method = ctx.request.body.method;
+			const query = ctx.request.body.query;
+			const res = await search(method, query);
+			ctx.response.body = JSON.stringify(res);
+			ctx.response.type = "application/json";
+			return;
+		})
+		/**
+		 * @description 查询收藏夹
+		 */
+		router.post('/fav/query', async (ctx, next) =>
+		{
+			var res = new Object() as any;
+			try
+			{
+				var res = new Object() as any;
+				const verifyres = verifyToken(ctx.request.body.token)
+				if (!verifyres)
+				{
+					ctx.response.status = 403;
+					return;
+				}
+				const resfav = await database.favoritesQuery(verifyres.uuid);
+				res.status = conf.res.success;
+				res.res = resfav;
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+				return;
+
+			} catch (error)
+			{
+				res.status = conf.res.success;
+				res.info = conf.except.invaildReq;
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+				console.error(error);
+			}
+		});
+		/**
+		 * @description 添加到收藏夹
+		 */
+		router.post('/fav/add', async (ctx, next) =>
+		{
+			var res = new Object() as any;
+			try
+			{
+				var res = new Object() as any;
+				const verifyres = verifyToken(ctx.request.body.token)
+				if (!verifyres)
+				{
+					ctx.response.status = 403;
+					return;
+				}
+				const resdatabase = await database.favoritesAdd(verifyres.uuid, JSON.parse(ctx.request.body.data));
+				if (resdatabase.status === conf.res.success)
+				{
+					res.status = conf.res.success;
+				}
+				else
+				{
+					res.status = conf.res.failure;
+					res.info = resdatabase.info;
+				}
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			} catch (error)
+			{
+				res.status = conf.res.failure;
+				res.info = error;
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			}
+		});
+		/**
+		 * @description  从收藏夹删除
+		 */
+		router.post('/fav/delete', async (ctx, next) =>
+		{
+			var res = new Object() as any;
+			try
+			{
+				var res = new Object() as any;
+				const verifyres = verifyToken(ctx.request.body.token)
+				if (!verifyres)
+				{
+					ctx.response.status = 403;
+					return;
+				}
+				const resdatabase = await database.favoritesDelete(verifyres.uuid, JSON.parse(ctx.request.body.data));
+				if (resdatabase.status === conf.res.success)
+				{
+					res.status = conf.res.success;
+				}
+				else
+				{
+					res.status = conf.res.failure;
+					res.info = resdatabase.info;
+				}
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			} catch (error)
+			{
+				console.error(error)
+				res.status = conf.res.failure;
+				res.info = error;
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
 			}
 		})
 		app.listen(conf.port);

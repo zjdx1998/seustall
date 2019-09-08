@@ -14,6 +14,8 @@ import {Button, Text} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import ActionButton from 'react-native-action-button';
 import IDReminder from "../Components/IDReminder";
+import * as TL from '../Common/testItemList';
+import {list} from "../Common/testItemList";
 
 export default class MainPages extends Component {
   private props: any;
@@ -25,11 +27,17 @@ export default class MainPages extends Component {
     this.setState({ modalVisible: visible });
   }
 
+  refresh(){
+      alert('刷新')
+  }
+
 
   render() {
     return (
         <View style={styles.baseContainer}>
-          <ScrollView style={styles.baseContainer}>
+          <ScrollView
+              style={styles.baseContainer}
+          >
             <View style={styles.headerContainer}>
               <GlobalHeader navigation={this.props.navigation} />
             </View>
@@ -42,7 +50,11 @@ export default class MainPages extends Component {
             <View style={styles.headerContainer} />
             <View style={styles.slideshowContainer} />
             <View style={styles.recommendationAreaContainer}>
-              <RecommendationArea navigation={this.props.navigation} />
+              <RecommendationArea
+                  navigation={this.props.navigation}
+                  list={TL.list}
+                  wantList={TL.list}
+              />
             </View>
             <View style={styles.headerContainer}>
               <Button
@@ -51,6 +63,13 @@ export default class MainPages extends Component {
                   buttonStyle={{backgroundColor:'#cc6699'}}
               />
             </View>
+              <IDReminder
+              modalVisible={this.state.modalVisible}
+              content={this.state.content}
+              callback={this.setModalVisible.bind(this)}
+              navigation={this.props.navigation}
+          >
+          </IDReminder>
           </ScrollView>
           <ActionButton
               verticalOrientation="up"
@@ -107,13 +126,6 @@ export default class MainPages extends Component {
             </ActionButton.Item>
           </ActionButton>
 
-          <IDReminder
-              modalVisible={this.state.modalVisible}
-              content={this.state.content}
-              callback={this.setModalVisible.bind(this)}
-              navigation={this.props.navigation}
-          >
-          </IDReminder>
         </View>
     );
   }

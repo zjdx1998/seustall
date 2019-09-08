@@ -43,5 +43,10 @@ export default {
 	sold: {
 		type: sequelize.INTEGER,
 		allowNull: false,
+	},
+	to:
+	{
+		type: sequelize.INTEGER,
+		allowNull:true,
 	}
 }

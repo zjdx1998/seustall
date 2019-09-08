@@ -19,7 +19,7 @@ import {
 import {postData} from '../Common/FetchHelper';
 import {sha1} from '../Common/SHA-1Encryptor';
 import UserInfo from '../Common/UserInfo';
-const loginURL = 'http://inari.ml:8080/user/login';
+const loginURL = 'http://hanyuu.top:8080/user/login';
 import {Icon} from 'react-native-elements';
 const {UIManager} = NativeModules;
 
@@ -89,10 +89,10 @@ export default class SignInUI extends Component {
   }
   buttonPressed() {
     postData(loginURL, {
-      phonenumber: '15950550436',
-      password: '123',
-      // phonenumber: this.state.inputedNum,
-      // password:sha1(this.state.inputedPW),
+      // phonenumber: '15950550436',
+      // password: '123',
+      phonenumber: this.state.inputedNum,
+      password:sha1(this.state.inputedPW),
     })
       .then(data => {
         if (data.status == "success") {
@@ -190,7 +190,7 @@ export default class SignInUI extends Component {
             <View
               style={[styles.idButton, {opacity: this.state.idButtonAlpha}]}
             >
-              <Text style={{color: '#cc6699', size: 30}} onPress={this.sendVerifyCode}>
+              <Text style={{color: '#cc6699'}} onPress={this.sendVerifyCode}>
                 {this.state.sendIDText}
               </Text>
             </View>

@@ -109,7 +109,7 @@ export default class ReleaseInformation extends Component {
   uploadItemData = async () => {
     this.Loading.show();
     const [uid, token] = await ItemList.getIdAndToken();
-    const commonURL='http://inari.ml:8080/';
+    const commonURL='http://hanyuu.top:8080/';
 
     let params = {
       token:token,
@@ -120,7 +120,7 @@ export default class ReleaseInformation extends Component {
       token:token,
       uuid: uid,
       title: this.state.title,
-      type: '1',
+      type:this.state.classes,
       price: this.computeValue(),
       imgurl: 'image/item/0.9321619878296834.jpg',
       depreciatione: this.state.newDegree,
@@ -128,8 +128,8 @@ export default class ReleaseInformation extends Component {
       sold:1,
     };
 
-    const addImageURL = 'http://inari.ml:8080/item/image';
-    const addItemURL = 'http://inari.ml:8080/item/add';
+    const addImageURL = 'http://hanyuu.top:8080/item/image';
+    const addItemURL = 'http://hanyuu.top:8080/item/add';
 
     console.log(params);
     console.log(data);
@@ -158,9 +158,11 @@ export default class ReleaseInformation extends Component {
             console.log('uploadImage', responseData);
             if (responseData.status == 'success') {
               let str='';
+              console.log('r.img',responseData.imgurl);
               for (let item of responseData.imgurl){
                str+=item+'++';
               }
+              console.log(str);
                data.imgurl = str;
               postData(addItemURL, data)
                   .then(response => {

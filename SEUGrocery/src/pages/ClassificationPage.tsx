@@ -42,10 +42,30 @@ export default class ClassificationPage extends Component {
         }
     }
     componentDidMount() {
+        let typeid=this.props.navigation.state.params.type;
         ItemList.getItemList().then(list => {
-            this.setState({goodsList: list});
+            let newList=[];
+            for (let item of list){
+                if(item.type==typeid && item.sold==1){
+                    newList.push(item);
+                }
+            }
+            this.setState({goodsList: newList});
         });
     }
+    componentDidUpdate(){
+        let typeid=this.props.navigation.state.params.type;
+        ItemList.getItemList().then(list => {
+            let newList=[];
+            for (let item of list){
+                if(item.type==typeid && item.sold==1){
+                    newList.push(item);
+                }
+            }
+            this.setState({goodsList: newList});
+        });
+    }
+
     render() {
         return (
             <ScrollView style = {styles.baseContainer}>
@@ -89,7 +109,7 @@ export default class ClassificationPage extends Component {
                 {this.state.goodsList.map(i => (
                     <Good
                         itemid={i.itemid}
-                        image={{uri:'http://inari.ml:8080/'+ i.imgurl.split('++')}}
+                        image={{uri:'http://hanyuu.top:8080/'+ i.imgurl.split('++')}}
                         name={i.title}
                         price={i.price}
                         //text={i.info}
@@ -123,6 +143,7 @@ const styles = StyleSheet.create({
         //flex: 1,
         flexDirection: 'row',
         flexWrap: 'wrap',
+        marginLeft:SP.WB(3),
     },
     price: {
         fontSize: 20,

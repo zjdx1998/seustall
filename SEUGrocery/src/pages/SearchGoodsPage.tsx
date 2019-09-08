@@ -28,6 +28,7 @@ import {postData} from '../Common/FetchHelper';
 import Good from "../Common/ItemBlock";
 import {goodsInfo} from "../Common/GoodsInfo";
 import * as DataBase from '../Common/DataBase';
+import RecommendationArea from "../Components/RecommendationArea";
 
 export default class SearchGoodsPage extends Component {
     private props: any;
@@ -51,13 +52,17 @@ export default class SearchGoodsPage extends Component {
         this.getInfo(this.props.navigation.state.params.keyword);
     }
 
+    componentDidUpdate() {
+        // this.getInfo(this.props.navigation.state.params.keyword);
+    }
+
     getInfo = (keyword) => {
         // console.log('keyword',this.props.navigation.state.params.keyword);
         // console.log('list',this.state.list);
         this.setState({list:[],wantList:[]});
 
         //千万别删
-        let url='http://inari.ml:8080/item/search';
+        let url='http://hanyuu.top:8080/item/search';
         let data={
             method:'good',
             query:keyword,
@@ -107,9 +112,9 @@ export default class SearchGoodsPage extends Component {
                         console.log('imgurl',response.imgurl);
                         if(response.status=='success') {
                             if(response.imgurl==''){
-                                tempObj.icon_url = 'http://inari.ml:8080/'+'image/item/0.9321619878296834.jpg';
+                                tempObj.icon_url = 'http://hanyuu.top:8080/'+'image/item/0.9321619878296834.jpg';
                             }else {
-                                tempObj.icon_url = 'http://inari.ml:8080/' + response.imgurl.split("++");
+                                tempObj.icon_url = 'http://hanyuu.top:8080/' + response.imgurl.split("++")[0];
                             }
                             if (response.sold === 1) {
                                 let tempList = this.state.list;
@@ -166,7 +171,7 @@ export default class SearchGoodsPage extends Component {
 
 
     render() {
-        const {search} = this.state;
+        // const {search} = this.state;
         const tips = ['商品信息', '求购信息'];
         return (
             <ScrollView>
@@ -182,8 +187,13 @@ export default class SearchGoodsPage extends Component {
                             type={'antdesign'}
                             color={"#030303"}
                             onPress={() => {
-                                this.props.navigation.navigate('searchP');
-                            }}
+                                this.props.navigation.navigate('searchP',{
+                                    refresh:(f,keyword)=> {
+                                        if(f!='good'){return;}
+                                        this.setState({search: keyword});
+                                        this.getInfo(keyword);
+                                    }
+                                })}}
                         />
                     }
                     centerComponent={
@@ -191,7 +201,7 @@ export default class SearchGoodsPage extends Component {
                             <SearchBar
                                 placeholder={'Type here...'}
                                 onChangeText={this.updateSearch}
-                                value={search}
+                                value={this.state.search}
                                 round={true}
                                 lightTheme={true}
                                 containerStyle={styles.searchBar}
@@ -216,67 +226,11 @@ export default class SearchGoodsPage extends Component {
 
                     }
                 />
-                <View style={styles.container_row}>
-                    {tips.map((i, j) => {
-                        return (
-                            <View style={styles.mode}>
-                                <Text
-                                    style={styles.typeTip}
-                                    onPress={() => {
-                                        this.setState({goalType: j, left: -1 * SP.WB(100) * j});
-                                    }}
-                                >{i}</Text>
-                                <Divider style={[styles.line, {opacity: j === this.state.goalType ? 1 : 0}]}/>
-                            </View>
-                        )
-                    })}
-                </View>
-                <Button
-                    buttonStyle={{backgroundColor:'#cc6699'}}
-                    onPress={()=>this.getInfo(search)}
-                    title={'刷 新'}
+                <RecommendationArea
+                    navigation={this.props.navigation}
+                  list={this.state.list}
+                  wantList={this.state.wantList}
                 />
-                <View style={[styles.body, {left: this.state.left}]}>
-                    <ScrollView>
-                        <View style={{width: SP.WB(100)}}>
-                            <View style={styles.goodsList}>
-                                {this.state.list.map(i => (
-                                    <Good
-                                        itemid={i.id}
-                                        image={{uri: i.icon_url}}
-                                        name={i.name}
-                                        price={i.price}
-                                        text={i.info}
-                                        navigation={this.props.navigation}
-                                    />
-                                ))}
-                            </View>
-                        </View>
-                    </ScrollView>
-                    <View>
-                        <ScrollView style={{width: SP.WB(100)}}>
-                            {this.state.wantList.map((item, index) => {
-                                return (
-                                    <TouchableOpacity>
-                                        <ListItem
-                                            title={item.name}
-                                            subtitle={
-                                                <View>
-                                                    <View style={{}}>
-                                                        <Text>{item.info}</Text>
-                                                        <Text style={{color:'#cc6699'}}>最高接受价：￥{item.price}</Text>
-                                                    </View>
-                                                </View>
-                                            }
-                                            leftAvatar={{source: require('../Common/img/need.png')}}
-                                            bottomDivider
-                                        />
-                                    </TouchableOpacity>
-                                )
-                            })}
-                        </ScrollView>
-                    </View>
-                </View>
             </ScrollView>
 
         );
@@ -321,7 +275,7 @@ const styles = StyleSheet.create({
         // flex: 1,
         flexDirection: 'row',
         flexWrap: 'wrap',
-        justifyContent:'center',
+        justifyContent:'flex-start',
     },
 
     body:{
