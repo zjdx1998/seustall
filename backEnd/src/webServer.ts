@@ -441,7 +441,7 @@ function webServer()
 			var newGood = new Object() as ItemInterface;
 			newGood = ctx.request.body;
 			newGood.uuid = verify.uuid;
-			newGood.imgurl = path.join(conf.imgurl,"default.jpg");
+			newGood.imgurl = path.join(conf.imgurl, "default.jpg");
 			const res = await database.writeItem(newGood);
 			postItem(res.data);
 
@@ -453,17 +453,44 @@ function webServer()
 		 */
 		router.post('/item/delete', async (ctx, next) =>
 		{
-			const verify: any = verifyToken(ctx.request.body.token);
-			if (!verify)
+			var res = new Object() as any;
+			try
 			{
-				ctx.response.status = 403;
-				return;
+				const verify: any = verifyToken(ctx.request.body.token);
+				if (!verify)
+				{
+					ctx.response.status = 403;
+					return;
+				}
+				const resquery = await database.queryItem(ctx.request.body.itemid);
+				if (resquery.uuid == verify.uuid)
+				{
+					const resupdate = await database.deleteItem(resquery.itemid);
+					imgClear(resquery.uuid, resquery.itemid);
+					if (resupdate.status == conf.res.success)
+					{
+						res.status = conf.res.success;
+					}
+					else
+					{
+						res.status = conf.res.failure;
+						res.info = resupdate.info;
+					}
+				}
+				else
+				{
+					res.status = conf.res.failure;
+					res.info = conf.except.invaildReq + conf.except.noItem;
+				}
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			} catch (error)
+			{
+				res.status = conf.res.failure;
+				res.info = error;
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
 			}
-			const res = await database.writeItem(newGood);
-			postItem(res.data);
-
-			ctx.response.body = JSON.stringify(res);
-			ctx.response.type = 'application/json';
 		})
 		/**
 		 * @description 商品添加图片

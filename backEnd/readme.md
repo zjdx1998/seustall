@@ -2,9 +2,9 @@
 
 [TOC]
 ## Version
-* server version: v6.7
-* doc version: v6.7.0 alpha
-* updated: 2019/09/08 18:42
+* server version: v6.7.1
+* doc version: v6.7.1 alpha
+* updated: 2019/09/08 21:01
 * author: Hanyuu Furude
 
 ## Characteristics
@@ -543,6 +543,25 @@ Content-Type:application/x-www-form-urlencoded
 {"status":"none"}
 //wrong token
 403 Forbidden
+```
+
+### delete
+
+```
+POST /item/delete
+```
+
+```
+Content-Type:application/x-www-form-urlencoded
+```
+
+```json
+{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzU2NTYwODkzNCwiaWF0IjoxNTY3NTY1NjA4fQ.J_END7-qsN7HyPmLpQXHcaBOylNvI96OTSEgVg4X-9w","itemid":"1"}}
+```
+
+``` json
+//success
+{"status":"success"}
 ```
 
 ### upload image
