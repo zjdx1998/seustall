@@ -1,32 +1,57 @@
 # FOOF Background Service
-> Author
-> - Hanyuu Furude
-> - Ted Zhan
+
+[TOC]
+## Version
+
+* version: v6.6.2 alpha
+* updated: 2019/09/06 16:42
+* author: Hanyuu Furude
+
 ## Characteristics
+
 - Docker
 - Nginx
 - WebPack
 - koa
 - Sequelize
+- jwt
 
 ## Run docker
+
+* listening port: 4000
 
 ``` docker
 docker run --network host -d -v [locationOfAvatarOnPhysicsMachine]:[locationOfAvatarOnContainer] hanyuufurude/foofserver:v[x]
 ```
 - e.g.
 ``` docker
-docker run --network host -d -v /home/admin/avatar:/foof/avatar hanyuufurude/foofserver:v4
+docker run --network host -d -v /home/.../avatar:/foof/avatar hanyuufurude/foofserver:v3
 ```
 ## Warning
 1. If you meet Exception like this
 	> Error: Client does not support authentication protocol requested by server; consider upgrading MySQL client
 
-	You are suggested to change the type of your password, please typeing like this:
+	You are suggested to change the type of your password, please typing like this:
 	``` SQL
 	alter user 'USER'@'localhost' identified with mysql_native_password by 'PASSWORD'
 	flush privileges;
 	```
+2. If you try to pack the back end your self, you may meet error like this:
+
+   > require is not a function
+
+   You are suggest to stop the use of the ‘gently’, and  we suggest you can add a config in your **webpack.conf.ts** to resolve the error.
+
+   ```
+   module.exports = {
+   	plugins: [
+   		new webpack.DefinePlugin({ "global.GENTLY": false })
+   	],
+   };
+   ```
+
+
+
 ## SQL table fields
 #### users
 ```
@@ -46,7 +71,7 @@ docker run --network host -d -v /home/admin/avatar:/foof/avatar hanyuufurude/foo
 | info        | varchar(255) | NO   |     | NULL    |                |
 +-------------+--------------+------+-----+---------+----------------+
 ```
-#### goods
+#### items
 ```
 +---------------+--------------+------+-----+---------+----------------+
 | Field         | Type         | Null | Key | Default | Extra          |
@@ -60,12 +85,42 @@ docker run --network host -d -v /home/admin/avatar:/foof/avatar hanyuufurude/foo
 | depreciatione | int(11)      | NO   |     | NULL    |                |
 | note          | varchar(255) | NO   |     | NULL    |                |
 | sold          | int(11)      | NO   |     | NULL    |                |
+| to            | int(11)      | YES  |     | NULL    |                |
 +---------------+--------------+------+-----+---------+----------------+
 ```
+#### favorites
+
+```
+
++--------+---------+------+-----+---------+----------------+
+| Field  | Type    | Null | Key | Default | Extra          |
++--------+---------+------+-----+---------+----------------+
+| id     | int(11) | NO   | PRI | NULL    | auto_increment |
+| itemid | int(11) | NO   |     | NULL    |                |
+| uuid   | int(11) | NO   |     | NULL    |                |
++--------+---------+------+-----+---------+----------------+
+```
+
+#### chats
+```
++-----------+--------------+------+-----+---------+----------------+
+| Field     | Type         | Null | Key | Default | Extra          |
++-----------+--------------+------+-----+---------+----------------+
+| id        | int(11)      | NO   | PRI | NULL    | auto_increment |
+| from      | int(11)      | NO   |     | NULL    |                |
+| to        | int(11)      | NO   |     | NULL    |                |
+| data      | varchar(255) | NO   |     | NULL    |                |
+| fetched   | tinyint(1)   | NO   |     | NULL    |                |
+| createdAt | datetime     | NO   |     | NULL    |                |
+| updatedAt | datetime     | NO   |     | NULL    |                |
++-----------+--------------+------+-----+---------+----------------+
+```
+
 # Interface to frond end.
 
 ## Test page
-[hanyuu.top:8080](http://hanyuu.top:8080)
+* china: [hanyuu.top:8080](http://hanyuu.top:8080)
+* international:[inari.ml:8080](http://inari.ml:8080)
 
 ## Users
 
@@ -85,21 +140,131 @@ None
 ``` json
 //success
 {
-  "uuid": 2,
-  "password": "2322dbbdcaa610d99a2ee9d0154294a4e41c279c",
-  "username": "WakamiyaEve",
-  "phonenumber": null,
-  "idcard": null,
-  "studentid": null,
-  "address": null,
-  "avatarurl": "image\\avatar\\2.jpg",
+  "uuid": 1,
+  "username": "新手咸鱼人员",
+  "avatarurl": "image\\avatar\\default.jpg",
   "verified": 0,
-  "score": 10,  
-  "info": "lsakfdjlk",
+  "score": 10,
+  "info": "这家伙很懒，什么都没有写＞︿＜",
   "status": "success"
 }
 ```
+### me
+
+```
+POST /user/me
+```
+
+```
+Content-Type:application/x-www-form-urlencoded
+```
+
+```json
+{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzU5NjMwMjIwMCwiaWF0IjoxNTY3NTk2MzAyfQ.ijUssByflHjPqWOMMcJMvqroJCaS1PKOBXUYYaS6dYU"}}
+```
+
+```json
+//success
+{
+  "uuid": 1,
+  "username": "新手咸鱼人员",
+  "phonenumber": "1",
+  "idcard": "",
+  "studentid": "0",
+  "address": "",
+  "avatarurl": "image\\avatar\\default.jpg",
+  "verified": 0,
+  "score": 10,
+  "info": "这家伙很懒，什么都没有写＞︿＜",
+  "status": "success"
+}
+//wrong token
+403 Forbidden
+```
+
+
+### published
+
+```
+POST /user/published
+```
+
+```
+Content-Type:application/x-www-form-urlencoded
+```
+
+``` json
+{"表单数据":{"uuid":"1"}}
+```
+
+``` json
+[
+  {
+    "itemid": 5,
+    "uuid": 1,
+    "title": "未命名商品1",
+    "type": 1,
+    "price": 1.23,
+    "imgurl": "[     \"image\\\\item\\\\0.35113526938054584.jpg\",     \"image\\\\item\\\\0.5106340873338395.jpg\",     \"image\\\\item\\\\0.37461623290026935.jpg\",     \"image\\\\item\\\\0.887643214342515.jpg\"   ]",
+    "depreciatione": 99,
+    "note": "然而并没什么描述",
+    "sold": -1,
+    "to": null
+  },
+  {
+    "itemid": 6,
+    "uuid": 1,
+    "title": "未命名商品2",
+    "type": 2,
+    "price": 3.99,
+    "imgurl": "[     \"image\\\\item\\\\0.35113526938054584.jpg\",     \"image\\\\item\\\\0.5106340873338395.jpg\",     \"image\\\\item\\\\0.37461623290026935.jpg\",     \"image\\\\item\\\\0.887643214342515.jpg\"   ]",
+    "depreciatione": 99,
+    "note": "这里也没什么描述",
+    "sold": -2,
+    "to": null
+  }
+]
+```
+### finished
+```
+POST /user/finished
+```
+```
+Content-Type:application/x-www-form-urlencoded
+```
+``` json
+{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzU5NjMwMjIwMCwiaWF0IjoxNTY3NTk2MzAyfQ.ijUssByflHjPqWOMMcJMvqroJCaS1PKOBXUYYaS6dYU"}}
+```
+``` json
+[
+  {
+    "itemid": 3,
+    "uuid": 1,
+    "title": "432",
+    "type": 798,
+    "price": 987,
+    "imgurl": "987",
+    "depreciatione": 798,
+    "note": "987",
+    "sold": -2,
+    "to": 1
+  },
+  {
+    "itemid": 4,
+    "uuid": 1,
+    "title": "432",
+    "type": 798,
+    "price": 987,
+    "imgurl": "987",
+    "depreciatione": 798,
+    "note": "987",
+    "sold": -2,
+    "to": 1
+  }
+]
+```
 ### login
+
 ```
 POST /user/login
 ```
@@ -108,7 +273,7 @@ Content-Type:application/x-www-form-urlencoded
 ```
 
 ```json
-{"表单数据":{"phonenumber":"1111","password":"1111"}}
+{"表单数据":{"phonenumber":"1","password":"1"}}
 ```
 
 ``` json
@@ -117,24 +282,22 @@ Content-Type:application/x-www-form-urlencoded
   "status": "success",
   "info": {
     "uuid": 1,
-    "password": null,
-    "username": "WakamiyaEve",
-    "phonenumber": "1111",
-    "idcard": "1111",
-    "studentid": 1111,
-    "address": "address",
+    "username": "新手咸鱼人员",
+    "phonenumber": "1",
+    "idcard": "",
+    "studentid": "0",
+    "address": "",
     "avatarurl": "image\\avatar\\default.jpg",
     "verified": 0,
     "score": 10,
-    "info": "info"
+    "info": "这家伙很懒，什么都没有写＞︿＜"
   },
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzI0Mzk5MzU3NywiaWF0IjoxNTY3MjQzOTkzfQ.EcKlNs69v11mF2glsAAQsQz0MLep2KPDSugf_AwBPo0"
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzU5NzAyOTA0MywiaWF0IjoxNTY3NTk3MDI5fQ.fx-bxf7P55BU5OuvbGWTbzyTFZ-AH2JLpGLuVC58ge0"
 }
 // password incorrect
 {
   "status": "failure",
-  "info": "password incorrect",
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJnZW5lcmF0ZSI6MTU2Njk4OTcxMjAyMywiaWF0IjoxNTY2OTg5NzEyfQ.cLwu0_TK_Z4mYI3xDp3RJQ9NJoa4R1Pc-tX8E4xFUWY"
+  "info": "password incorrect"
 }
 ```
 ### register
@@ -146,7 +309,7 @@ Content-Type:application/x-www-form-urlencoded
 ```
 
 ``` json
-{"表单数据":{"phonenumber":"2222","verifiycode":"2222","password":"2222"}}
+{"表单数据":{"phonenumber":"2","verifycode":"2","password":""}}
 ```
 
 ``` json
@@ -157,7 +320,54 @@ Content-Type:application/x-www-form-urlencoded
 // invaild request
 {"status":"failure","info":"invaild request"}
 ```
+### reset password
+
+```
+POST /user/reset
+```
+
+```
+Content-Type:application/x-www-form-urlencoded
+```
+
+``` json
+{"表单数据":{"phonenumber":"1111","verifycode":"2345","password":"1"}}
+```
+
+```json
+// success
+{"status":"success"}
+// invaild verify code
+{
+  "status":"failure",
+  "info":"bad verify code"
+}
+// invaild request
+{
+  "status":"failure",
+  "info":"invaild request"
+}
+```
+
+### require verify code ( phone number )
+
+```
+POST /user/requirecode
+```
+```
+Content-Type:application/x-www-form-urlencoded
+```
+```json
+{"表单数据":{"phonenumber":"1"}}
+```
+``` json
+//success
+{"status":"success"}
+```
+
 ### upload avatar
+
+* the request size is no greater than 1mb
 
 ```
 POST /user/avatar	(avatar's max size: 1mb)
@@ -201,44 +411,13 @@ Content-Type: image/jpg
 403 Forbidden
 ```
 
-### me
-
-```
-POST \user\me
-```
-
-```
-Content-Type:application/x-www-form-urlencoded
-```
-
-```json
-{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzI0ODU5OTI4OSwiaWF0IjoxNTY3MjQ4NTk5fQ.ezvX48rpjAAzd6Bwr3eFrSCnrQT_3SGoXID1NSWAa_8"}}
-```
-
-```json
-//success
-{
-  "uuid": 1,
-  "password": null,
-  "username": "WakamiyaEve",
-  "phonenumber": "1111",
-  "idcard": "1111",
-  "studentid": 1111,
-  "address": "address",
-  "avatarurl": "image\\avatar\\1.jpg",
-  "verified": 0,
-  "score": 10,
-  "info": "info",
-  "status": "success"
-}
-//wrong token
-403 Forbidden
-```
-
 ### modify
 
+- this interface will accept the request whether the request contains password or not. if you don’t want to change your password, please do not request this fields.
+- however, you have to copy the value of the fields of other fields even you don’t want to change those;
+
 ```
-POST \user\modify
+POST /user/modify
 ```
 
 ```
@@ -257,67 +436,49 @@ Const-Type:application/x-www-form-urlencoded
 //wrong token
 403 Forbidden
 ```
-
-
-
-
-
-
-
-
-
-### published
+### require verify code (email)
 
 ```
-POST \user\published
+POST /user/mail/verify
 ```
-
 ```
-Content-Type:application/x-www-form-urlencoded
+Const-Type:application/x-www-form-urlencoded
 ```
-
 ``` json
-{"表单数据":{"uuid":"1"}}
+{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzYwNTM4ODY4OSwiaWF0IjoxNTY3NjA1Mzg4fQ.jCF-T3w_Z_E9u6GnZJY2OfB0n4kjXLikC3f9jl4vJmg"}}
 ```
-
 ``` json
-[
-  {
-    "itemid": 1,
-    "uuid": 1,
-    "title": "窝窝头",
-    "type": 1,
-    "price": 0.25,
-    "imgurl": "[\"image\\\\item\\\\1_0.jpg\",\"image\\\\item\\\\1_1.jpg\",\"image\\\\item\\\\1_2.jpg\",\"image\\\\item\\\\1_3.jpg\"]",
-    "depreciatione": 1,
-    "note": "嘿嘿！",
-    "sold": 0
-  },
-  {
-    "itemid": 2,
-    "uuid": 1,
-    "title": "两个窝窝头",
-    "type": 1,
-    "price": 0.5,
-    "imgurl": "https://www.meishij.net/zuofa/wowotou_2.html",
-    "depreciatione": 1,
-    "note": "嘿嘿！",
-    "sold": 0
-  }
-]
+// success
+{"status":"success"}
 ```
-
-
-
-
-
-
-
-
+### verify code ( mail )
+```
+GET /user/mail/verify/:token
+```
+```
+none
+```
+``` json
+//success
+{"status":"success"}
+```
 
 ## Items
 
-* query
+### define of sold
+
+``` json
+	sold:
+	{
+		sale: 1,
+		sold: 2,
+		want: -1,
+		got: -2,
+	}
+```
+
+### query
+
 ```
 GET /item/[itemid]
 ```
@@ -327,13 +488,26 @@ None
 
 ``` json
 //success
-{"status":"success"}
+{
+  "itemid": 1,
+  "uuid": 1,
+  "title": "432",
+  "type": 798,
+  "price": 987,
+  "imgurl": "987",
+  "depreciatione": 798,
+  "note": "987",
+  "sold": 987,
+  "to": 0,
+  "status": "success"
+}
 //no item
 {"status":"none"}
 ```
-* add
+### add
+
 ```
-POST \item\add
+POST /item/add
 ```
 
 ```
@@ -341,7 +515,7 @@ Content-Type:application/x-www-form-urlencoded
 ```
 
 ``` json
-{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzI0ODU5OTI4OSwiaWF0IjoxNTY3MjQ4NTk5fQ.ezvX48rpjAAzd6Bwr3eFrSCnrQT_3SGoXID1NSWAa_8","title":"屏幕清洁剂","type":"3","price":"3.55","imgurl":"{+++\"imgurl\":+[+++++\"image\\\\item\\\\0.21266930758871538.jpg\",+++++\"image\\\\item\\\\0.4408016895777478.jpg\",+++++\"image\\\\item\\\\0.7268863338186755.jpg\",+++++\"image\\\\item\\\\0.7410747437739387.jpg\"+++]+}","depreciatione":"50","note":"清洁剂","sold":"-1"}}
+{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzU5NjMwMjIwMCwiaWF0IjoxNTY3NTk2MzAyfQ.ijUssByflHjPqWOMMcJMvqroJCaS1PKOBXUYYaS6dYU","title":"未命名商品1","type":"1","price":"1.23","imgurl":"[+++++\"image\\\\item\\\\0.35113526938054584.jpg\",+++++\"image\\\\item\\\\0.5106340873338395.jpg\",+++++\"image\\\\item\\\\0.37461623290026935.jpg\",+++++\"image\\\\item\\\\0.887643214342515.jpg\"+++]","depreciatione":"99","note":"然而并没什么描述","sold":"-1"}}
 ```
 
 ``` json
@@ -353,21 +527,21 @@ Content-Type:application/x-www-form-urlencoded
 403 Forbidden
 ```
 
-*  upload image
+### upload image
+
+* The name property of the file is arbitrary and the request size is no greater than 1mb
 
 ```
-POST \item\image
+POST /item/image
 ```
 
 ```
 Content-Type:multipart/form-data
 ```
 
-> 文件的name属性任意，请求尺寸不大于2mb
-
 ``` json
-	
-请求载荷（payload）	
+
+请求载荷（payload）
 
 -----------------------------5005412110300
 
@@ -406,8 +580,16 @@ Content-Type: image/png
 
 ```json
 // success
-{"status":"success"}
-// file too large 
+{
+  "status": "success",
+  "imgurl": [
+    "image\\item\\0.35113526938054584.jpg",
+    "image\\item\\0.5106340873338395.jpg",
+    "image\\item\\0.37461623290026935.jpg",
+    "image\\item\\0.887643214342515.jpg"
+  ]
+}
+// file too large
 413 Request Entity Too Large
 //wrong token
 403 Forbidden
@@ -433,12 +615,292 @@ Content-Type:multipart/form-data
 //wrong token
 403 Forbidden
 ```
+### trade
 
-### About sold
+```
+POST /item/trade
+```
 
-* sold
--1. not sold
-* want
--2. not bought
-* finished
-[uuid]. the uuid of the other member
+```
+Content-Type:multipart/form-data
+```
+
+``` json
+{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzU2NTYwODkzNCwiaWF0IjoxNTY3NTY1NjA4fQ.J_END7-qsN7HyPmLpQXHcaBOylNvI96OTSEgVg4X-9w","itemid":"1"}}
+```
+
+``` json
+//success
+{
+  "status":"success"
+}
+// not for trade
+{
+  "status": "failure",
+  "info": "item not availabe for trade"
+}
+```
+
+## Favorites
+
+### query
+
+```
+POST /fav/query
+```
+
+```
+Content-Type:application/x-www-form-urlencoded
+```
+
+``` json
+{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzU2NTYwODkzNCwiaWF0IjoxNTY3NTY1NjA4fQ.J_END7-qsN7HyPmLpQXHcaBOylNvI96OTSEgVg4X-9w"}}
+```
+
+``` json
+{
+  "status": "success",
+  "res": [
+    {
+      "id": 5,
+      "itemid": 3,
+      "uuid": 1
+    },
+    {
+      "id": 7,
+      "itemid": 1,
+      "uuid": 1
+    },
+    {
+      "id": 8,
+      "itemid": 2,
+      "uuid": 1
+    },
+    {
+      "id": 9,
+      "itemid": 3,
+      "uuid": 1
+    },
+    {
+      "id": 10,
+      "itemid": 4,
+      "uuid": 1
+    },
+    {
+      "id": 11,
+      "itemid": 5,
+      "uuid": 1
+    },
+    {
+      "id": 12,
+      "itemid": 6,
+      "uuid": 1
+    },
+    {
+      "id": 13,
+      "itemid": 7,
+      "uuid": 1
+    },
+    {
+      "id": 14,
+      "itemid": 8,
+      "uuid": 1
+    },
+    {
+      "id": 15,
+      "itemid": 9,
+      "uuid": 1
+    }
+  ]
+}
+```
+
+### add
+
+* the field of data is a json string list of itemid that you wanna to add to your favorites.
+
+```
+POST /fav/add
+```
+
+```
+Content-Type:application/x-www-form-urlencoded
+```
+
+```json
+{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzU5NjMwMjIwMCwiaWF0IjoxNTY3NTk2MzAyfQ.ijUssByflHjPqWOMMcJMvqroJCaS1PKOBXUYYaS6dYU","data":"[1,2,3]"}}
+```
+
+``` json
+//success
+{
+  "status": "success"
+}
+```
+
+### delete
+
+* the field of data is a json string list of itemid that you wanna to delete from your favorites.
+
+```
+POST /fav/delete
+```
+
+```
+Content-Type:application/x-www-form-urlencoded
+```
+
+``` json
+{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzU2NTYwODkzNCwiaWF0IjoxNTY3NTY1NjA4fQ.J_END7-qsN7HyPmLpQXHcaBOylNvI96OTSEgVg4X-9w","data":"[1,2,3]"}}
+```
+
+```json
+{
+  "status": "success"
+}
+```
+
+## Message
+
+### send message
+
+```
+POST /user/chat/push
+```
+
+```
+Content-Type:application/x-www-form-urlencoded
+```
+
+``` json
+{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzU2NTYwODkzNCwiaWF0IjoxNTY3NTY1NjA4fQ.J_END7-qsN7HyPmLpQXHcaBOylNvI96OTSEgVg4X-9w","to":"1","data":"hi,+world."}}
+```
+
+``` json
+//success
+{"status":"success"}
+```
+
+### fetch new message
+
+* this interface will only return messages that have never been fetched.
+
+* we suggest that you use this to check whether you have a new message or not.
+
+```
+POST /user/chat/fetchnew
+```
+
+```
+The name property of the file is arbitrary and the request size is no greater than 2mb
+```
+
+``` json
+{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzU2NTYwODkzNCwiaWF0IjoxNTY3NTY1NjA4fQ.J_END7-qsN7HyPmLpQXHcaBOylNvI96OTSEgVg4X-9w"}}
+```
+
+``` json
+{
+  "status": "success",
+  "data": [
+    {
+      "id": 2,
+      "from": 1,
+      "to": 1,
+      "data": "hi, world.",
+      "fetched": false,
+      "createdAt": "2019-09-04T14:29:05.000Z",
+      "updatedAt": "2019-09-04T14:29:05.000Z"
+    }
+  ]
+}
+```
+
+### fetch all message
+
+* if you lost your message or want to sync you message record, it’s a good choice
+
+```
+POST /user/chat/fetchall
+```
+
+```
+Content-Type: application/x-www-form-urlencoded
+```
+
+```json
+{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzU2NTYwODkzNCwiaWF0IjoxNTY3NTY1NjA4fQ.J_END7-qsN7HyPmLpQXHcaBOylNvI96OTSEgVg4X-9w"}}
+```
+
+``` json
+{
+  "status": "success",
+  "data": [
+    {
+      "id": 1,
+      "from": 1,
+      "to": 1,
+      "data": "hi",
+      "fetched": true,
+      "createdAt": "2019-09-04T07:17:22.000Z",
+      "updatedAt": "2019-09-04T07:37:56.000Z"
+    },
+    {
+      "id": 2,
+      "from": 1,
+      "to": 1,
+      "data": "hi, world.",
+      "fetched": true,
+      "createdAt": "2019-09-04T14:29:05.000Z",
+      "updatedAt": "2019-09-04T14:36:32.000Z"
+    }
+  ]
+}
+```
+
+## Search
+
+```
+POST /item/search
+```
+
+```
+Content-Type: application/x-www-form-urlencoded
+```
+
+```json
+//method:item
+{"表单数据":{"method":"good","query":"jd"}}
+//method:user
+{"表单数据":{"method":"user","query":"jd"}}
+```
+
+```json
+//success
+{
+  "took":7,
+  "timed_out":false,
+  "_shards":
+  {
+    "total":5,
+    "successful":5,
+    "skipped":0,
+    "failed":0
+    },
+  "hits":
+  {
+    "total":0,
+    "max_score":null,
+        "hits":[
+        ]
+    }
+}
+//invaild request
+{
+  "status": "failure",
+  "info": "invaild request"
+}
+```
+
+
+

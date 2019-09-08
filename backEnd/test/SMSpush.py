@@ -14,8 +14,11 @@ class MobSMS:
         if debug:
             return 200
 
-        data = {'appkey': self.appkey, 'phone': phone,
-                'zone': zone, 'code': code}
+        data = {
+            'appkey': self.appkey,
+            'phone': phone,
+            'zone': zone,
+            'code': code}
         req = requests.post(self.verify_url, data=data, verify=False)
         if req.status_code == 200:
             j = req.json()

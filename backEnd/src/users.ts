@@ -52,5 +52,6 @@ export default {
 	info:{
 		type:sequelize.STRING,
 		allowNull:true,
-	}
+	},
+	
 }
