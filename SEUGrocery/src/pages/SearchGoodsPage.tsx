@@ -230,6 +230,7 @@ export default class SearchGoodsPage extends Component {
                     navigation={this.props.navigation}
                   list={this.state.list}
                   wantList={this.state.wantList}
+                    refresh={()=>this.getInfo()}
                 />
             </ScrollView>
 

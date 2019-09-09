@@ -89,10 +89,10 @@ export default class SignInUI extends Component {
   }
   buttonPressed() {
     postData(loginURL, {
-      // phonenumber: '15950550436',
-      // password: '123',
-      phonenumber: this.state.inputedNum,
-      password:sha1(this.state.inputedPW),
+      phonenumber: '15950550436',
+      password: sha1('123'),
+      // phonenumber: this.state.inputedNum,
+      // password:sha1(this.state.inputedPW),
     })
       .then(data => {
         if (data.status == "success") {

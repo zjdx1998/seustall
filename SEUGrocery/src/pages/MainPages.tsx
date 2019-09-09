@@ -16,12 +16,17 @@ import ActionButton from 'react-native-action-button';
 import IDReminder from "../Components/IDReminder";
 import * as TL from '../Common/testItemList';
 import {list} from "../Common/testItemList";
+import UserInfo from '../Common/UserInfo';
+
 
 export default class MainPages extends Component {
   private props: any;
   state={
     modalVisible: false,
+      list:[],
+      wantList:[],
   }
+  itemids=[];
 
   setModalVisible(visible) {
     this.setState({ modalVisible: visible });
@@ -31,8 +36,54 @@ export default class MainPages extends Component {
       alert('刷新')
   }
 
+  componentDidMount():void {
+     this.getMore();
+  }
 
-  render() {
+  getMore=()=>{
+       UserInfo.get('uuid')
+          .then(uuid=> {
+              console.log(uuid)
+              fetch('http://hanyuu.top:8080/recommend/' + uuid)
+                  .then(resopnse => resopnse.json())
+                  .then(response => {
+                      console.log(response);
+                      for (let i of response) {
+                          if(i in this.itemids){
+                              continue;
+                          }
+                          this.itemids.push(i);
+                          fetch('http://hanyuu.top:8080/item/' + i)
+                              .then(itemRes => itemRes.json())
+                              .then(itemRes => {
+                                  if (itemRes.status == 'success') {
+                                      let temp = {
+                                          itemid: i,
+                                          icon_url:'http://hanyuu.top:8080/'+ itemRes.imgurl.split("++")[0],
+                                          price: itemRes.price,
+                                          info: itemRes.note,
+                                          name: itemRes.title,
+                                      }
+                                      if (itemRes.sold == '1') {
+                                          let list = this.state.list;
+                                          list.push(temp);
+                                          this.setState({list: list})
+                                      }
+                                      else if (itemRes.sold ==  '-1') {
+                                          let list = this.state.wantList;
+                                          list.push(temp);
+                                          this.setState({wantList: list});
+                                      }
+                                  }
+                              })
+                      }
+                  })
+          })
+
+  }
+
+
+    render() {
     return (
         <View style={styles.baseContainer}>
           <ScrollView
@@ -55,8 +106,9 @@ export default class MainPages extends Component {
             <View style={styles.recommendationAreaContainer}>
               <RecommendationArea
                   navigation={this.props.navigation}
-                  list={TL.list}
-                  wantList={TL.list}
+                  list={this.state.list}
+                  wantList={this.state.wantList}
+                  refresh={()=>this.getMore()}
               />
             </View>
             <View style={styles.headerContainer}>
