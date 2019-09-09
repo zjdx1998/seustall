@@ -35,12 +35,16 @@ export async function updateUser(user: UserInterface)
 	{
 		const res = await postData(conf.resend.host.root + conf.resend.host.user + user.uuid + `/_update`,
 			{
-				address: user.address,
-				idcard: user.idcard,
-				info: user.info,
-				score: user.score,
-				studentid: user.studentid,
-				username: user.username
+
+				doc: {
+					address: user.address,
+					idcard: user.idcard,
+					info: user.info,
+					score: user.score,
+					studentid: user.studentid,
+					username: user.username
+				},
+				doc_as_upsert: true,
 			});
 		// console.log(res);
 	}
@@ -56,9 +60,12 @@ export async function postItem(item: ItemInterface)
 	{
 		const res = await postData(conf.resend.host.root + conf.resend.host.item + item.itemid,
 			{
-				note: item.note,
-				price: item.price,
-				title: item.title,
+				doc: {
+					note: item.note,
+					price: item.price,
+					title: item.title,
+				},
+				doc_as_upsert: true,
 			});
 		// console.log(res);
 	} catch (error)
