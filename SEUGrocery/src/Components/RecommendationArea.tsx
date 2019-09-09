@@ -123,8 +123,10 @@ export default class RecommendationArea extends Component {
             </ScrollView>
             <View>
               <ScrollView style={{width: SP.WB(100)}}>
+                <View style={{marginHorizontal:10}}>
                 {this.props.wantList.map((item, index) => {
                   return (
+
                       <TouchableOpacity>
                         <ListItem
                             title={item.name}
@@ -140,8 +142,10 @@ export default class RecommendationArea extends Component {
                             bottomDivider
                         />
                       </TouchableOpacity>
+
                   )
                 })}
+                </View>
               </ScrollView>
             </View>
           </View>
