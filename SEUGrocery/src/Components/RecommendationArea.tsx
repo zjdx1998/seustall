@@ -60,13 +60,14 @@ export default class RecommendationArea extends Component {
         <LoadingMore
             isLoading={this.state.loadMore}
             onLoading={()=>{
-              alert('fdfdfd');
+              this.props.refresh();
             }}
         />
     );
   }
 
   _onRefresh=()=>{
+    this.props.refresh();
     setTimeout(()=>{
       this.setState({isRefreshing:false})
     },5000);
