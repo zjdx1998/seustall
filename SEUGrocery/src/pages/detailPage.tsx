@@ -45,6 +45,11 @@ export default class DetailPage extends Component {
     }
 
     fetchData = () => {
+        // setTimeout(() => {
+        //     alert(this.props.navigation.state.params.itemid)
+
+        // }, 100);
+
         if(this.props.navigation.state.params.itemid==this.state.itemid){
             return;
         }else{
@@ -52,17 +57,6 @@ export default class DetailPage extends Component {
             fetch(itemURL + this.props.navigation.state.params.itemid)
                 .then(response => response.json())
                 .then(rT => {
-                    // this.setState({
-                    //   itemid: rT.itemid,
-                    //   // username: itemURL + this.props.navigation.state.params.itemid,
-                    //   uuid: rT.uuid,
-                    //   title: rT.title,
-                    //   type: rT.type,
-                    //   price: parseFloat(rT.price),
-                    //   imgurl: rT.imgurl,
-                    //   note: rT.note,
-                    //   depreciatione: rT.depreciatione,
-                    // });
                     fetch(userURL + rT.uuid)
                         .then(res => res.json())
                         .then(user => {
@@ -109,6 +103,14 @@ export default class DetailPage extends Component {
     componentDidMount() {
         this.fetchData()
     }
+
+    componentWillUpdate(){
+        this.fetchData()
+    }
+
+    // componentDidUpdated(){
+    //     this.fetchData()
+    // }
 
 
     state = {
@@ -200,7 +202,12 @@ export default class DetailPage extends Component {
                         <TouchableOpacity
                             style={styles.buttonStyle}
                             onPress={() => {
-                                this.props.navigation.navigate('chatP');
+                                this.props.navigation.navigate('chatP',{
+                                    uuid:this.state.uuid,
+                                    username:this.state.username,
+                                    title:this.state.title,
+                                    avatarurl:this.state.avatorurl
+                                });
                                 //
                             }}>
                             <Text
