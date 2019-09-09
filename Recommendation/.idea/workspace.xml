@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="25603bd3-d9f6-41c4-9335-8bd27c4dfdc3" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -19,8 +18,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="254">
-              <caret line="15" column="54" selection-start-line="15" selection-start-column="54" selection-end-line="15" selection-end-column="54" />
+            <state relative-caret-position="342">
+              <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
               <folding>
                 <element signature="e#0#49#0" expanded="true" />
               </folding>
@@ -123,16 +122,15 @@
       <workItem from="1567683399855" duration="2357000" />
       <workItem from="1567734267078" duration="4649000" />
       <workItem from="1567920838539" duration="4414000" />
-      <workItem from="1567945117380" duration="1905000" />
+      <workItem from="1567945117380" duration="2815000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="13325000" />
+    <option name="totallyTimeSpent" value="14235000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1280" y="-46" width="1280" height="1001" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.20274636" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -171,8 +169,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="254">
-          <caret line="15" column="54" selection-start-line="15" selection-start-column="54" selection-end-line="15" selection-end-column="54" />
+        <state relative-caret-position="342">
+          <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
           <folding>
             <element signature="e#0#49#0" expanded="true" />
           </folding>

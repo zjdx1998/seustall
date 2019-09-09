@@ -33,8 +33,8 @@ export default class LoadingMore extends Component {
                         style={{width:SP.WB(15),height:SP.WB(15)}}
                     />
                     <Text style={{
-                        color:'#cc6699',
-                        fontSize:20,
+                        color:'#bbb',
+                        fontSize:15,
                         marginLeft:SP.WB(10)
                     }}>
                         正在加载...
@@ -56,8 +56,8 @@ export default class LoadingMore extends Component {
                     }}
                 >
                     <Text style={{
-                        color:'#cc6699',
-                        fontSize:20,
+                        color:'#bbb',
+                        fontSize:15,
                         alignSelf:'center',
                         padding:SP.WB(5),
                     }}>

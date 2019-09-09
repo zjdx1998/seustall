@@ -65,9 +65,9 @@ export default class AfterSignUpPage extends Component {
             avatarChanged:false,
         };
         UserInfo.get('token')
-        .then(data=>{
-            this.setState({token:data})
-        })
+            .then(data=>{
+                this.setState({token:data})
+            })
     }
 
     checkUserName = () => {
@@ -97,28 +97,10 @@ export default class AfterSignUpPage extends Component {
     // @ts-ignore
     uploadUserData = async () => {
         this.Loading.show();
-        // const [uid, token] = await ItemList.getIdAndToken();
-            let uploadAvatarURL=commonURL+'user/avatar';
-            let paras={
-                token:this.state.token,
-                path:this.state.imgURL.uri,
-            }
-            uploadImage(uploadAvatarURL,paras)
-                .then(response=>{
-                    if(response.status=='success'){
-                        alert('头像上传成功');
-                    }
-                    else{
-                        alert('头像上传失败');
-                    }
-                })
-                .catch(err=>{
-                    alert('头像上传失败')
-                })
-
+        const [uid, token] = await ItemList.getIdAndToken();
 
         let data = {
-            token: this.state.token,
+            token:token,
             username:this.state.userName,
             idcard:'1',
             studentid:this.state.majorNum,
@@ -132,7 +114,7 @@ export default class AfterSignUpPage extends Component {
         postData(modifyUserURL, data)
             .then(response => {
                 this.Loading.close();
-                alert('发布成功');
+                alert('填写成功');
             })
             .catch(err => {
                 console.error(err);
@@ -148,15 +130,36 @@ export default class AfterSignUpPage extends Component {
     };
 
     cameraAction = () => {
-        ImagePicker.showImagePicker(photoOptions, (response) => {
+        ImagePicker.showImagePicker(photoOptions, async (response) => {
             console.log('response' + response);
             if (response.didCancel) {
                 return;
             }
             this.setState({
-                imgURL:{uri:response.uri},
-                avatarChanged:true,
+                imgURL: {uri: response.uri},
+                avatarChanged: true,
             });
+            this.Loading.show();
+            const [uid, token] = await ItemList.getIdAndToken();
+            let uploadAvatarURL = commonURL + 'user/avatar';
+            let paras = {
+                token: token,
+                path: this.state.imgURL.uri,
+            }
+            uploadImage(uploadAvatarURL, paras)
+                .then(response => {
+                    if (response.status == 'success') {
+                        alert('头像上传成功');
+                        this.Loading.close();
+                    } else {
+                        alert('头像上传失败');
+                        this.Loading.close();
+                    }
+                })
+                .catch(err => {
+                    alert('头像上传失败');
+                    this.Loading.close();
+                })
 
         })
 
@@ -167,9 +170,11 @@ export default class AfterSignUpPage extends Component {
         this.setState({majorNum:CC.modifyNum(major)});
     }
 
-    buttonPressed=()=>{
-        // this.checkInput();
-        this.props.navigation.navigate('home');
+    buttonPressed= async () => {
+        if (this.checkInput()) {
+            await this.uploadUserData();
+            this.props.navigation.navigate('home');
+        }
     }
 
 
@@ -208,7 +213,6 @@ export default class AfterSignUpPage extends Component {
                                 value={this.state.userName}
                                 editable={true}
                                 onChangeText={userName => this.setState({userName})}
-                                keyboardType={'numeric'}
                                 maxLength={15}
                                 style={styles.h4}
                             />
