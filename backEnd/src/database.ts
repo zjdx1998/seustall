@@ -42,8 +42,8 @@ export default class data
 					max: 5,
 					min: 0,
 					idle: 1000
-				}
-
+				},
+				logging: false,
 			});
 		this.connect();
 	}

@@ -29,7 +29,7 @@ function webServer()
 	try
 	{
 		const app = new Koa();
-		app.use(logger());
+		// app.use(logger());
 		app.use(koaBody({ multipart: true }));
 		app.use(router.routes());
 		/**

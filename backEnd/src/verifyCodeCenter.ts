@@ -25,7 +25,6 @@ export default class VerifyCenter
 	public constructor()
 	{
 		this.dict = {};
-		console.log("verify center constructor called.")
 	}
 	public push(id: string)
 	{
