@@ -49,6 +49,9 @@ export default class MainPages extends Component {
             </View>
             <View style={styles.headerContainer} />
             <View style={styles.slideshowContainer} />
+            <View style={{backgroundColor:'#fff',justifyContent: 'center',marginHorizontal:10}}>
+              <Text style={{fontSize:20,color:'#cc6699', alignSelf:'center'}}>为你推荐</Text>
+            </View>
             <View style={styles.recommendationAreaContainer}>
               <RecommendationArea
                   navigation={this.props.navigation}
