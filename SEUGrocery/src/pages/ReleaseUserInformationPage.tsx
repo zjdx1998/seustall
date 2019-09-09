@@ -110,7 +110,7 @@ export default class ReleaseIWantPage extends Component {
             idcard: '',
             major: '',
             detail: '',
-            campus: '',
+            campus: 'T',
             imgURL: '',
             left:0,
         };
@@ -324,7 +324,7 @@ export default class ReleaseIWantPage extends Component {
                             </View>
 
                             <View style={styles.container_row}>
-                                <Text style={styles.h4}>校区：</Text>
+                                <Text style={styles.h4}>地址：</Text>
                                 <View style={styles.inputContainer}>
                                     <Picker
                                         selectedValue={this.state.campus}
@@ -332,9 +332,11 @@ export default class ReleaseIWantPage extends Component {
                                         onValueChange={(itemValue, itemIndex) => {
                                             this.setState({campus: itemValue});
                                         }}>
-                                        <Picker.Item label="九龙湖校区" value="九龙湖" />
-                                        <Picker.Item label="四牌楼校区" value="四牌楼" />
-                                        <Picker.Item label="丁家桥校区" value="丁家桥" />
+                                        <Picker.Item label="九龙湖校区桃园" value="T" />
+                                        <Picker.Item label="九龙湖校区梅园" value="M" />
+                                        <Picker.Item label="九龙湖校区橘园" value="J" />
+                                        <Picker.Item label="四牌楼校区" value="S" />
+                                        <Picker.Item label="丁家桥校区" value="D" />
                                     </Picker>
                                 </View>
                             </View>

@@ -60,7 +60,7 @@ export default class AfterSignUpPage extends Component {
             major: '',
             majorNum:'',
             detail: '',
-            campus: '九龙湖校区',
+            campus: 'T',
             imgURL: {uri:commonURL+'image/avatar/default.jpg'},
             avatarChanged:false,
         };
@@ -220,7 +220,7 @@ export default class AfterSignUpPage extends Component {
                     </View>
 
                     <View style={styles.container_row}>
-                        <Text style={styles.h4}>校区：</Text>
+                        <Text style={styles.h4}>地址：</Text>
                         <View style={styles.inputContainer}>
                             <Picker
                                 selectedValue={this.state.campus}
@@ -228,9 +228,11 @@ export default class AfterSignUpPage extends Component {
                                 onValueChange={(itemValue, itemIndex) => {
                                     this.setState({campus: itemValue});
                                 }}>
-                                <Picker.Item label="九龙湖校区" value="九龙湖校区" />
-                                <Picker.Item label="四牌楼校区" value="四牌楼校区" />
-                                <Picker.Item label="丁家桥校区" value="丁家桥校区" />
+                                <Picker.Item label="九龙湖校区桃园" value="T" />
+                                <Picker.Item label="九龙湖校区梅园" value="M" />
+                                <Picker.Item label="九龙湖校区橘园" value="J" />
+                                <Picker.Item label="四牌楼校区" value="S" />
+                                <Picker.Item label="丁家桥校区" value="D" />
                             </Picker>
                         </View>
                     </View>
