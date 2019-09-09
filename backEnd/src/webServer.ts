@@ -113,8 +113,8 @@ function webServer()
 				// const resverify = verifyCode(ctx.request.body.phonenumber, ctx.request.body.verifycode);
 				// if (resverify.status == conf.res.success)
 				const resverify = verifyCenter.query(ctx.request.body.phonenumber, ctx.request.body.verifycode);
-				res.data = resverify;
-				if (true)
+				res = resverify;
+				if (resverify.status == conf.res.success)
 				{
 					var newUser = new Object() as UserInterface;
 					newUser = ctx.request.body;
@@ -163,7 +163,7 @@ function webServer()
 			var res = new Object() as any;
 			// var res = requireCode(ctx.request.body.phonenumber);
 			var rescode = verifyCenter.push(ctx.request.body.phonenumber);
-			res = rescode.data.code;
+			res = rescode
 			if (rescode.status == conf.res.success)
 			{
 				// sendSMS(ctx.request.body.phonenumber, rescode.data.code)
@@ -312,13 +312,8 @@ function webServer()
 					return;
 				}
 				const queryres: any = await database.queryUserS(verify.uuid);
-				if (await mail(queryres as UserInterface))
-				{
-					res.status = conf.res.success;
-				} else
-				{
-					res.status = conf.res.failure;
-				}
+				await mail(queryres as UserInterface)
+				res.status = conf.res.success;
 				ctx.response.body = JSON.stringify(res);
 				ctx.response.type = 'application/json';
 

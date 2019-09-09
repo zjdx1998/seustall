@@ -4,6 +4,8 @@
  * @description config
  */
 export default {
+	root: "http://hanyuu.top:8080",
+	// root:"http://localhost",
 	res:
 	{
 		success: "success",
@@ -44,9 +46,9 @@ export default {
 	},
 	mailConfig:
 	{
-		serivce: "qq",
-		user: "wakamiyaeve@qq.com",
-		pass: "azffygurwzxfdhgf",
+		serivce: "126",
+		user: "TomotakeYoshino@126.com",
+		pass: "gitpushf1"
 	},
 	searchConfig:
 	{
@@ -61,6 +63,7 @@ export default {
 	},
 	resend:
 	{
+		switchOn: false,
 		host:
 		{
 			root: "http://hanyuu.top:9200",
