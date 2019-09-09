@@ -755,7 +755,7 @@ export default class data
 	/**
 	 * @description 添加一个消息记录
 	 */
-	public async chatPush(from: number, to: number, data: string)
+	public async chatPush(from: number, to: number, type: number, data: string)
 	{
 		var res = new Object() as any;
 		try
@@ -767,6 +767,7 @@ export default class data
 				{
 					from,
 					to,
+					type,
 					data,
 					fetched: false,
 				}
@@ -862,6 +863,172 @@ export default class data
 		{
 			console.error(error);
 			res.status = conf.res.failure;
+			res.info = error;
+			return res;
+		}
+	}
+	/**
+	 * @description “我想要”请求单条删除
+	 */
+	public async deleteWant(id: number)
+	{
+		var res = new Object() as any;
+		try
+		{
+			const resdestroy = this.chat.destroy(
+				{ where: { id } }
+			);
+			res.status = conf.res.success;
+			res.info = resdestroy;
+			return res;
+		} catch (error)
+		{
+			res.status = conf.res.failure;
+			res.info = error;
+			return res;
+		}
+	}
+	/**
+	 * @description “我想要”请求全部删除
+	 */
+	public async deleteAllWant(itemid: number)
+	{
+		var res = new Object() as any;
+		try
+		{
+			const resdestroy = this.chat.destroy(
+				{ where: { itemid } }
+			);
+			res.status = conf.res.success;
+			res.info = resdestroy;
+			return res;
+		} catch (error)
+		{
+			res.status = conf.res.failure;
+			res.info = error;
+			return res;
+		}
+	}
+	/**
+	 * @description 预定商品
+	 */
+	public async preorderItem(uuid: number, itemid: number)
+	{
+		var res = new Object() as any;
+		try
+		{
+			const resquery = await this.queryItem(itemid);
+			if (resquery.sold == 1)
+			{
+				this.items.update(
+					{
+						sold: 3,
+						to: uuid
+					},
+					{ where: { itemid } }
+				);
+				res.status = conf.res.success;
+				return res;
+			} else if (resquery.sold == -1)
+			{
+				this.items.update(
+					{
+						sold: -3,
+						to: uuid
+					},
+					{ where: { itemid } }
+				);
+				res.status = conf.res.success;
+				return res;
+			}
+			else
+			{
+				res.status = conf.res.failure;
+				res.info = conf.except.notfortrade;
+				return res;
+			}
+		} catch (error)
+		{
+			res.status = conf.res.failure;
+			res.info = error;
+			return res;
+		}
+	}
+	/**
+	 * @description 复位商品至待出售状态
+	 */
+	public async resetItemStatus(itemid: number)
+	{
+		var res = new Object() as any;
+		try
+		{
+			const resquery = await this.queryItem(itemid);
+			if (resquery.sold == 3)
+			{
+				const resupdate = this.items.update(
+					{
+						sold: 1,
+						to: 0
+					}, { where: { itemid } }
+				);
+				res.status = conf.res.success;
+				return res;
+			} else if (resquery.sold == -3)
+			{
+				const resupdate = this.items.update(
+					{
+						sold: -1,
+						to: 0
+					}, { where: { itemid } }
+				);
+				res.status = conf.res.success;
+				return res;
+			} else
+			{
+				res.status = conf.res.failure;
+				res.info = conf.except.invaildReq;
+				return res;
+			}
+		} catch (error)
+		{
+			res.status = conf.res.failure;
+			res.info = error;
+			return res;
+		}
+	}
+	/**
+	 * @description 商品确认交易完成
+	 */
+	public async tradeItemFinished(itemid: number)
+	{
+		var res = new Object() as any;
+		try
+		{
+			const resquery = await this.queryItem(itemid);
+			if (resquery.sold == 3)
+			{
+				this.items.update(
+					{ sold: 2 }, { where: { itemid } }
+				);
+				res.status = conf.res.success;
+				return res;
+			} else if (resquery.sold == -3)
+			{
+				this.items.update(
+					{ sold: -2 }, { where: { itemid } }
+				);
+				res.status = conf.res.success;
+				return res;
+			}
+			else
+			{
+				res.status = conf.res.failure;
+				res.info = conf.except.invaildReq;
+				return res;
+			}
+		} catch (error)
+		{
+			res.status = conf.res.success;
 			res.info = error;
 			return res;
 		}

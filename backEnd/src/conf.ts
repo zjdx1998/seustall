@@ -38,6 +38,7 @@ export default {
 		noItem: "no such item",
 		badVerifycode: "bad verify code",
 		reqtoofreq: "request too frequent",
+		notfortrade: "not for trade",
 	},
 	SMSConfig:
 	{
@@ -58,8 +59,10 @@ export default {
 	{
 		sale: 1,
 		sold: 2,
+		selling: 3,
 		want: -1,
 		got: -2,
+		trading: -3,
 	},
 	resend:
 	{

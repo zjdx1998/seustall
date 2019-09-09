@@ -815,7 +815,7 @@ Content-Type:application/x-www-form-urlencoded
 ```
 
 ``` json
-{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzU2NTYwODkzNCwiaWF0IjoxNTY3NTY1NjA4fQ.J_END7-qsN7HyPmLpQXHcaBOylNvI96OTSEgVg4X-9w","to":"1","data":"hi,+world."}}
+{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzU2NTYwODkzNCwiaWF0IjoxNTY3NTY1NjA4fQ.J_END7-qsN7HyPmLpQXHcaBOylNvI96OTSEgVg4X-9w","to":"1","type":"1","data":"hi,+world."}}
 ```
 
 ``` json
@@ -849,6 +849,7 @@ The name property of the file is arbitrary and the request size is no greater th
       "id": 2,
       "from": 1,
       "to": 1,
+      "type": 1,
       "data": "hi, world.",
       "fetched": false,
       "createdAt": "2019-09-04T14:29:05.000Z",
@@ -882,6 +883,7 @@ Content-Type: application/x-www-form-urlencoded
       "id": 1,
       "from": 1,
       "to": 1,
+      "type": 1,
       "data": "hi",
       "fetched": true,
       "createdAt": "2019-09-04T07:17:22.000Z",
@@ -891,6 +893,7 @@ Content-Type: application/x-www-form-urlencoded
       "id": 2,
       "from": 1,
       "to": 1,
+      "type": 1,
       "data": "hi, world.",
       "fetched": true,
       "createdAt": "2019-09-04T14:29:05.000Z",
@@ -899,6 +902,48 @@ Content-Type: application/x-www-form-urlencoded
   ]
 }
 ```
+
+###  suggest structure of message
+
+> example message
+>
+> ```
+> {
+>     "status":"success",
+>     "data":[
+>         {
+>             "id":3,
+>             "from":1,
+>             "to":12,
+>             "type":1,
+>             "data":"hi",
+>             "fetched":false,
+>             "createdAt":"2019-09-09T15:53:00.000Z",
+>             "updatedAt":"2019-09-09T15:53:00.000Z"
+>         }
+>     ]
+> }
+> ```
+>
+> 
+
+* id
+  * id is the id of the message, it’s just a globally unique identifier of the message, you can ignore it in most situations.
+* from & to
+  * all information about sender and receiver should be fetched by their uuid (from and to) . You are not suggested to carry any extra information about any role for that may out dated.
+* type
+  * 0: system information
+    * data = 
+    * data = 
+  * 1: chat information
+* data
+  * data is the body of the message, it has extra conventions in front end, it will be mentioned below.
+* fetched
+  * whether this piece of message had been picked by receiver.
+* CreatedAt & updatedAt
+  * the timestamp of the record (when the user post the piece of message)
+
+
 
 ## Search
 

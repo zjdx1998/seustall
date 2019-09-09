@@ -372,7 +372,7 @@ function webServer()
 					ctx.response.status = 403;
 					return;
 				}
-				res = await database.chatPush(verify.uuid, ctx.request.body.to, ctx.request.body.data);
+				res = await database.chatPush(verify.uuid, ctx.request.body.to, ctx.request.body.type,ctx.request.body.data);
 				ctx.response.body = JSON.stringify(res);
 				ctx.response.type = "application/json";
 			} catch (error)
