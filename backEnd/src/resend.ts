@@ -29,11 +29,48 @@ export async function postUser(user: UserInterface)
 	}
 
 }
+export async function updateUser(user: UserInterface)
+{
+	try
+	{
+		const res = await postData(conf.resend.host.root + conf.resend.host.user + user.uuid + `/_update`,
+			{
+				address: user.address,
+				idcard: user.idcard,
+				info: user.info,
+				score: user.score,
+				studentid: user.studentid,
+				username: user.username
+			});
+		// console.log(res);
+	}
+	catch (error)
+	{
+		console.error(error)
+	}
+
+}
 export async function postItem(item: ItemInterface)
 {
 	try
 	{
 		const res = await postData(conf.resend.host.root + conf.resend.host.item + item.itemid,
+			{
+				note: item.note,
+				price: item.price,
+				title: item.title,
+			});
+		// console.log(res);
+	} catch (error)
+	{
+		console.error(error);
+	}
+}
+export async function updateItem(item: ItemInterface)
+{
+	try
+	{
+		const res = await postData(conf.resend.host.root + conf.resend.host.item + item.itemid + `/_update`,
 			{
 				note: item.note,
 				price: item.price,

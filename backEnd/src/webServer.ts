@@ -16,7 +16,7 @@ import conf from './conf';
 import Database from "./database";
 import mail from './mailpush';
 import VerifyCenter from './verifyCodeCenter';
-import { postItem, postUser, search } from './resend';
+import { postItem, postUser, updateItem, updateUser, search } from './resend';
 import sendSMS from './SMSVerify';
 import { imgClear } from './storge';
 
@@ -284,7 +284,7 @@ function webServer()
 					ctx.response.status = 403
 					return;
 				}
-				postUser(resupdate.data);
+				updateUser(resupdate.data);
 				res.status = conf.res.success;
 				ctx.response.type = "application/json";
 				ctx.response.body = JSON.stringify(res)
@@ -595,7 +595,7 @@ function webServer()
 					ctx.response.status = 403
 					return;
 				}
-				postItem(resdsatabase.data);
+				updateItem(resdsatabase.data);
 				res.status = conf.res.success;
 				ctx.response.type = "application/json";
 				ctx.response.body = JSON.stringify(res)
