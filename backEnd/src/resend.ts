@@ -54,6 +54,8 @@ export async function search(method: string, src: any)
 		{
 			res = await postData(conf.resend.search.root + conf.resend.search.item,
 				{
+					"from": 0,
+					"size": 4000,
 					"query": {
 						"multi_match": {
 							"query": src,
@@ -67,6 +69,8 @@ export async function search(method: string, src: any)
 		{
 			res = await postData(conf.resend.search.root + conf.resend.search.user,
 				{
+					"from": 0,
+					"size": 4000,
 					"query": {
 						"multi_match": {
 							"query": src,
