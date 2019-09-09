@@ -44,7 +44,7 @@ var photoOptions = {
         path: '东大杂货铺',
     },
 };
-const commonURL='http://inari.ml:8080/';
+const commonURL='http://hanyuu.top:8080/';
 
 
 export default class AfterSignUpPage extends Component {

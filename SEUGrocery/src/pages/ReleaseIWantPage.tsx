@@ -103,7 +103,7 @@ export default class ReleaseIWantPage extends Component {
   computeValue = () => {
       console.log(this.state.firstValue);
 
-    return Number(this.state.firstValue) + Number(this.state.secondValue) / 100;
+    return Number(this.state.firstValue) + Number(this.state.secondValue) / 100;  
   };
 
   // @ts-ignore
