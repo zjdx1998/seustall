@@ -9,10 +9,10 @@ import {postData} from './FetchHelper';
 import UserInfo from './UserInfo';
 
 
-const publishedUrl = 'http://inari.ml:8080/user/published'
-const finishedUrl = 'http://inari.ml:8080/user/finished'
-const favQueryUrl = 'http://inari.ml:8080/fav/query'
-const rootUrl = 'http://inari.ml:8080/'
+const publishedUrl = 'http://hanyuu.top:8080/user/published'
+const finishedUrl = 'http://hanyuu.top:8080/user/finished'
+const favQueryUrl = 'http://hanyuu.top:8080/fav/query'
+const rootUrl = 'http://hanyuu.top:8080/'
 
 
 class ItemList{
@@ -98,25 +98,29 @@ class ItemList{
    */
     static async getFavList(){
       const[uid,toke] = await this.getIdAndToken();
-      var list = [];
-      var length = 0;
-      postData(favQueryUrl,{token:toke}).then(data=>{
 
-        // alert(JSON.stringify(data.res[1].itemid))
-        // var i :any;
-        for (var i in data.res){
-          fetch(rootUrl+'item/'+data.res[i].itemid)
-          .then(response=>
-            response.json()
-          )
-          .then(item=>{
-            list[length]=item;
-            length++;
-        })
-        }
-      return list;
-    })
+      return postData(favQueryUrl,{token:toke})
+    //   .then(data=>{
+
+    //     // alert(JSON.stringify(data.res[1].itemid))
+    //     // var i :any;
+    //     for (var i in data.res){
+    //       fetch(rootUrl+'item/'+data.res[i].itemid)
+    //       .then(response=>
+    //         response.json()
+    //       )
+    //       .then(item=>{
+    //         list[length]=item;
+    //         length++;
+    //     })
+    //     }
+    //     alert(JSON.stringify(list));
+    //   return list;
+    // })
   }
+    static async getFavListByToken(toke){
+      return postData(favQueryUrl,{token:toke})
+    }
      
 
 
