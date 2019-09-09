@@ -63,7 +63,7 @@ export default {
 	},
 	resend:
 	{
-		switchOn: false,
+		switchOn: true,
 		host:
 		{
 			root: "http://hanyuu.top:9200",
