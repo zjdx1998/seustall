@@ -34,6 +34,7 @@ import SearchUsersPage from "../pages/searchUsersPage";
 import UserInfo from '../Common/UserInfo';
 import ShowUserInfoPage from "../pages/ShowUserInfoPage";
 import OrderCenterPage from "../pages/OrderCenterPage";
+import IWantDetailPage from "../pages/IWantDetailPage";
 
 // const customComponent = props => (
 //   <ScrollView style={{backgroundColor: '#FFE4E1', flex: 1}}>
@@ -464,6 +465,12 @@ const TotalNav = createDrawerNavigator(
                 drawerlabel: () => null,
             },
         },
+        wantDetailP: {
+            screen: IWantDetailPage,
+            navigationOptions: {
+                drawerlabel: () => null,
+            },
+        },
     },
     {
         order: [
@@ -492,6 +499,7 @@ const TotalNav = createDrawerNavigator(
             'userInformation',
             'classificationP',
             'showUser',
+            'wantDetailP',
         ],
         initialRouteName: 'startP',
         backBehavior: 'home',

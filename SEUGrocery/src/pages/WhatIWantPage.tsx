@@ -25,11 +25,12 @@ import LocalBackHeader from "../Components/LocalBackHeader";
 import UserInfo from '../Common/UserInfo';
 import ItemList from '../Common/ItemList';
 import {postData} from '../Common/FetchHelper';
+import {TouchableOpacity} from "react-native-gesture-handler";
 
 
 
 export default class WhatIWantPage extends Component {
-    private Loading: any;
+    private props: any;
     constructor(props) {
         super(props);
         this.state = {
@@ -209,19 +210,31 @@ export default class WhatIWantPage extends Component {
         ];
         //文字内容
         return (
+            <TouchableOpacity
+                onPress={() => {
+                    this.props.navigation.navigate('wantDetailP', {
+                        itemid: item.item.itemid,
+                        go_back_key: this.props.navigation.state.key,
+                    });
+                }}>
             <Swipeout
                 right={swipeoutBtns}
                 style={{justifyContent: 'center', height: 120, backgroundColor: '#ffffff'}}
                 buttonWidth={120}
             >
+
+
                 <View style={styles.item}>
                     <Text numberOfLines={1} style={styles.txtName}>{item.item.title}</Text>
                     <Text numberOfLines={2} style={styles.txtDetail}>{item.item.note}</Text>
                     <Text numberOfLines={1} style={styles.txtDetail}>最高接受价：￥{item.item.price}</Text>
                     <Text numberOfLines={1} style={styles.txtTime}>{item.item.time}</Text>
+
                 </View>
 
             </Swipeout>
+            </TouchableOpacity>
+
         )
     }
 }

@@ -128,7 +128,14 @@ export default class RecommendationArea extends Component {
                 {this.props.wantList.map((item, index) => {
                   return (
 
-                      <TouchableOpacity>
+
+                        <TouchableOpacity
+                            onPress={() => {
+                              this.props.navigation.navigate('wantDetailP', {
+                                itemid: item.itemid,
+                                go_back_key: this.props.navigation.state.key,
+                              });
+                            }}>
                         <ListItem
                             title={item.name}
                             subtitle={
