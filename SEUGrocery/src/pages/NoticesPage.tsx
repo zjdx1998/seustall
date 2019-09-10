@@ -81,6 +81,7 @@ export default class NoticesPage extends Component {
                 var mlist = [];
                 var c = await list.forEach(async function (value) {
                     // alert(JSON.stringify(value));
+                    // console.log(value.key)
                     var len = 0;
                     for (var mes in value.value) {
                         len++;
@@ -116,11 +117,11 @@ export default class NoticesPage extends Component {
     renderItem = ({ item }) => (
         <TouchableOpacity
             onPress={() => this.props.navigation.navigate('chatP', {
-                uuid: item.uuid,
-                username: item.name,
-                title: item.title,
-                avatarurl: item.avatar_url,
-                text: item.text,
+                uuid_chat: item.uuid,
+                username_chat: item.name,
+                title_chat: item.title,
+                avatarurl_chat: item.avatar_url,
+                text_chat: item.text,
             })}
         >
             <ListItem

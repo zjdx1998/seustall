@@ -238,10 +238,10 @@ export default class DetailPage extends Component {
                         style={styles.buttonStyle}
                         onPress={() => {
                              this.props.navigation.navigate('chatP', {
-                                uuid: this.state.uuid,
-                                username: this.state.username,
-                                title: this.state.title,
-                                avatarurl: this.state.avatorurl
+                                uuid_chat: this.state.uuid,
+                                    username_chat: this.state.username,
+                                    title_chat: this.state.title,
+                                    avatarurl_chat: this.state.avatorurl
                             });
                         }}>
                         <Text

@@ -34,39 +34,15 @@ export default class ChatPage extends Component {
     constructor(props) {
         super(props);
         //this.state.uuid = props;
-        var mList = [];
-        var user={                    
-            _id: this.props.navigation.state.params.uuid,
-            name: this.props.navigation.state.params.username,
-            avatar: this.props.navigation.state.params.avatarurl,
-        }
-        var count = 1;
-
-        if (this.props.navigation.state.params.text !== undefined) {
-            // alert(JSON.stringify(this.props.navigation.state.params.text))
-            this.props.navigation.state.params.text.forEach(function (value) {
-                // alert(JSON.stringify(value))
-                // alert(JSON.stringify(user))
-                // alert(value.time)
-                var message = {
-                    _id: count++,
-                    text: value.text,
-                    createdAt: new Date(value.time),
-                    user: user
-                }
-                mList.push(message);
-                // alert(JSON.stringify(mList))
-            })
-            mList.reverse();
-        }
+        
 
 
         this.state = {
-            uuid_to: this.props.navigation.state.params.uuid,
-            title: this.props.navigation.state.params.title,
-            username_to: this.props.navigation.state.params.username,
-            avatarurl_to: this.props.navigation.state.params.avatarurl,
-            messages: mList,
+            uuid_to: this.props.navigation.state.params.uuid_chat,
+            title: this.props.navigation.state.params.title_chat,
+            username_to: this.props.navigation.state.params.username_chat,
+            avatarurl_to: this.props.navigation.state.params.avatarurl_chat,
+            messages: [],
         }
         UserInfo.get('token').then(data=>{this.setState({token:data})});
         UserInfo.get('uuid').then(data=>{this.setState({uuid:data})});
@@ -82,16 +58,41 @@ export default class ChatPage extends Component {
     }
     componentWillUpdate(nextProps) {
         this.state = {
-            uuid_to: nextProps.navigation.state.params.uuid,
-            title: nextProps.navigation.state.params.title,
-            username_to: nextProps.navigation.state.params.username,
-            avatarurl_to: nextProps.navigation.state.params.avatarurl,
+            uuid_to: nextProps.navigation.state.params.uuid_chat,
+            title: nextProps.navigation.state.params.title_chat,
+            username_to: nextProps.navigation.state.params.username_chat,
+            avatarurl_to: nextProps.navigation.state.params.avatarurl_chat,
         }
     }
 
-    // componentWillMount() {
+    componentDidMount() {
+        var mList = [];
+        var user={                    
+            _id: this.props.navigation.state.params.uuid_chat,
+            name: this.props.navigation.state.params.username_chat,
+            avatar: this.props.navigation.state.params.avatarurl_chat,
+        }
+        var count = 1;
 
-    // }
+        if (this.props.navigation.state.params.text_chat !== undefined) {
+            // alert(JSON.stringify(this.props.navigation.state.params.text))
+            this.props.navigation.state.params.text_chat.forEach(function (value) {
+                // alert(JSON.stringify(value))
+                // alert(JSON.stringify(user))
+                // alert(value.time)
+                var message = {
+                    _id: count++,
+                    text: value.text,
+                    createdAt: new Date(value.time),
+                    user: user
+                }
+                mList.push(message);
+                // alert(JSON.stringify(mList))
+            })
+            mList.reverse();
+            this.setState({messages:mList})
+        }
+    }
     refreshMessage(){
         var uuid = this.state.uuid_to;
         var messages = [];
@@ -130,7 +131,7 @@ export default class ChatPage extends Component {
         // alert(JSON.stringify(messages));
 
         var newdata = {
-            type:1,
+            // type:1,
             text:messages[0].text,
             // username:messages[0].user.name,
             // avatarurl:messages[0].user.avatar,
