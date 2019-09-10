@@ -4,74 +4,154 @@
   @date: 2019-8-23
 */
 
-import {StyleSheet, View, Dimensions, Image, Text} from 'react-native';
+import {StyleSheet, View, Dimensions, Image, Text, ScrollView, RefreshControl} from 'react-native';
 import * as SP from '../Common/ScreenProperty';
 //import { Image,Text} from 'react-native-elements';
 import React, {Component} from 'react';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Good from '../Common/ItemBlock';
+import {Divider, ListItem} from "react-native-elements";
+import LoadingMore from "./LoadingMore";
 const {width} = Dimensions.get('window'); //解构赋值 获取屏幕宽度
 
-const Goods = [
-  {
-    itemid: 1,
-    name: 'name1',
-    icon_url: 'https://avatars2.githubusercontent.com/u/45632558?s=400&v=4',
-    price: '10',
-    classify: '书',
-    info: '这还是一本书，一本很好的书，是一本非常好的书',
-  },
-  {
-    itemid: 2,
-    name: 'name2',
-    icon_url: 'https://hanyuufurude.github.io/img/covers.jpg',
-    price: '20',
-    classify: '体育器材',
-    info: 'balabalablab',
-  },
-  {
-    itemid: 3,
-    name: 'name3',
-    icon_url: 'https://hanyuufurude.github.io/img/covers.jpg',
-    price: '30',
-    classify: '电子产品',
-    info: 'balabalablab',
-  },
-  {
-    itemid: 4,
-    name: 'name4',
-    icon_url: 'https://hanyuufurude.github.io/img/covers.jpg',
-    price: '40',
-    classify: '食物',
-    info: 'balabalablab',
-  },
-];
+
+const tips = ['商品信息', '求购信息'];
 
 export default class RecommendationArea extends Component {
-  state:{
-    goodsList:any,
+  state={
+    left: 0,
+    goalType: 0,
+    left: 0,
+    loadMore:false,
   }
+
   constructor(){
     super();
-    this.state={
-      goodsList:Goods,
+
+  }
+
+  /**
+   * scrollview滑动的时候
+   * @private
+   */
+  _onScroll(event) {
+    if(this.state.loadMore){
+      return;
+    }
+    let y = event.nativeEvent.contentOffset.y;
+    let height = event.nativeEvent.layoutMeasurement.height;
+    let contentHeight = event.nativeEvent.contentSize.height;
+    console.log('offsetY-->' + y);
+    console.log('height-->' + height);
+    console.log('contentHeight-->' + contentHeight);
+    if(y+height>=contentHeight-20){
+      this.setState({
+        loadMore:true
+      });
     }
   }
+
+  /**
+   * 显示上啦加载view
+   * @private
+   */
+  _renderLoadMore() {
+    return (
+        <LoadingMore
+            isLoading={this.state.loadMore}
+            onLoading={()=>{
+              this.props.refresh();
+            }}
+        />
+    );
+  }
+
+  _onRefresh=()=>{
+    this.props.refresh();
+    setTimeout(()=>{
+      this.setState({isRefreshing:false})
+    },5000);
+  };
+
   private props: any;
   render() {
     return (
-      <View style={styles.goodsList}>
-        {Goods.map(i => (
-          <Good
-            itemid={i.itemid}
-            image={{uri: i.icon_url}}
-            name={i.name}
-            price={i.price}
-            text={i.info}
-            navigation={this.props.navigation}
-          />
-        ))}
-      </View>
+        <ScrollView
+            onScroll={this._onScroll.bind(this)}
+            scrollEventThrottle={50}
+            refreshControl={
+              <RefreshControl
+                  refreshing={this.state.isRefreshing}
+                  onRefresh={this._onRefresh}
+                  tintColor={"#ff0000"}
+                  title="Loading..."
+                  titleColor={"#00ff00"}
+                  colors={['#cc6699', '#6699cc', '#99cc66']}
+                  progressBackgroundColor={"#fff"}
+              />
+            }>
+          <View style={styles.container_row}>
+            {tips.map((i, j) => {
+              return (
+                  <View style={styles.mode}>
+                    <Text
+                        style={styles.typeTip}
+                        onPress={() => {
+                          this.setState({goalType: j, left: -1 * SP.WB(100) * j});
+                        }}
+                    >{i}</Text>
+                    <Divider style={[styles.line, {opacity: j === this.state.goalType ? 1 : 0}]}/>
+                  </View>
+              )
+            })}
+          </View>
+          <View style={[styles.body, {left: this.state.left}]}>
+            <ScrollView>
+              <View style={{width: SP.WB(100)}}>
+                <View style={styles.goodsList}>
+                  {this.props.list.map(i => (
+                      <Good
+                          itemid={i.itemid}
+                          image={{uri: i.icon_url}}
+                          name={i.name}
+                          price={i.price}
+                          text={i.info}
+                          navigation={this.props.navigation}
+                      />
+                  ))}
+                </View>
+              </View>
+            </ScrollView>
+            <View>
+              <ScrollView style={{width: SP.WB(100)}}>
+                <View style={{marginHorizontal:10}}>
+                {this.props.wantList.map((item, index) => {
+                  return (
+
+                      <TouchableOpacity>
+                        <ListItem
+                            title={item.name}
+                            subtitle={
+                              <View>
+                                <View style={{}}>
+                                  <Text>{item.info}</Text>
+                                  <Text style={{color:'#cc6699'}}>最高接受价：￥{item.price}</Text>
+                                </View>
+                              </View>
+                            }
+                            leftAvatar={{source: require('../Common/img/need.png')}}
+                            bottomDivider
+                        />
+                      </TouchableOpacity>
+
+                  )
+                })}
+                </View>
+              </ScrollView>
+            </View>
+          </View>
+          {this._renderLoadMore()}
+        </ScrollView>
     );
   }
 }
@@ -79,36 +159,49 @@ export default class RecommendationArea extends Component {
 
 
 const styles = StyleSheet.create({
-  block: {
-    backgroundColor: '#ffffff',
-    borderRadius: 10,
-    width: width / 2 - 20,
-    height: SP.HB(35),
-    alignItems: 'center',
-    margin: 10,
-    padding: 10,
-    flexDirection: 'column',
-    flex: 1,
+  container_row:{
+    flexDirection:'row',
+    justifyContent: 'center',
   },
-  goodsList: {
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+  container:{
+    flex:1,
     justifyContent:'center',
   },
-  price: {
-    fontSize: 20,
-    color: '#cc6699',
-    flex: 1,
+  searchBar:{
+    width:SP.WB(70),
+    backgroundColor:'#eee',
+    borderTopWidth:0,
+    borderBottomWidth:0,
   },
-  textdes: {
-    fontSize: 12,
-    color: '#000',
-    flex: 1,
+  input:{
+    backgroundColor:'#ddd',
   },
-  name: {
-    fontSize: 28,
-    color: '#cc6699',
-    flex: 1,
+  mode:{
+    justifyContent:'center',
+    marginTop:SP.HB(1),
+    marginBottom:SP.HB(2),
+    marginLeft:SP.WB(5),
+    marginRight:SP.WB(5),
   },
+  line:{
+    backgroundColor:'#cc6699',
+    height:3,
+
+  },
+  typeTip:{
+    fontSize:20,
+  },
+  goodsList: {
+    // flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent:'flex-start',
+    marginLeft: SP.WB(2.5),
+  },
+
+  body:{
+    flexDirection:'row',
+    width:SP.WB(200),
+  },
+
 });

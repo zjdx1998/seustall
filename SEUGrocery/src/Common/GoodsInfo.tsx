@@ -7,7 +7,7 @@
 
 const fetch = require('node-fetch');
 
-const itemUrl = 'http://inari.ml:8080/item/'
+const itemUrl = 'http://hanyuu.top:8080/item/'
 
 export function goodsInfo(index) {
     return(

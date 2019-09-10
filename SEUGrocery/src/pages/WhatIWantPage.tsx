@@ -24,56 +24,12 @@ import Swipeout from 'react-native-swipeout';
 import LocalBackHeader from "../Components/LocalBackHeader";
 import UserInfo from '../Common/UserInfo';
 import ItemList from '../Common/ItemList';
+import {postData} from '../Common/FetchHelper';
 
-
-
-const Testdata = [
-    {
-        "goodName": "铅笔",
-        "detail": "彩虹色",
-        "highestPrice": 1,
-        "time": "2019-8-27"
-    },
-    {
-        "goodName": "洗衣机",
-        "detail": "全自动，能烘干，小巧轻便，必须九成新以上，提供上门送货并且要帮忙搬进宿舍",
-        "highestPrice": 700,
-        "time": "2019-8-27"
-    },
-    {
-        "goodName": "铅笔",
-        "detail": "彩虹色",
-        "highestPrice": 1,
-        "time": "2019-8-27"
-    },
-    {
-        "goodName": "铅笔",
-        "detail": "彩虹色",
-        "highestPrice": 1,
-        "time": "2019-8-27"
-    },
-    {
-        "goodName": "铅笔",
-        "detail": "彩虹色",
-        "highestPrice": 1,
-        "time": "2019-8-27"
-    },
-    {
-        "goodName": "铅笔",
-        "detail": "彩虹色",
-        "highestPrice": 1,
-        "time": "2019-8-27"
-    },
-    {
-        "goodName": "铅笔",
-        "detail": "彩虹色",
-        "highestPrice": 1,
-        "time": "2019-8-27"
-    },
-]
 
 
 export default class WhatIWantPage extends Component {
+    private Loading: any;
     constructor(props) {
         super(props);
         this.state = {
@@ -103,6 +59,7 @@ export default class WhatIWantPage extends Component {
         var wList = list.filter(function(e) {
             return e.sold == -1;
           });
+            //wlist.forEach(item => item.select = false);
         //   this.renderRowList(wList);
         //   alert(wList);
           this.setState({data:wList});
@@ -110,6 +67,35 @@ export default class WhatIWantPage extends Component {
         });
 
       }
+
+    deleteWantItem = async (itemid) => {
+            //this.Loading.show();
+            const [uid, token] = await ItemList.getIdAndToken();
+
+            let data = {
+                token: token,
+                itemid: itemid,
+            };
+            // console.log(data);
+            const commonURL='http://inari.ml:8080/';
+            const modifyURL=commonURL+'item/delete';
+            // alert(data);
+           console.log(data);
+
+            await postData(modifyURL, data)
+                .then(response => {
+                    console.log(response);
+                        // Loading.close();
+                        alert('删除成功');
+                })
+                .catch(err => {
+                    console.error(err);
+                    // Loading.close();
+                    alert('sorry,删除失败');
+                });
+            //this.Loading.close();
+
+    }
 
     render() {
         return (
@@ -203,7 +189,20 @@ export default class WhatIWantPage extends Component {
                     '确定要删除该物品？',
                     [
                         {text: 'Cancel', onPress: () => console.log('Cancel Pressed!')},
-                        {text: 'OK', onPress: () => console.log('OK Pressed!')},
+                        {text: 'OK', onPress: async () => {
+                                await this.deleteWantItem(item.item.itemid);
+
+                                ItemList.getItemList().then(list => {
+                                    //   alert(JSON.stringify(list));
+                                    var wList = list.filter(function (e) {
+                                        return e.sold == -1;
+                                    });
+                                    //   this.renderRowList(wList);
+                                    //   alert(wList);
+                                    this.setState({data: wList});
+
+                                });
+                            }},
                     ]
                 )
             }

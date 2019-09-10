@@ -14,22 +14,81 @@ import {Button, Text} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import ActionButton from 'react-native-action-button';
 import IDReminder from "../Components/IDReminder";
+import * as TL from '../Common/testItemList';
+import {list} from "../Common/testItemList";
+import UserInfo from '../Common/UserInfo';
+
 
 export default class MainPages extends Component {
   private props: any;
   state={
     modalVisible: false,
+      list:[],
+      wantList:[],
   }
+  itemids=[];
 
   setModalVisible(visible) {
     this.setState({ modalVisible: visible });
   }
 
+  refresh(){
+      alert('刷新')
+  }
 
-  render() {
+  componentDidMount():void {
+     this.getMore();
+  }
+
+  getMore=()=>{
+       UserInfo.get('uuid')
+          .then(uuid=> {
+              console.log(uuid)
+              fetch('http://hanyuu.top:8080/recommend/' + uuid)
+                  .then(resopnse => resopnse.json())
+                  .then(response => {
+                      console.log(response);
+                      for (let i of response) {
+                          if(i in this.itemids){
+                              continue;
+                          }
+                          this.itemids.push(i);
+                          fetch('http://hanyuu.top:8080/item/' + i)
+                              .then(itemRes => itemRes.json())
+                              .then(itemRes => {
+                                  if (itemRes.status == 'success') {
+                                      let temp = {
+                                          itemid: i,
+                                          icon_url:'http://hanyuu.top:8080/'+ itemRes.imgurl.split("++")[0],
+                                          price: itemRes.price,
+                                          info: itemRes.note,
+                                          name: itemRes.title,
+                                      }
+                                      if (itemRes.sold == '1') {
+                                          let list = this.state.list;
+                                          list.push(temp);
+                                          this.setState({list: list})
+                                      }
+                                      else if (itemRes.sold ==  '-1') {
+                                          let list = this.state.wantList;
+                                          list.push(temp);
+                                          this.setState({wantList: list});
+                                      }
+                                  }
+                              })
+                      }
+                  })
+          })
+
+  }
+
+
+    render() {
     return (
         <View style={styles.baseContainer}>
-          <ScrollView style={styles.baseContainer}>
+          <ScrollView
+              style={styles.baseContainer}
+          >
             <View style={styles.headerContainer}>
               <GlobalHeader navigation={this.props.navigation} />
             </View>
@@ -41,8 +100,16 @@ export default class MainPages extends Component {
             </View>
             <View style={styles.headerContainer} />
             <View style={styles.slideshowContainer} />
+            <View style={{backgroundColor:'#fff',justifyContent: 'center',marginHorizontal:10}}>
+              <Text style={{fontSize:20,color:'#cc6699', alignSelf:'center'}}>为你推荐</Text>
+            </View>
             <View style={styles.recommendationAreaContainer}>
-              <RecommendationArea navigation={this.props.navigation} />
+              <RecommendationArea
+                  navigation={this.props.navigation}
+                  list={this.state.list}
+                  wantList={this.state.wantList}
+                  refresh={()=>this.getMore()}
+              />
             </View>
             <View style={styles.headerContainer}>
               <Button
@@ -51,6 +118,13 @@ export default class MainPages extends Component {
                   buttonStyle={{backgroundColor:'#cc6699'}}
               />
             </View>
+              <IDReminder
+              modalVisible={this.state.modalVisible}
+              content={this.state.content}
+              callback={this.setModalVisible.bind(this)}
+              navigation={this.props.navigation}
+          >
+          </IDReminder>
           </ScrollView>
           <ActionButton
               verticalOrientation="up"
@@ -107,13 +181,6 @@ export default class MainPages extends Component {
             </ActionButton.Item>
           </ActionButton>
 
-          <IDReminder
-              modalVisible={this.state.modalVisible}
-              content={this.state.content}
-              callback={this.setModalVisible.bind(this)}
-              navigation={this.props.navigation}
-          >
-          </IDReminder>
         </View>
     );
   }

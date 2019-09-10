@@ -106,7 +106,7 @@ export default class UserInformationPage extends Component {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-              onPress={()=>this.props.navigation.navigate('page2')}
+              onPress={()=>this.props.navigation.navigate('page3')}
             activeOpacity={0.2}
             focusedOpacity={0.5}>
             <View
@@ -163,12 +163,12 @@ const styles = StyleSheet.create({
     //height: 35,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
 
   },
   selectText: {
     color: '#ffffff',
-    fontSize: 27,
+    fontSize: 20,
     margin:10
 
   },

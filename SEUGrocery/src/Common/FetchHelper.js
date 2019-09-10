@@ -5,7 +5,7 @@
 */
 
 const fetch = require('node-fetch');
-const indexURL = "http://inari.ml:8080/";
+const indexURL = "http://hanyuu.top:8080/";
 
 export function postData(url, data) {
   // Default options are marked with *

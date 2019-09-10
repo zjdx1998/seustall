@@ -16,7 +16,7 @@ export function uploadImage(url,params) {
     }
     for (let url of params.path.split('++')) {
     let file = {uri: url, type: 'image/jpeg', name: 'image.jpg'};
-    formData.append("file0", file);
+    formData.append("file", file);
     }
     return fetch(url, {
         method: 'POST',

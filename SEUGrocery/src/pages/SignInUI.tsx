@@ -19,7 +19,7 @@ import {
 import {postData} from '../Common/FetchHelper';
 import {sha1} from '../Common/SHA-1Encryptor';
 import UserInfo from '../Common/UserInfo';
-const loginURL = 'http://inari.ml:8080/user/login';
+const loginURL = 'http://hanyuu.top:8080/user/login';
 import {Icon} from 'react-native-elements';
 const {UIManager} = NativeModules;
 
@@ -89,8 +89,10 @@ export default class SignInUI extends Component {
   }
   buttonPressed() {
     postData(loginURL, {
+      // phonenumber: '17551046561',
+      // password: sha1('13315585158zz'),
       phonenumber: '15950550436',
-      password: '123',
+      password: sha1('123'),
       // phonenumber: this.state.inputedNum,
       // password:sha1(this.state.inputedPW),
     })
@@ -131,9 +133,6 @@ export default class SignInUI extends Component {
     });
   };
 
-  changeToSignUp=()=>{
-
-  }
 
   render() {
     return (
@@ -190,7 +189,7 @@ export default class SignInUI extends Component {
             <View
               style={[styles.idButton, {opacity: this.state.idButtonAlpha}]}
             >
-              <Text style={{color: '#cc6699', size: 30}} onPress={this.sendVerifyCode}>
+              <Text style={{color: '#cc6699'}} onPress={this.sendVerifyCode}>
                 {this.state.sendIDText}
               </Text>
             </View>
@@ -203,11 +202,11 @@ export default class SignInUI extends Component {
           </TouchableOpacity>
           {/*//切换状态的按键*/}
           <View style={[styles.container_row,{marginLeft:componentWidth*0.1}]}>
-          <TouchableOpacity
+          {/*<TouchableOpacity
             style={styles.registerButton}
             onPress={this.identifyingCodeLoginButton}>
             <Text style={styles.registerText}>{this.state.register}</Text>
-          </TouchableOpacity>
+          </TouchableOpacity>*/}
 
           <TouchableOpacity
               style={styles.registerButton}
