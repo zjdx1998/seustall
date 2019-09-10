@@ -33,6 +33,7 @@ import NoticesPage from "../pages/NoticesPage";
 import SearchUsersPage from "../pages/searchUsersPage";
 import UserInfo from '../Common/UserInfo';
 import ShowUserInfoPage from "../pages/ShowUserInfoPage";
+import OrderCenterPage from "../pages/OrderCenterPage";
 
 // const customComponent = props => (
 //   <ScrollView style={{backgroundColor: '#FFE4E1', flex: 1}}>
@@ -246,11 +247,42 @@ const customComponents = props => (
                     消息中心
                 </Text>
             </TouchableOpacity>
+
+             <TouchableOpacity
+                style={[
+                    styles.menuSingleContainer,
+                    {
+                        backgroundColor: that.state.currentIndex === 6 ? '#fff' : '#CC6699',
+                    },
+                ]}
+                onPress={() => {
+                    props.navigation.closeDrawer();
+                    props.navigation.navigate('page6', {
+                        go_back_key: props.navigation.state.key,
+                        refresh: () => {
+                            that.setState({currentIndex: 1});
+                        },
+                    });
+                    that.setState({currentIndex: 6});
+                }}>
+                <Text
+                    style={[
+                        styles.menuTitleStyle,
+                        {color: that.state.currentIndex === 6 ? '#CC6699' : '#fff'},
+                        {
+                            marginHorizontal:
+                                that.state.currentIndex === 6 ? SP.WB(10) : SP.WB(3),
+                        },
+                    ]}>
+                    订单中心
+                </Text>
+            </TouchableOpacity>
+
             <TouchableOpacity
                 style={[
                     styles.menuSingleContainer,
                     {
-                        backgroundColor: that.state.currentIndex === 5 ? '#fff' : '#CC6699',
+                        backgroundColor: that.state.currentIndex === 7 ? '#fff' : '#CC6699',
                     },
                 ]}
                 onPress={() => {
@@ -261,15 +293,15 @@ const customComponents = props => (
                             that.setState({currentIndex: 1});
                         },
                     });
-                    that.setState({currentIndex: 5});
+                    that.setState({currentIndex: 7});
                 }}>
                 <Text
                     style={[
                         styles.menuTitleStyle,
-                        {color: that.state.currentIndex === 5 ? '#CC6699' : '#fff'},
+                        {color: that.state.currentIndex === 7 ? '#CC6699' : '#fff'},
                         {
                             marginHorizontal:
-                                that.state.currentIndex === 5 ? SP.WB(10) : SP.WB(3),
+                                that.state.currentIndex === 7 ? SP.WB(10) : SP.WB(3),
                         },
                     ]}>
                     收藏夹
@@ -323,6 +355,13 @@ const TotalNav = createDrawerNavigator(
                 drawerLabel: '消息中心',
             },
         },
+        page6: {
+            screen: OrderCenterPage,
+            navigationOptions: {
+                drawerLabel: '订单中心',
+            },
+        },
+
         release_good: {
             screen: ReleaseGoodInformation,
             navigationOptions: {
@@ -436,6 +475,7 @@ const TotalNav = createDrawerNavigator(
             'page3',
             'page4',
             'page5',
+            'page6',
             'startP',
             'loginP',
             'signUpP',
