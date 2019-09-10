@@ -89,12 +89,12 @@ export default class SignInUI extends Component {
   }
   buttonPressed() {
     postData(loginURL, {
-      phonenumber: '17551046561',
-      password: sha1('13315585158zz'),
+      // phonenumber: '17551046561',
+      // password: sha1('13315585158zz'),
       // phonenumber: '15950550436',
       // password: sha1('123'),
-      // phonenumber: this.state.inputedNum,
-      // password:sha1(this.state.inputedPW),
+      phonenumber: this.state.inputedNum,
+      password:sha1(this.state.inputedPW),
     })
       .then(data => {
         if (data.status == "success") {
@@ -212,7 +212,7 @@ export default class SignInUI extends Component {
               style={styles.registerButton}
               onPress={()=>{
                 this.props.navigation.navigate('signUpP')
-                console.log('注册')
+                // console.log('注册')
               }}
           >
             <Text style={styles.registerText}>注册</Text>
