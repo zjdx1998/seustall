@@ -251,6 +251,13 @@ export default class OrderCenterPage extends Component {
                       //     title: i.item.title,
                       //     avatarurl: i.user.avatarurl,
                       // })
+                      this.props.navigation.navigate('chatP',{
+                        uuid_chat: i.user.uuid,
+                        username_chat: i.user.username,
+                        title_chat: i.user.title,
+                        avatarurl_chat: i.user.avatarurl,
+                        type_chat: 1,
+                      })
                     }}
                     buttonStyle={styles.button}
                   />
@@ -293,12 +300,13 @@ export default class OrderCenterPage extends Component {
                   <Button
                     title="跟TA聊天"
                     onPress={() => {
-                      // this.props.navigation.navigate('chatP',{
-                      //     uuid: i.user.uuid,
-                      //     username: i.user.username,
-                      //     title: i.item.title,
-                      //     avatarurl: i.user.avatarurl,
-                      // })
+                      this.props.navigation.navigate('chatP',{
+                        uuid_chat: i.user.uuid,
+                        username_chat: i.user.username,
+                        title_chat: i.user.title,
+                        avatarurl_chat: i.user.avatarurl,
+                        type_chat: 1,
+                      })
                     }}
                     buttonStyle={styles.button}
                   />

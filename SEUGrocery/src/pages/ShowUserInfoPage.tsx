@@ -163,7 +163,15 @@ export default class ShowUserInfoPage extends Component {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('chatP')}
+            onPress={() => 
+              this.props.navigation.navigate('chatP',{
+              uuid_chat: this.state.uuid,
+              username_chat: this.state.username,
+              title_chat: this.state.title,
+              avatarurl_chat: this.state.avatarurl,
+              type_chat: 1,
+            })}
+
             activeOpacity={0.2}
             focusedOpacity={0.5}>
             <View
