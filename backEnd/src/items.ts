@@ -47,6 +47,16 @@ export default {
 	to:
 	{
 		type: sequelize.INTEGER,
-		allowNull:true,
+		allowNull: true,
 	}
 }
+const indexes =
+	[
+		{
+			name: 'itemid',
+			unique: true,
+			method: 'BTREE',
+			fields: ['itemid'],
+		},
+	]
+export { indexes as itemIndexes }

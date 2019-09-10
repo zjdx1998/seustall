@@ -4,6 +4,7 @@
  * @description 验证码中心
  */
 import conf from './conf';
+import sendSMS from './SMSVerify';
 
 class Record
 {
@@ -18,17 +19,17 @@ class Record
 		this.time = new Date();
 	}
 }
-class VerifyCenter
+export default class VerifyCenter
 {
 	private dict: any;
 	public constructor()
 	{
 		this.dict = {};
-		console.log("verify center constructor called.")
 	}
-	public push(id: string, code: string)
+	public push(id: string)
 	{
 		var res = new Object() as any;
+		const code = this.genCode();
 		if (this.dict[id])
 		{
 			const timeDelta = (new Date()).valueOf() - (this.dict[id].time).valueOf();
@@ -60,12 +61,13 @@ class VerifyCenter
 			{
 				res.status = conf.res.success;
 				this.clean()
+				delete this.dict[id];
 				return res;
 			}
 			else
 			{
 				res.status = conf.res.failure;
-				res.info = conf.except.badverifycode;
+				res.info = conf.except.badVerifycode;
 				return res;
 			}
 		}
@@ -73,6 +75,7 @@ class VerifyCenter
 		{
 			res.status = conf.res.failure;
 			res.info = conf.except.invaildReq;
+			return res;
 		}
 	}
 	public clean()
@@ -85,6 +88,13 @@ class VerifyCenter
 			}
 		}
 	}
+	private genCode()
+	{
+		var code = "";
+		for (var i = 0; i < 4; ++i)
+		{
+			code += Math.floor(Math.random() * 10);
+		}
+		return code;
+	}
 }
-
-export var verifyCenter: VerifyCenter;
