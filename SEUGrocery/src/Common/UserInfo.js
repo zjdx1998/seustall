@@ -25,7 +25,7 @@ const keys = [
   'info',
 ];
 
-const publisherdUrl = 'http://inari.ml:8080/user/published'
+const publisherdUrl = 'http://hanyuu.top:8080/user/published'
 
 class UserInfo {
   uuid = ''
@@ -73,7 +73,7 @@ class UserInfo {
     this.save('idcard', userInfo.info.idcard);
     this.save('studentid', userInfo.info.studentid);
     this.save('address', userInfo.info.address);
-    this.save('avatarurl', "http://inari.ml:8080/"+userInfo.info.avatarurl);
+    this.save('avatarurl', "http://hanyuu.top:8080/"+userInfo.info.avatarurl);
     this.save('verified', userInfo.info.verified);
     this.save('score', userInfo.info.score);
     this.save('token',userInfo.token);

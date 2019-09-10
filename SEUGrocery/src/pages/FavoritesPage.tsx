@@ -12,13 +12,16 @@ import UserInfo from '../Common/UserInfo';
 import ItemList from '../Common/ItemList';
 
 const favQueryURL = "fav/query";
+const rootUrl = 'http://hanyuu.top:8080/'
 
 export default class FavoritesPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
       showGoodsWay: '0',
+      favList:[],
       avatarurl:'',
+      goodsList:[],
     };
     UserInfo.get('avatarurl').then(data=>{this.setState({avatarurl:data})})
   }
@@ -100,12 +103,21 @@ export default class FavoritesPage extends Component {
     );
   }
   componentDidMount() {
-    // alert('rua12421312');
-    var list = ItemList.getFavList();
-    this.goodsPanel.setState({ goodsList: list });
-    alert(JSON.stringify(list))
+    this.updateFavList();
+  }
+  // componentDidUpdate() {
+  //   this.updateFavList();
+  // }
+  updateFavList(){
+    ItemList.getFavList().then(list=>{
+      // alert(JSON.stringify(list));
+      this.setState({favList:list});
+      this.goodsPanel.setState({favList:list});
+      this.goodsPanel.getFavList();
+    })
   }
 }
+
 
 const styles = StyleSheet.create({
   baseContainer: {

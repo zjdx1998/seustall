@@ -19,7 +19,7 @@ import {
 import {postData} from '../Common/FetchHelper';
 import {sha1} from '../Common/SHA-1Encryptor';
 import UserInfo from '../Common/UserInfo';
-const loginURL = 'http://inari.ml:8080/user/login';
+const loginURL = 'http://hanyuu.top:8080/user/login';
 import {Icon} from 'react-native-elements';
 import * as SP from '../Common/ScreenProperty';
 import IDVerifySuccess from "../Components/IDVerifySuccess";
