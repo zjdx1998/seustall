@@ -2,9 +2,9 @@
 
 [TOC]
 ## Version
-* server version: v6.7.1
-* doc version: v6.7.1 alpha
-* updated: 2019/09/08 21:01
+* server version: v7.0.1A
+* doc version: v7.0.0 alpha
+* updated: 2019/09/10 13:02
 * author: Hanyuu Furude
 
 ## Characteristics
