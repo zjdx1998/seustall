@@ -39,7 +39,7 @@ export default class ShowUserInfoPage extends Component {
 
     fetchData=()=>{
         const fetch = require('node-fetch');
-        fetch('http://inari.ml:8080/user/'+this.props.navigation.state.params.uuid)
+        fetch('http://hanyuu.top:8080/user/'+this.props.navigation.state.params.uuid)
             .then((response) => response.json())
             .then(response=>{
                     if(response.status=="success" ){
@@ -48,7 +48,7 @@ export default class ShowUserInfoPage extends Component {
                             uuid : this.props.navigation.state.params.uuid,
                             username :response.username,
                             address:'',
-                            avatarurl:'http://inari.ml:8080/'+response.avatarurl,
+                            avatarurl:'http://hanyuu.top:8080/'+response.avatarurl,
                             verified:response.verified,
                             score:response.score,
                             info : response.info,

@@ -20,7 +20,7 @@ import UserInfo from '../Common/UserInfo';
 import {postData} from '../Common/FetchHelper';
 import ItemList from '../Common/ItemList';
 
-const finishedURL = "http://inari.ml:8080/user/finished";
+const finishedURL = "http://hanyuu.top:8080/user/finished";
 
 
 export default class WhatIBoughtPage extends Component {

@@ -202,11 +202,11 @@ export default class SignInUI extends Component {
           </TouchableOpacity>
           {/*//切换状态的按键*/}
           <View style={[styles.container_row,{marginLeft:componentWidth*0.1}]}>
-          <TouchableOpacity
+          {/*<TouchableOpacity
             style={styles.registerButton}
             onPress={this.identifyingCodeLoginButton}>
             <Text style={styles.registerText}>{this.state.register}</Text>
-          </TouchableOpacity>
+          </TouchableOpacity>*/}
 
           <TouchableOpacity
               style={styles.registerButton}

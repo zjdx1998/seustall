@@ -59,7 +59,7 @@ export default class GoodsPanel extends Component {
         {this.state.goodsList.map(i => (
           <Good
             itemid ={i.itemid}
-            imgurl={{uri: "http://inari.ml:8080/"+i.imgurl}}
+            imgurl={{uri: "http://hanyuu.top:8080/"+i.imgurl}}
             title={i.title}
             price={i.price}
             depreciatione={i.depreciatione}

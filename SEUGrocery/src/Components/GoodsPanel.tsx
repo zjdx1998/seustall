@@ -18,40 +18,43 @@ const {width} = Dimensions.get('window');
 
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import UserInfo from '../Common/UserInfo';
+const favQueryUrl = 'http://hanyuu.top:8080/fav/query'
+const rootUrl = 'http://hanyuu.top:8080/'
+
 
 const Goods = [
-  {
-    itemid: '1',
-    title: '米色针织开衫+牛仔裤带吊牌',
-    imgurl: 'https://avatars2.githubusercontent.com/u/45632558?s=400&v=4',
-    sold: 1,
-    depreciatione: '10',
-    price: '100',
-    campus: '九龙湖校区',
-    classify: '服饰鞋包',
-    //info: '这还是一本书，一本很好的书，是一本非常好的书',
-  },
-  {
-    itemid: '2',
-    title: 'MAC口红diva有小票仅手臂试色',
-    imgurl: 'https://avatars2.githubusercontent.com/u/45632558?s=400&v=4',
-    sold: 0,
-    depreciatione: '9.5',
-    price: '150',
-    campus: '九龙湖校区',
-    classify: '服饰鞋子包',
-  },
-  {
-    itemid: '3',
-    title: 'MAC口红diva有小票仅手臂试色',
-    imgurl: 'https://avatars2.githubusercontent.com/u/45632558?s=400&v=4',
-    sold: 0,
-    depreciatione: '9.5',
-    price: '150',
-    campus: '九龙湖校区',
-    classify: '美妆护肤',
-    //info: '这还是一本书，一本很好的书，是一本非常好的书',
-  },
+  // {
+  //   itemid: '1',
+  //   title: '米色针织开衫+牛仔裤带吊牌',
+  //   imgurl: 'https://avatars2.githubusercontent.com/u/45632558?s=400&v=4',
+  //   sold: 1,
+  //   depreciatione: '10',
+  //   price: '100',
+  //   campus: '九龙湖校区',
+  //   classify: '服饰鞋包',
+  //   //info: '这还是一本书，一本很好的书，是一本非常好的书',
+  // },
+  // {
+  //   itemid: '2',
+  //   title: 'MAC口红diva有小票仅手臂试色',
+  //   imgurl: 'https://avatars2.githubusercontent.com/u/45632558?s=400&v=4',
+  //   sold: 0,
+  //   depreciatione: '9.5',
+  //   price: '150',
+  //   campus: '九龙湖校区',
+  //   classify: '服饰鞋子包',
+  // },
+  // {
+  //   itemid: '3',
+  //   title: 'MAC口红diva有小票仅手臂试色',
+  //   imgurl: 'https://avatars2.githubusercontent.com/u/45632558?s=400&v=4',
+  //   sold: 0,
+  //   depreciatione: '9.5',
+  //   price: '150',
+  //   campus: '九龙湖校区',
+  //   classify: '美妆护肤',
+  //   //info: '这还是一本书，一本很好的书，是一本非常好的书',
+  // },
 ];
 
 export default class GoodsPanel extends Component {
@@ -60,12 +63,14 @@ export default class GoodsPanel extends Component {
     CurrentGoods: any;
     goodsList: any;
     showGoodsWay: any;
+    favList:any;
   };
   constructor(props) {
     super(props);
     this.state = {
       CurrentGoods: Goods,
       goodsList: Goods,
+      favList:[],
       showGoodsWay: this.props.showGoodsWay,
     };
   }
@@ -90,6 +95,22 @@ export default class GoodsPanel extends Component {
 
     return list;
   }
+  getFavList(){
+    var liststr = "[]";
+    var list = eval('('+liststr+')');
+
+    var length = 0;
+    // alert(JSON.stringify(this.state.favList))
+    for(var i of this.state.favList.res){
+      // alert(JSON.stringify(i))
+      fetch(rootUrl+'item/'+i.itemid)
+      .then(response=>response.json())
+      .then(data=>{
+        list.push(data);
+        this.setState({goodsList:list});
+      })
+    }
+  }
 
   render() {
     if (this.state.showGoodsWay == '0') {
@@ -108,7 +129,7 @@ export default class GoodsPanel extends Component {
         {this.state.CurrentGoods.map(i => (
           <Good
             itemid={i.itemid}
-            image={{uri: 'http://inari.ml:8080/'+i.imgurl.split("++")[0]}}
+            image={{uri: 'http://hanyuu.top:8080/'+i.imgurl.split("++")[0]}}
             name={i.title}
             price={i.price}
             howNew={i.depreciatione}

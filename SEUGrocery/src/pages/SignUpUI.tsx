@@ -25,8 +25,8 @@ import * as SP from '../Common/ScreenProperty';
 
 const {UIManager} = NativeModules;
 
-const registerURL = 'http://inari.ml:8080/user/register';
-const verifiycodeURL = "http://inari.ml:8080/user/requirecode";
+const registerURL = 'http://hanyuu.top:8080/user/register';
+const verifiycodeURL = "http://hanyuu.top:8080/user/requirecode";
 
 UIManager.setLayoutAnimationEnabledExperimental &&
 UIManager.setLayoutAnimationEnabledExperimental(true);
