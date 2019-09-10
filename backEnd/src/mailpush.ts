@@ -10,8 +10,6 @@ import jwt from 'jsonwebtoken';
 import { UserInterface } from './role';
 export default async function (src: UserInterface)
 {
-
-
 	//https://github.com/andris9/nodemailer-wellknown#supported-services
 	var transporter = nodemailer.createTransport({
 		service: conf.mailConfig.serivce,
@@ -34,32 +32,23 @@ export default async function (src: UserInterface)
 		expiresIn: 1800 //秒到期时间
 	}
 	const token = jwt.sign(payload, conf.secretkey, timeout);
-	const url = `http://localhost/user/verify/${token}`;
-	const text = `${src.username} ${url}.`
+	const link = `${conf.root}/user/mail/verify/${token}`;
 	// setup e-mail data with unicode symbols
 	var mailOptions = {
 		from: conf.mailConfig.user,
 		to: `${src.idcard}@seu.edu.cn`,
-		subject: "foof",
-		text: token,
+		subject: "东大杂货铺",
+		// text: `${conf.root}/user/mail/verify/${token}`,
+		html: `<h1>欢迎注册东大杂货铺</h1>请单击链接<a href="${link}">${link}</a>验证。<br>若本邮件不是由您操作的，请忽略。<br><br>东大杂货铺团队`
 	};
-
-	var res = false;
-	res = await transporter.sendMail(mailOptions, function (error: any, info: any)
+	transporter.sendMail(mailOptions, function (error: any, info: any)
 	{
 		if (error)
 		{
 			console.error(error);
-			res = false;
 		} else
 		{
 			console.log('Message sent: ' + info.response);
-			res = true;
 		}
 	});
-	if (res)
-	{
-		return true;
-	}
-	return false;
 }

@@ -125,6 +125,7 @@ export default class SearchUsersPage extends Component {
         }
         postData(url,data)
             .then(response=>{
+                console.log(response);
                 if(response.status=='failure'){
                     alert('请求错误')
                 }

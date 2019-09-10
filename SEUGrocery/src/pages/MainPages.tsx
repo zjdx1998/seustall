@@ -56,7 +56,7 @@ export default class MainPages extends Component {
                           fetch('http://hanyuu.top:8080/item/' + i)
                               .then(itemRes => itemRes.json())
                               .then(itemRes => {
-                                  if (itemRes.status == 'success') {
+                                  if (itemRes.status == 'success'&& itemRes.uuid!=uuid) {
                                       let temp = {
                                           itemid: i,
                                           icon_url:'http://hanyuu.top:8080/'+ itemRes.imgurl.split("++")[0],

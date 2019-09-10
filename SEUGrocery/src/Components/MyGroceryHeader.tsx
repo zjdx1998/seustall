@@ -21,6 +21,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome'
 import UserInfo from '../Common/UserInfo';
 import ItemList from '../Common/ItemList';
+import * as SP from '../Common/ScreenProperty';
 
 
 export default class MyGroceryHeader extends Component {
@@ -110,7 +111,7 @@ export default class MyGroceryHeader extends Component {
             <View style={styles.container}>
                 <View style={styles.viewUserTop}>
                     <Avatar
-                        size = {120}
+                        size = {SP.WB(20)}
                         rounded
                         source = {{uri:this.state.userAvatar}}
                         // source={{uri: UserInfo.get('avatarurl').avatarurl}}
@@ -152,12 +153,12 @@ const styles = StyleSheet.create({
         margin: 20
     },
     txtTitle: {
-        fontSize: 30,
+        fontSize: SP.setSpText(15),
         alignSelf: 'center',
         color:'#ffffff',
     },
     txtInfo: {
-        fontSize: 20,
+        fontSize: SP.setSpText(10),
         alignSelf: 'center',
         color:'#ffffff',
         marginTop: 40

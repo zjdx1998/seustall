@@ -2,9 +2,9 @@
 
 [TOC]
 ## Version
-
-* version: v6.6.2 alpha
-* updated: 2019/09/06 16:42
+* server version: v7.1.3A
+* doc version: v7.0.2 alpha
+* updated: 2019/09/10 16:56
 * author: Hanyuu Furude
 
 ## Characteristics
@@ -109,6 +109,7 @@ docker run --network host -d -v /home/.../avatar:/foof/avatar hanyuufurude/foofs
 | id        | int(11)      | NO   | PRI | NULL    | auto_increment |
 | from      | int(11)      | NO   |     | NULL    |                |
 | to        | int(11)      | NO   |     | NULL    |                |
+| type      | varchar(255) | NO   |     | NULL    |                |
 | data      | varchar(255) | NO   |     | NULL    |                |
 | fetched   | tinyint(1)   | NO   |     | NULL    |                |
 | createdAt | datetime     | NO   |     | NULL    |                |
@@ -471,9 +472,13 @@ none
 	sold:
 	{
 		sale: 1,
-		sold: 2,
+    sold: 2,
+    deleted :3,
 		want: -1,
-		got: -2,
+    got: -2,
+    deleted: -3,
+
+
 	}
 ```
 
@@ -494,11 +499,11 @@ None
   "title": "432",
   "type": 798,
   "price": 987,
-  "imgurl": "987",
+  "imgurl": "image\\item\\1-1-0.jpg++image\\item\\1-1-1.jpg++image\\item\\1-1-2.jpg++image\\item\\1-1-3.jpg++",
   "depreciatione": 798,
   "note": "987",
-  "sold": 987,
-  "to": 0,
+  "sold": 2,
+  "to": null,
   "status": "success"
 }
 //no item
@@ -515,16 +520,49 @@ Content-Type:application/x-www-form-urlencoded
 ```
 
 ``` json
-{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzU5NjMwMjIwMCwiaWF0IjoxNTY3NTk2MzAyfQ.ijUssByflHjPqWOMMcJMvqroJCaS1PKOBXUYYaS6dYU","title":"未命名商品1","type":"1","price":"1.23","imgurl":"[+++++\"image\\\\item\\\\0.35113526938054584.jpg\",+++++\"image\\\\item\\\\0.5106340873338395.jpg\",+++++\"image\\\\item\\\\0.37461623290026935.jpg\",+++++\"image\\\\item\\\\0.887643214342515.jpg\"+++]","depreciatione":"99","note":"然而并没什么描述","sold":"-1"}}
+{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzU5NjMwMjIwMCwiaWF0IjoxNTY3NTk2MzAyfQ.ijUssByflHjPqWOMMcJMvqroJCaS1PKOBXUYYaS6dYU","title":"未命名商品1","type":"1","price":"1.23","depreciatione":"99","note":"然而并没什么描述","sold":"-1"}}
+```
+
+``` json
+//success
+{
+  "status": "success",
+  "data": {
+    "itemid": 15,
+    "title": "1",
+    "type": "1",
+    "price": "1",
+    "depreciatione": "1",
+    "note": "1",
+    "sold": "1",
+    "uuid": 1,
+    "imgurl": "./image/itemdefault.jpg",
+    "to": 0
+  }
+}
+//no item
+{"status":"none"}
+//wrong token
+403 Forbidden
+```
+
+### delete
+
+```
+POST /item/delete
+```
+
+```
+Content-Type:application/x-www-form-urlencoded
+```
+
+```json
+{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzU2NTYwODkzNCwiaWF0IjoxNTY3NTY1NjA4fQ.J_END7-qsN7HyPmLpQXHcaBOylNvI96OTSEgVg4X-9w","itemid":"1"}}
 ```
 
 ``` json
 //success
 {"status":"success"}
-//no item
-{"status":"none"}
-//wrong token
-403 Forbidden
 ```
 
 ### upload image
@@ -551,6 +589,11 @@ Content-Disposition: form-data; name="token"
 
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzI0ODU5OTI4OSwiaWF0IjoxNTY3MjQ4NTk5fQ.ezvX48rpjAAzd6Bwr3eFrSCnrQT_3SGoXID1NSWAa_8
 
+-----------------------------5005412110300
+Content-Disposition: form-data; name="itemid"
+
+
+1
 -----------------------------5005412110300
 
 Content-Disposition: form-data; name="file0"; filename="Hoshikawa_Hotaru.png"
@@ -583,10 +626,10 @@ Content-Type: image/png
 {
   "status": "success",
   "imgurl": [
-    "image\\item\\0.35113526938054584.jpg",
-    "image\\item\\0.5106340873338395.jpg",
-    "image\\item\\0.37461623290026935.jpg",
-    "image\\item\\0.887643214342515.jpg"
+    "image\\item\\1-1-0.jpg",
+    "image\\item\\1-1-1.jpg",
+    "image\\item\\1-1-2.jpg",
+    "image\\item\\1-1-3.jpg"
   ]
 }
 // file too large
@@ -773,7 +816,7 @@ Content-Type:application/x-www-form-urlencoded
 ```
 
 ``` json
-{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzU2NTYwODkzNCwiaWF0IjoxNTY3NTY1NjA4fQ.J_END7-qsN7HyPmLpQXHcaBOylNvI96OTSEgVg4X-9w","to":"1","data":"hi,+world."}}
+{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzU2NTYwODkzNCwiaWF0IjoxNTY3NTY1NjA4fQ.J_END7-qsN7HyPmLpQXHcaBOylNvI96OTSEgVg4X-9w","to":"1","type":"1","data":"hi,+world."}}
 ```
 
 ``` json
@@ -807,6 +850,7 @@ The name property of the file is arbitrary and the request size is no greater th
       "id": 2,
       "from": 1,
       "to": 1,
+      "type": 1,
       "data": "hi, world.",
       "fetched": false,
       "createdAt": "2019-09-04T14:29:05.000Z",
@@ -840,6 +884,7 @@ Content-Type: application/x-www-form-urlencoded
       "id": 1,
       "from": 1,
       "to": 1,
+      "type": 1,
       "data": "hi",
       "fetched": true,
       "createdAt": "2019-09-04T07:17:22.000Z",
@@ -849,6 +894,7 @@ Content-Type: application/x-www-form-urlencoded
       "id": 2,
       "from": 1,
       "to": 1,
+      "type": 1,
       "data": "hi, world.",
       "fetched": true,
       "createdAt": "2019-09-04T14:29:05.000Z",
@@ -857,6 +903,158 @@ Content-Type: application/x-www-form-urlencoded
   ]
 }
 ```
+
+## trade
+
+### delete single request
+
+```
+POST /user/want/delete
+```
+
+```
+Content-Type: application/x-www-form-urlencoded
+```
+
+``` json
+{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2ODA4NDgyNTY4NywiaWF0IjoxNTY4MDg0ODI1fQ.tO3FJusJxxgaI8qChGInEH9goUDW7S6Io_p1LsjGvf8","id":"2"}}
+```
+
+```json
+//success
+{	status: "success" }
+// Unauthorized operations
+{
+  "status": "failure",
+  "info": "Insufficient permissions"
+}
+```
+
+### delete all request
+
+```
+POST /user/want/deleteall
+```
+
+```
+Content-Type: application/x-www-form-urlencoded
+```
+
+```json
+{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzU2NTYwODkzNCwiaWF0IjoxNTY3NTY1NjA4fQ.J_END7-qsN7HyPmLpQXHcaBOylNvI96OTSEgVg4X-9w","itemid":"2"}}
+```
+
+```json
+//success
+{	status: "success" }
+// Unauthorized operations
+{
+  "status": "failure",
+  "info": "Insufficient permissions"
+}
+```
+
+### order
+
+```
+POST /item/order
+```
+
+```
+Content-Type: application/x-www-form-urlencoded
+```
+
+``` json
+{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzU2NTYwODkzNCwiaWF0IjoxNTY3NTY1NjA4fQ.J_END7-qsN7HyPmLpQXHcaBOylNvI96OTSEgVg4X-9w","to":"12","itemid":"3"}}
+```
+
+``` json
+//success
+{	status: "success" }
+// not for trade
+{
+  "status": "failure",
+  "info": "not for trade"
+}
+```
+
+### reset
+
+```
+POST /item/reset
+```
+
+```
+Content-Type: application/x-www-form-urlencoded
+```
+
+```json
+{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2ODA4NDgyNTY4NywiaWF0IjoxNTY4MDg0ODI1fQ.tO3FJusJxxgaI8qChGInEH9goUDW7S6Io_p1LsjGvf8","itemid":"4"}}
+```
+
+``` json
+//success
+{	status: "success" }
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+###  suggest structure of message
+
+> example message
+>
+> ```
+> {
+>     "status":"success",
+>     "data":[
+>         {
+>             "id":3,
+>             "from":1,
+>             "to":12,
+>             "type":1,
+>             "data":"hi",
+>             "fetched":false,
+>             "createdAt":"2019-09-09T15:53:00.000Z",
+>             "updatedAt":"2019-09-09T15:53:00.000Z"
+>         }
+>     ]
+> }
+> ```
+>
+
+* id
+  * id is the id of the message, it’s just a globally unique identifier of the message, you can ignore it in most situations.
+* from & to
+  * all information about sender and receiver should be fetched by their uuid (from and to) . You are not suggested to carry any extra information about any role for that may out dated.
+* type
+  * 0: system information
+    * data = 
+    * data = 
+  * 1: chat information
+* data
+  * data is the body of the message, it has extra conventions in front end, it will be mentioned below.
+* fetched
+  * whether this piece of message had been picked by receiver.
+* CreatedAt & updatedAt
+  * the timestamp of the record (when the user post the piece of message)
+
+
 
 ## Search
 

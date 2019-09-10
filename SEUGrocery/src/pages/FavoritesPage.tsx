@@ -12,16 +12,14 @@ import UserInfo from '../Common/UserInfo';
 import ItemList from '../Common/ItemList';
 
 const favQueryURL = "fav/query";
-const rootUrl = 'http://hanyuu.top:8080/'
 
 export default class FavoritesPage extends Component {
+  private goodsPanel: any;
   constructor(props) {
     super(props);
     this.state = {
       showGoodsWay: '0',
-      favList:[],
       avatarurl:'',
-      goodsList:[],
     };
     UserInfo.get('avatarurl').then(data=>{this.setState({avatarurl:data})})
   }
@@ -103,21 +101,39 @@ export default class FavoritesPage extends Component {
     );
   }
   componentDidMount() {
-    this.updateFavList();
-  }
-  // componentDidUpdate() {
-  //   this.updateFavList();
-  // }
-  updateFavList(){
-    ItemList.getFavList().then(list=>{
-      // alert(JSON.stringify(list));
-      this.setState({favList:list});
-      this.goodsPanel.setState({favList:list});
-      this.goodsPanel.getFavList();
-    })
+    // const fetch = require('node-fetch');
+    // const indexURL = "http://inari.ml:8080/";
+    // // alert('rua12421312');
+    // console.log('didMount');
+    // ItemList.getFavList()
+    //     .then(list=> {
+    //       console.log('list',list);
+    //       let goodsList=[];
+    //       if(list.status=='success') {
+    //         for (let i in list.res) {
+    //           fetch(indexURL + 'item/' + i)
+    //               .then(res => res.json())
+    //               .then(response => {
+    //                 console.log('reoponse', response)
+    //                 if(response.sold>0) {
+    //                   goodsList.push({
+    //                     itemid: response.itemid,
+    //                     title: response.title,
+    //                     imgurl: response.imgurl,
+    //                     sold: response.sold,
+    //                     depreciatione: response.depreciatione,
+    //                     price: response.price,
+    //                     info: response.note,
+    //                   });
+    //                   this.goodsPanel.setState({goodsList: goodsList});
+    //                 }
+    //               })
+    //         }
+    //       }
+
+        // } )
   }
 }
-
 
 const styles = StyleSheet.create({
   baseContainer: {
