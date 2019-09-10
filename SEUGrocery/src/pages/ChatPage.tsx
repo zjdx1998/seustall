@@ -105,10 +105,9 @@ export default class ChatPage extends Component {
         avatarurl_to: this.props.navigation.state.params.avatarurl_chat,
         messages: [],
       });
-
-
-            if ((this.props.navigation.state.params.text_chat !== undefined)
-        this.props.navigation.state.params.type_chat == 2
+      if (
+        this.props.navigation.state.params.text_chat !== undefined &&
+        this.props.navigation.state.params.type_chat === 2
       ) {
         var mList = [];
         var user = {
@@ -168,9 +167,7 @@ export default class ChatPage extends Component {
       that.setState(previousState => ({
         messages: GiftedChat.append(previousState.messages, messages),
       }));
-
-        });
-
+    });
   }
 
   onSend(messages = []) {
