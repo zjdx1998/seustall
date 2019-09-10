@@ -1,3 +1,6 @@
+# @author: 71117123
+# @CreateTime: 2019/9/8
+# @LastUpdate: 2019/9/10
 from flask import Flask, render_template, jsonify
 from random import *
 
