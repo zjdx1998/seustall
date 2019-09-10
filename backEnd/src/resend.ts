@@ -45,6 +45,7 @@ export async function updateUser(user: UserInterface)
 					username: user.username
 				},
 				doc_as_upsert: true,
+				detect_noop: false
 			});
 		// console.log(res);
 	}
@@ -60,12 +61,10 @@ export async function postItem(item: ItemInterface)
 	{
 		const res = await postData(conf.resend.host.root + conf.resend.host.item + item.itemid,
 			{
-				doc: {
-					note: item.note,
-					price: item.price,
-					title: item.title,
-				},
-				doc_as_upsert: true,
+				note: item.note,
+				price: item.price,
+				title: item.title,
+
 			});
 		// console.log(res);
 	} catch (error)
@@ -79,9 +78,14 @@ export async function updateItem(item: ItemInterface)
 	{
 		const res = await postData(conf.resend.host.root + conf.resend.host.item + item.itemid + `/_update`,
 			{
-				note: item.note,
-				price: item.price,
-				title: item.title,
+				doc:
+				{
+					note: item.note,
+					price: item.price,
+					title: item.title,
+				},
+				doc_as_upsert: true,
+				detect_noop: false
 			});
 		// console.log(res);
 	} catch (error)

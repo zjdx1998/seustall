@@ -70,7 +70,7 @@ export default {
 	resend:
 	{
 		// todo 打包时打开此开关
-		switchOn: true,
+		switchOn: false,
 		/**
 		switchOn: false,
 			//*/
