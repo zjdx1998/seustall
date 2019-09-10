@@ -13,20 +13,23 @@ import path from 'path';
 import jwt, { decode } from 'jsonwebtoken';
 import { User, Item, UserInterface, ItemInterface } from './role';
 import conf from './conf';
-import data from "./database";
+import Database from "./database";
 import mail from './mailpush';
-import { postItem, postUser, search } from './resend';
-import { requireCode, verifyCode } from './SMSVerify';
+import VerifyCenter from './verifyCodeCenter';
+import { postItem, postUser, updateItem, updateUser, search } from './resend';
+import sendSMS from './SMSVerify';
+import { imgClear } from './storge';
 
 const router = new koaRouter();
 function webServer()
 {
 	//尝试连接数据库，若失败则抛出异常重新尝试连接
-	const database = new data();;
+	const database = new Database();
+	var verifyCenter = new VerifyCenter();
 	try
 	{
 		const app = new Koa();
-		app.use(logger());
+		// app.use(logger());
 		app.use(koaBody({ multipart: true }));
 		app.use(router.routes());
 		/**
@@ -107,9 +110,11 @@ function webServer()
 			var res = new Object() as any;
 			try
 			{
-				const resverify = verifyCode(ctx.request.body.phonenumber, ctx.request.body.verifycode);
+				// const resverify = verifyCode(ctx.request.body.phonenumber, ctx.request.body.verifycode);
 				// if (resverify.status == conf.res.success)
-				if (true)
+				const resverify = verifyCenter.query(ctx.request.body.phonenumber, ctx.request.body.verifycode);
+				res = resverify;
+				if (resverify.status == conf.res.success)
 				{
 					var newUser = new Object() as UserInterface;
 					newUser = ctx.request.body;
@@ -155,14 +160,21 @@ function webServer()
 		 */
 		router.post('/user/requirecode', async (ctx, next) =>
 		{
-			var res = requireCode(ctx.request.body.phonenumber);
+			var res = new Object() as any;
+			// var res = requireCode(ctx.request.body.phonenumber);
+			var rescode = verifyCenter.push(ctx.request.body.phonenumber);
+			res = rescode
+			if (rescode.status == conf.res.success)
+			{
+				// sendSMS(ctx.request.body.phonenumber, rescode.data.code)
+			}
 			ctx.response.body = JSON.stringify(res);
 			ctx.response.type = "application/json";
 		})
 		/**
 		 * @description 手机号重置密码
 		 */
-		router.post('/user/reset', async (ctx, next) =>
+		router.post('/user/ =', async (ctx, next) =>
 		{
 			var res = new Object() as any;
 			try
@@ -176,7 +188,8 @@ function webServer()
 					ctx.response.type = "application/json";
 					return;
 				}
-				var resverify = verifyCode(ctx.request.body.phonenumber, ctx.request.body.verifycode);
+				//todo
+				var resverify = verifyCenter.query(ctx.request.body.phonenumber, ctx.request.body.verifycode);
 				if (resverify.status == conf.res.success)
 				{
 					database.updatepassword(
@@ -271,7 +284,7 @@ function webServer()
 					ctx.response.status = 403
 					return;
 				}
-				postUser(resupdate.data);
+				updateUser(resupdate.data);
 				res.status = conf.res.success;
 				ctx.response.type = "application/json";
 				ctx.response.body = JSON.stringify(res)
@@ -299,13 +312,8 @@ function webServer()
 					return;
 				}
 				const queryres: any = await database.queryUserS(verify.uuid);
-				if (await mail(queryres as UserInterface))
-				{
-					res.status = conf.res.success;
-				} else
-				{
-					res.status = conf.res.failure;
-				}
+				await mail(queryres as UserInterface)
+				res.status = conf.res.success;
 				ctx.response.body = JSON.stringify(res);
 				ctx.response.type = 'application/json';
 
@@ -364,7 +372,7 @@ function webServer()
 					ctx.response.status = 403;
 					return;
 				}
-				res = await database.chatPush(verify.uuid, ctx.request.body.to, ctx.request.body.data);
+				res = await database.chatPush(verify.uuid, ctx.request.body.to, ctx.request.body.type, ctx.request.body.data);
 				ctx.response.body = JSON.stringify(res);
 				ctx.response.type = "application/json";
 			} catch (error)
@@ -427,6 +435,159 @@ function webServer()
 			}
 		})
 		/**
+		 * @description token 用户删除单个物品单个其他用户发起的我想要请求
+		 * @todo
+		 */
+		router.post('/user/want/delete', async (ctx, next) =>
+		{
+			var res = new Object() as any;
+			try
+			{
+				const verify: any = verifyToken(ctx.request.body.token);
+				if (!verify)
+				{
+					ctx.response.status = 403;
+					return;
+				}
+				const id = ctx.request.body.id;
+				const resquery = await database.queryMsgid(id);
+				if (resquery.status == conf.res.success)
+				{
+					if (resquery.data.to == verify.uuid)
+					{
+						const resupdate = await database.deleteWant(id);
+						res = resupdate;
+					} else
+					{
+						res.status = conf.res.failure;
+						res.info = conf.except.noPermission;
+					}
+				}
+				else
+				{
+					res.status = conf.res.failure;
+					res.info = resquery.info;
+				}
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			} catch (error)
+			{
+				res.status = conf.res.failure;
+				res.info = error;
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			}
+		})
+		/**
+		 * @description token 用户删除单个物品所有的我想要请求
+		 * @todo
+		 */
+		router.post('/user/want/deleteall', async (ctx, next) =>
+		{
+			var res = new Object() as any;
+			try
+			{
+				const verify: any = verifyToken(ctx.request.body.token);
+				if (!verify)
+				{
+					ctx.response.status = 403;
+					return;
+				}
+				const itemid = ctx.request.body.itemid;
+				const resquery = await database.queryItem(itemid);
+				if (resquery.status == conf.res.success)
+				{
+					const resupdate = await database.deleteAllWant(itemid);
+					res = resupdate;
+				}
+				else
+				{
+					res.status = conf.res.failure;
+					res.info = resquery.info;
+				}
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			} catch (error)
+			{
+				res.status = conf.res.success;
+				res.info = error;
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			}
+		})
+		/**
+		 * @description 用户预定商品
+		 * @todo
+		 */
+		router.post('/item/order', async (ctx, next) =>
+		{
+			var res = new Object() as any;
+			try
+			{
+				const verify: any = verifyToken(ctx.request.body.token);
+				if (!verify)
+				{
+					ctx.response.status = 403;
+					return;
+				}
+				const resupdate = await database.preorderItem(ctx.request.body.to, ctx.request.body.itemid);
+				res = resupdate;
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			}
+			catch (error)
+			{
+				res.status = conf.res.failure;
+				res.info = error;
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			}
+		})
+		/**
+		 * @description  重置商品状态
+		 */
+		router.post('/item/reset', async (ctx, next) =>
+		{
+			var res = new Object() as any;
+			try
+			{
+				const verify: any = verifyToken(ctx.request.body.token);
+				if (!verify)
+				{
+					ctx.response.status = 403;
+					return;
+				}
+				const resquery = await database.queryItem(ctx.request.body.itemid);
+				if (resquery.status == conf.res.success)
+				{
+					if (resquery.uuid == verify.uuid)
+					{
+						const resupdate = await database.resetItemStatus(resquery.itemid);
+						res = resupdate;
+					}
+					else
+					{
+						res.status = conf.res.failure;
+						res.info = conf.except.noPermission;
+					}
+				}
+				else
+				{
+					res.status = conf.res.failure;
+					res.info = resquery.info;
+				}
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			}
+			catch (error)
+			{
+				res.status = conf.res.failure;
+				res.info = error;
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			}
+		})
+		/**
 		 * @description token 用户添加求购/商品
 		 */
 		router.post('/item/add', async (ctx, next) =>
@@ -440,57 +601,119 @@ function webServer()
 			var newGood = new Object() as ItemInterface;
 			newGood = ctx.request.body;
 			newGood.uuid = verify.uuid;
+			newGood.imgurl = path.join(conf.imgurl, "default.jpg");
 			const res = await database.writeItem(newGood);
 			postItem(res.data);
+
 			ctx.response.body = JSON.stringify(res);
 			ctx.response.type = 'application/json';
+		})
+		/**
+		 * @description token 用户删除商品
+		 */
+		router.post('/item/delete', async (ctx, next) =>
+		{
+			var res = new Object() as any;
+			try
+			{
+				const verify: any = verifyToken(ctx.request.body.token);
+				if (!verify)
+				{
+					ctx.response.status = 403;
+					return;
+				}
+				const resquery = await database.queryItem(ctx.request.body.itemid);
+				if (resquery.uuid == verify.uuid)
+				{
+					const resupdate = await database.deleteItem(resquery.itemid);
+					imgClear(resquery.uuid, resquery.itemid);
+					if (resupdate.status == conf.res.success)
+					{
+						res.status = conf.res.success;
+					}
+					else
+					{
+						res.status = conf.res.failure;
+						res.info = resupdate.info;
+					}
+				}
+				else
+				{
+					res.status = conf.res.failure;
+					res.info = conf.except.invaildReq + conf.except.noItem;
+				}
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			} catch (error)
+			{
+				res.status = conf.res.failure;
+				res.info = error;
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			}
 		})
 		/**
 		 * @description 商品添加图片
 		 */
 		router.post('/item/image', async (ctx, next) =>
 		{
-			const verify: any = verifyToken(ctx.request.body.token);
-			if (!verify)
-			{
-				ctx.response.status = 403;
-				return;
-			}
-			var response = new Object() as any;
+			var res = new Object() as any;
 			try
 			{
-				const files: any = ctx.request.files;
-				var count = 0;
-				var imgList = new Array();
-				var imgListfs = new Array();
-				for (var file in files)
+				const verify: any = verifyToken(ctx.request.body.token);
+				if (!verify)
 				{
-					const filename = `${Math.random()}.jpg`
-					const urlfs = path.join(conf.imgurlfs, filename);
-					const url = path.join(conf.imgurl, filename);
-					imgListfs.push(urlfs);
-					imgList.push(url);
-					++count;
+					ctx.response.status = 403;
+					return;
 				}
-				count = 0
-				for (var file in files)
+				const item = await database.queryItem(ctx.request.body.itemid);
+				const itemid = item.itemid;
+				const uuid = verify.uuid;
+				if (item.status == conf.res.success)
 				{
-					const reader = fs.createReadStream(files[file].path);
-					const stream = fs.createWriteStream(imgListfs[count]);
-					reader.pipe(stream);
-					++count;
+					const files: any = ctx.request.files;
+					var count = 0;
+					var imgList = new Array();
+					var imgListfs = new Array();
+					var imgstring = "";
+					imgClear(uuid, itemid);
+					for (var file in files)
+					{
+						const filename = `${uuid}-${itemid}-${count}.jpg`
+						const urlfs = path.join(conf.imgurlfs, filename);
+						const url = path.join(conf.imgurl, filename);
+						imgstring += `${url}++`;
+						imgListfs.push(urlfs);
+						imgList.push(url);
+						++count;
+					}
+					count = 0
+					for (var file in files)
+					{
+						const reader = fs.createReadStream(files[file].path);
+						const stream = fs.createWriteStream(imgListfs[count]);
+						reader.pipe(stream);
+						++count;
+					}
+					database.updateImageURL(itemid, imgstring);
+					res.status = conf.res.success
+					res.imgurl = imgList;
+					ctx.response.body = JSON.stringify(res);
+					ctx.response.type = "application/json";
+				} else
+				{
+					res.status = conf.res.failure;
+					res.info = conf.except.invaildReq;
+					ctx.response.body = JSON.stringify(res);
+					ctx.response.type = "application/json";
 				}
-				response.status = conf.res.success
-				response.imgurl = imgList;
-				ctx.response.body = JSON.stringify(response);
-				ctx.response.type = "application/json";
 
 			} catch (error)
 			{
 				console.error(`[ERROR] ${error}`);
-				response.status = conf.res.failure;
-				response.info = conf.except.invaildReq;
-				ctx.response.body = JSON.stringify(response);
+				res.status = conf.res.failure;
+				res.info = conf.except.noItem;
+				ctx.response.body = JSON.stringify(res);
 				ctx.response.type = "application/json";
 			}
 		});
@@ -525,7 +748,7 @@ function webServer()
 					ctx.response.status = 403
 					return;
 				}
-				postItem(resdsatabase.data);
+				updateItem(resdsatabase.data);
 				res.status = conf.res.success;
 				ctx.response.type = "application/json";
 				ctx.response.body = JSON.stringify(res)
@@ -552,7 +775,7 @@ function webServer()
 					ctx.response.status = 403;
 					return;
 				}
-				const restrade = await database.tradeItem(ctx.request.body.itemid, verifyres.uuid);
+				const restrade = await database.tradeItem(ctx.request.body.itemid);
 				if (restrade)
 				{
 					res.status = conf.res.success;

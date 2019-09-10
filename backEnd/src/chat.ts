@@ -15,6 +15,11 @@ export default {
 		type: sequelize.INTEGER,
 		allowNull: false,
 	},
+	type:
+	{
+		type: sequelize.INTEGER,
+		allowNull: false,
+	},
 	data:
 	{
 		type: sequelize.STRING,

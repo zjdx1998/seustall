@@ -24,6 +24,7 @@ export default {
 	phonenumber: {
 		type: sequelize.STRING,
 		allowNull: false,
+		unique: true,
 	},
 	idcard: {
 		type: sequelize.STRING,
@@ -49,9 +50,25 @@ export default {
 		type: sequelize.INTEGER,
 		allowNull: false,
 	},
-	info:{
-		type:sequelize.STRING,
-		allowNull:true,
+	info: {
+		type: sequelize.STRING,
+		allowNull: true,
 	},
-	
+
 }
+const indexes =
+	[
+		{
+			name: 'uuid',
+			unique: true,
+			method: 'BTREE',
+			fields: ['uuid'],
+		},
+		{
+			name: 'phonenumber',
+			unique: true,
+			method: 'BTREE',
+			fields: ['phonenumber'],
+		},
+	]
+export { indexes as userIndexes }

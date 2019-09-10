@@ -111,6 +111,7 @@ export interface chatInterface
 {
 	from: number,
 	to: number,
+	type: number,
 	data: string,
 	fetched?: boolean,
 }

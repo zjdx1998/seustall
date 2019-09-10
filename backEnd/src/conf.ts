@@ -4,6 +4,8 @@
  * @description config
  */
 export default {
+	root: "http://hanyuu.top:8080",
+	// root:"http://localhost",
 	res:
 	{
 		success: "success",
@@ -30,11 +32,16 @@ export default {
 		reset: "fetal error,reseting server",
 		dbConnT: "database connect success",
 		dbConnF: "database connect failed",
-		databaseexception: "database exception",
+		databaseException: "database exception",
 		invaildReq: "invaild request",
 		noUser: "no such user",
-		badverifycode: "bad verify code",
-		reqtoofreq: "request too frequent"
+		noItem: "no such item",
+		noFav: "no such favorites",
+		noMwg: "no such message",
+		badVerifycode: "bad verify code",
+		reqtoofreq: "request too frequent",
+		notfortrade: "not for trade",
+		noPermission:"Insufficient permissions",
 	},
 	SMSConfig:
 	{
@@ -43,9 +50,9 @@ export default {
 	},
 	mailConfig:
 	{
-		serivce: "qq",
-		user: "wakamiyaeve@qq.com",
-		pass: "azffygurwzxfdhgf",
+		serivce: "126",
+		user: "TomotakeYoshino@126.com",
+		pass: "gitpushf1"
 	},
 	searchConfig:
 	{
@@ -55,11 +62,18 @@ export default {
 	{
 		sale: 1,
 		sold: 2,
+		selling: 3,
 		want: -1,
 		got: -2,
+		trading: -3,
 	},
 	resend:
 	{
+		// todo 打包时打开此开关
+		switchOn: false,
+		/**
+		switchOn: false,
+			//*/
 		host:
 		{
 			root: "http://hanyuu.top:9200",

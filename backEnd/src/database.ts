@@ -42,9 +42,9 @@ export default class data
 					max: 5,
 					min: 0,
 					idle: 1000
-				}
-
-			});
+				},
+				logging: false,
+			}	);
 		this.connect();
 	}
 
@@ -128,6 +128,7 @@ export default class data
 			return res;
 		}
 	}
+
 	/**
 	 * @description 写入用户信息
 	 */
@@ -160,19 +161,22 @@ export default class data
 	 */
 	public async queryItem(itemid: number)
 	{
+		var res = new Object() as any;
 		try
 		{
-
-			const res = await this.items.findOne({
+			const resquery = await this.items.findOne({
 				where:
 				{
 					itemid
 				}
 			})
+			res = resquery;
 			return this.responseFix(res);
 		} catch (error)
 		{
-			throw new Error("[ERROR] Database connect failed.\n" + error);
+			res.status = conf.res.failure;
+			res.info = error;
+			return res;
 		}
 	}
 	/**
@@ -189,9 +193,17 @@ export default class data
 					uuid
 				}
 			})
-			const userRes = new User(resquery);
-			res = this.responseFix(userRes.public());
-			res.status = conf.res.success;
+			if (resquery)
+			{
+				const userRes = new User(resquery);
+				res = this.responseFix(userRes.public());
+				res.status = conf.res.success;
+			} else
+			{
+				res.status = conf.res.failure;
+				res.info = conf.except.noUser;
+			}
+
 			return res;
 		} catch (error)
 		{
@@ -301,6 +313,44 @@ export default class data
 			response.status = conf.res.failure;
 			response.info = "bad request";
 			return response;
+		}
+	}
+
+	/**
+	 * @description 删除物品
+	 */
+	public async deleteItem(itemid: number)
+	{
+		var res = new Object() as any;
+		try
+		{
+			const resquery = await this.queryItem(itemid);
+			if (resquery.status == conf.res.success)
+			{
+				if (resquery.sold > 0)
+				{
+					res = await this.items.update(
+						{ sold: 3 },
+						{ where: { itemid } }
+					)
+				}
+				else
+				{
+					res = await this.items.update(
+						{ sold: 3 },
+						{ where: { itemid } }
+					)
+				}
+			};
+			res.status = conf.res.success;
+			res.data = data;
+			return res;
+		} catch (error)
+		{
+			console.error(`[ERROR] failed while writing item\n${error}`);
+			res.status = conf.res.failure;
+			res.info = "invaild request";
+			return res;
 		}
 	}
 	/**
@@ -451,7 +501,6 @@ export default class data
 					"title": src.title,
 					"type": src.type,
 					"price": src.price,
-					"imgurl": src.imgurl,
 					"depreciatione": src.depreciatione,
 					"note": src.note,
 				},
@@ -476,21 +525,20 @@ export default class data
 	/**
 	 * @description 发起交易
 	 */
-	public async tradeItem(itemid: number, uuid: number)
+	public async tradeItem(itemid: number)
 	{
 		try
 		{
 			const queryres: any = await this.queryItem(itemid as number)
-			if (queryres.status === "none" || queryres.sold == 2 || queryres.sold == -2)
+			if (queryres.status == "none" || !(queryres.sold == 3 || queryres.sold == -3))
 			{
 				return false;
 			}
-			if (queryres.sold == -1)
+			if (queryres.sold == -3)
 			{
 
 				const res = await this.items.update(
 					{
-						to: uuid,
 						sold: -2
 					},
 					{
@@ -501,11 +549,10 @@ export default class data
 					}
 				)
 				return true;
-			} else if (queryres.sold == 1)
+			} else if (queryres.sold == 3)
 			{
 				const res = await this.items.update(
 					{
-						to: uuid,
 						sold: 2
 					},
 					{
@@ -706,7 +753,7 @@ export default class data
 	/**
 	 * @description 添加一个消息记录
 	 */
-	public async chatPush(from: number, to: number, data: string)
+	public async chatPush(from: number, to: number, type: number, data: string)
 	{
 		var res = new Object() as any;
 		try
@@ -718,6 +765,7 @@ export default class data
 				{
 					from,
 					to,
+					type,
 					data,
 					fetched: false,
 				}
@@ -817,6 +865,203 @@ export default class data
 			return res;
 		}
 	}
+	public async queryMsgid(id: number)
+	{
+		var res = new Object() as any;
+		try
+		{
+			const resquery = await this.chat.findOne(
+				{ where: { id } }
+			)
+			if (resquery)
+			{
+				res.status = conf.res.success;
+				res.data = resquery;
+				return res;
+			}
+			else
+			{
+				res.status = conf.res.failure;
+				res.info = conf.except.noMwg;
+				return res;
+			}
+		} catch (error)
+		{
+			res.status = conf.res.failure;
+			res.info = error;
+			return res;
+		}
+	}
+	/**
+	 * @description “我想要”请求单条删除
+	 */
+	public async deleteWant(id: number)
+	{
+		var res = new Object() as any;
+		try
+		{
+			const resdestroy = await this.chat.destroy(
+				{ where: { id } }
+			);
+			res.status = conf.res.success;
+			res.info = resdestroy;
+			return res;
+		} catch (error)
+		{
+			res.status = conf.res.failure;
+			res.info = error;
+			return res;
+		}
+	}
+	/**
+	 * @description “我想要”请求全部删除
+	 */
+	public async deleteAllWant(itemid: number)
+	{
+		var res = new Object() as any;
+		try
+		{
+			const resdestroy = await this.chat.destroy(
+				{
+					where: {
+						data:itemid
+					}
+				}
+			);
+			res.status = conf.res.success;
+			res.info = resdestroy;
+			return res;
+		} catch (error)
+		{
+			res.status = conf.res.failure;
+			res.info = error;
+			return res;
+		}
+	}
+	/**
+	 * @description 预定商品
+	 */
+	public async preorderItem(uuid: number, itemid: number)
+	{
+		var res = new Object() as any;
+		try
+		{
+			const resquery = await this.queryItem(itemid);
+			if (resquery.sold == 1)
+			{
+				this.items.update(
+					{
+						sold: 3,
+						to: uuid
+					},
+					{ where: { itemid } }
+				);
+				res.status = conf.res.success;
+				return res;
+			} else if (resquery.sold == -1)
+			{
+				this.items.update(
+					{
+						sold: -3,
+						to: uuid
+					},
+					{ where: { itemid } }
+				);
+				res.status = conf.res.success;
+				return res;
+			}
+			else
+			{
+				res.status = conf.res.failure;
+				res.info = conf.except.notfortrade;
+				return res;
+			}
+		} catch (error)
+		{
+			res.status = conf.res.failure;
+			res.info = error;
+			return res;
+		}
+	}
+	/**
+	 * @description 复位商品至待出售状态
+	 */
+	public async resetItemStatus(itemid: number)
+	{
+		var res = new Object() as any;
+		try
+		{
+			const resquery = await this.queryItem(itemid);
+			if (resquery.sold == 3)
+			{
+				const resupdate = this.items.update(
+					{
+						sold: 1,
+						to: 0
+					}, { where: { itemid } }
+				);
+				res.status = conf.res.success;
+				return res;
+			} else if (resquery.sold == -3)
+			{
+				const resupdate = this.items.update(
+					{
+						sold: -1,
+						to: 0
+					}, { where: { itemid } }
+				);
+				res.status = conf.res.success;
+				return res;
+			} else
+			{
+				res.status = conf.res.failure;
+				res.info = conf.except.invaildReq;
+				return res;
+			}
+		} catch (error)
+		{
+			res.status = conf.res.failure;
+			res.info = error;
+			return res;
+		}
+	}
+	/**
+	 * @description 商品确认交易完成
+	 */
+	public async tradeItemFinished(itemid: number)
+	{
+		var res = new Object() as any;
+		try
+		{
+			const resquery = await this.queryItem(itemid);
+			if (resquery.sold == 3)
+			{
+				this.items.update(
+					{ sold: 2 }, { where: { itemid } }
+				);
+				res.status = conf.res.success;
+				return res;
+			} else if (resquery.sold == -3)
+			{
+				this.items.update(
+					{ sold: -2 }, { where: { itemid } }
+				);
+				res.status = conf.res.success;
+				return res;
+			}
+			else
+			{
+				res.status = conf.res.failure;
+				res.info = conf.except.invaildReq;
+				return res;
+			}
+		} catch (error)
+		{
+			res.status = conf.res.success;
+			res.info = error;
+			return res;
+		}
+	}
 	/**
 	 * @description 响应修饰器
 	 */
@@ -824,7 +1069,7 @@ export default class data
 	{
 		if (res && res.dataValues)
 		{
-			res.dataValues.status = 'success';
+			res.dataValues.status = conf.res.success;
 			return res.dataValues;
 		}
 		const noneRes: any = new Object();
