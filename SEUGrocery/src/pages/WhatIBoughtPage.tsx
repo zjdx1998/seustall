@@ -20,30 +20,31 @@ import UserInfo from '../Common/UserInfo';
 import {postData} from '../Common/FetchHelper';
 import ItemList from '../Common/ItemList';
 
-const finishedURL = "http://hanyuu.top:8080/user/finished";
-
+const finishedURL = 'http://hanyuu.top:8080/user/finished';
 
 export default class WhatIBoughtPage extends Component {
   private props: any;
-  state: { 
+  state: {
     userAvatar: string;
-    token:string;
- };
-constructor(props){
+    token: string;
+  };
+  constructor(props) {
     super(props);
     this.state = {
-        userAvatar:'',
-        token:'',
+      userAvatar: '',
+      token: '',
     };
-    UserInfo.get('avatarurl').then((url)=>{this.setState({
-        userAvatar:url
-    })});
-    UserInfo.get('token').then((tok)=>{this.setState({
-        token:tok
-    })});
+    UserInfo.get('avatarurl').then(url => {
+      this.setState({
+        userAvatar: url,
+      });
+    });
+    UserInfo.get('token').then(tok => {
+      this.setState({
+        token: tok,
+      });
+    });
   }
-
-
 
   render() {
     return (
@@ -57,7 +58,7 @@ constructor(props){
               <Avatar
                 size={120}
                 rounded
-                source={{uri:this.state.userAvatar}}
+                source={{uri: this.state.userAvatar}}
               />
             </View>
             <View style={styles.txtArea}>
@@ -67,7 +68,8 @@ constructor(props){
         </View>
         <View style={styles.headerContainer} />
         <View style={styles.GoodsAreaContainer}>
-          <BoughtGoodsPanel navigation={this.props.navigation}
+          <BoughtGoodsPanel
+            navigation={this.props.navigation}
             ref={goodsPanel => (this.goodsPanel = goodsPanel)}
           />
         </View>
@@ -76,14 +78,11 @@ constructor(props){
   }
   componentDidMount() {
     // alert('rua12421312');
-    ItemList.getFinishedList()
-    .then(list=>{
-      this.goodsPanel.setState({goodsList:list})
-    })
+    ItemList.getFinishedList().then(list => {
+      this.goodsPanel.setState({goodsList: list});
+    });
   }
 }
-
-
 
 const styles = StyleSheet.create({
   baseContainer: {

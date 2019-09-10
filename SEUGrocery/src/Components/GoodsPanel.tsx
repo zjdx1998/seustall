@@ -18,9 +18,8 @@ const {width} = Dimensions.get('window');
 
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import UserInfo from '../Common/UserInfo';
-const favQueryUrl = 'http://hanyuu.top:8080/fav/query'
-const rootUrl = 'http://hanyuu.top:8080/'
-
+const favQueryUrl = 'http://hanyuu.top:8080/fav/query';
+const rootUrl = 'http://hanyuu.top:8080/';
 
 const Goods = [
   // {
@@ -63,14 +62,14 @@ export default class GoodsPanel extends Component {
     CurrentGoods: any;
     goodsList: any;
     showGoodsWay: any;
-    favList:any;
+    favList: any;
   };
   constructor(props) {
     super(props);
     this.state = {
       CurrentGoods: Goods,
       goodsList: Goods,
-      favList:[],
+      favList: [],
       showGoodsWay: this.props.showGoodsWay,
     };
   }
@@ -95,20 +94,20 @@ export default class GoodsPanel extends Component {
 
     return list;
   }
-  getFavList(){
-    var liststr = "[]";
-    var list = eval('('+liststr+')');
+  getFavList() {
+    var liststr = '[]';
+    var list = eval('(' + liststr + ')');
 
     var length = 0;
     // alert(JSON.stringify(this.state.favList))
-    for(var i of this.state.favList.res){
+    for (var i of this.state.favList.res) {
       // alert(JSON.stringify(i))
-      fetch(rootUrl+'item/'+i.itemid)
-      .then(response=>response.json())
-      .then(data=>{
-        list.push(data);
-        this.setState({goodsList:list});
-      })
+      fetch(rootUrl + 'item/' + i.itemid)
+        .then(response => response.json())
+        .then(data => {
+          list.push(data);
+          this.setState({goodsList: list});
+        });
     }
   }
 
@@ -129,7 +128,7 @@ export default class GoodsPanel extends Component {
         {this.state.CurrentGoods.map(i => (
           <Good
             itemid={i.itemid}
-            image={{uri: 'http://hanyuu.top:8080/'+i.imgurl.split("++")[0]}}
+            image={{uri: 'http://hanyuu.top:8080/' + i.imgurl.split('++')[0]}}
             name={i.title}
             price={i.price}
             howNew={i.depreciatione}
@@ -158,7 +157,7 @@ class Good extends Component {
           <ImageBackground
             style={{flex: 1, height: 150, flexDirection: 'row'}}
             source={
-              this.props.isSold==2
+              this.props.isSold == 2
                 ? require('../Common/img/isSold.png')
                 : require('../Common/img/notSold.png')
             }>
@@ -171,7 +170,7 @@ class Good extends Component {
                 {this.props.name}
               </Text>
               <Text numberOfLines={1} style={styles.howNewAndCampus}>
-                {this.props.howNew/10}成新
+                {this.props.howNew / 10}成新
               </Text>
               <Text numberOfLines={1} style={styles.howNewAndCampus}>
                 {this.props.campus}

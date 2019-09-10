@@ -4,8 +4,6 @@
   @date: 2019-8-30
 */
 
-
-
 import AsyncStorage from '@react-native-community/async-storage';
 import {postData} from './FetchHelper';
 
@@ -25,22 +23,22 @@ const keys = [
   'info',
 ];
 
-const publisherdUrl = 'http://hanyuu.top:8080/user/published'
+const publisherdUrl = 'http://hanyuu.top:8080/user/published';
 
 class UserInfo {
-  uuid = ''
-  password =''
-  username =''
-  phonenumber=''
-  idcard=''
-  studentid=''
-  address=''
-  avatarurl=''
-  verified=''
-  score=''
-  token=''
-  itemList = ''
-  info = ''
+  uuid = '';
+  password = '';
+  username = '';
+  phonenumber = '';
+  idcard = '';
+  studentid = '';
+  address = '';
+  avatarurl = '';
+  verified = '';
+  score = '';
+  token = '';
+  itemList = '';
+  info = '';
 
   /**
    * 获取
@@ -73,11 +71,11 @@ class UserInfo {
     this.save('idcard', userInfo.info.idcard);
     this.save('studentid', userInfo.info.studentid);
     this.save('address', userInfo.info.address);
-    this.save('avatarurl', "http://hanyuu.top:8080/"+userInfo.info.avatarurl);
+    this.save('avatarurl', 'http://hanyuu.top:8080/' + userInfo.info.avatarurl);
     this.save('verified', userInfo.info.verified);
     this.save('score', userInfo.info.score);
-    this.save('token',userInfo.token);
-    this.save('info',userInfo.info.info);
+    this.save('token', userInfo.token);
+    this.save('info', userInfo.info.info);
   }
 
   /**
@@ -102,7 +100,6 @@ class UserInfo {
   static delete(key) {
     return AsyncStorage.removeItem(key);
   }
-  
 }
 
 export default UserInfo;

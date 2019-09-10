@@ -101,52 +101,52 @@ export default class ReleaseIWantPage extends Component {
   };
 
   computeValue = () => {
-      console.log(this.state.firstValue);
+    console.log(this.state.firstValue);
 
-    return Number(this.state.firstValue) + Number(this.state.secondValue) / 100;  
+    return Number(this.state.firstValue) + Number(this.state.secondValue) / 100;
   };
 
   // @ts-ignore
   uploadItemData = async () => {
     this.Loading.show();
     const [uid, token] = await ItemList.getIdAndToken();
-    const commonURL='http://hanyuu.top:8080/';
+    const commonURL = 'http://hanyuu.top:8080/';
 
     let data = {
-      token:token,
+      token: token,
       title: this.state.title,
-      type: this.state.classes,//1-8
+      type: this.state.classes, //1-8
       price: this.computeValue(),
       depreciatione: this.state.newDegree,
-      note: this.state.campus+','+this.state.detail,
-      sold:'-1',
+      note: this.state.campus + ',' + this.state.detail,
+      sold: '-1',
     };
 
     console.log(data);
     const addItemURL = 'http://hanyuu.top:8080/item/add';
 
     postData(addItemURL, data)
-        .then(response => {
-          console.log('uploadData', response);
-          if (response.status == 'success') {
-            this.Loading.close();
-            alert('发布成功');
-          }else{
-            alert('上传数据失败');
-            this.Loading.close();
-          }
-        })
-        .catch(err => {
-          console.error(err);
+      .then(response => {
+        console.log('uploadData', response);
+        if (response.status == 'success') {
+          this.Loading.close();
+          alert('发布成功');
+        } else {
           alert('上传数据失败');
           this.Loading.close();
-        });
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert('上传数据失败');
+        this.Loading.close();
+      });
   };
 
   confirm = () => {
-     if(this.checkInput()){
-       this.uploadItemData();
-     };
+    if (this.checkInput()) {
+      this.uploadItemData();
+    }
   };
   render() {
     return (
@@ -211,8 +211,8 @@ export default class ReleaseIWantPage extends Component {
                 onValueChange={itemValue =>
                   this.setState({classes: itemValue})
                 }>
-                {classes.map((i,j) => (
-                  <Picker.Item label={i} value={String(j+1)} />
+                {classes.map((i, j) => (
+                  <Picker.Item label={i} value={String(j + 1)} />
                 ))}
               </Picker>
             </View>
@@ -222,7 +222,9 @@ export default class ReleaseIWantPage extends Component {
               <Text style={styles.value}>￥</Text>
               <TextInput
                 placeholder="0"
-                onChangeText={firstValue => this.setState({firstValue:firstValue})}
+                onChangeText={firstValue =>
+                  this.setState({firstValue: firstValue})
+                }
                 keyboardType={'numeric'}
                 style={styles.value}
                 value={this.state.firstValue}
@@ -230,7 +232,9 @@ export default class ReleaseIWantPage extends Component {
               <Text style={styles.value}> . </Text>
               <TextInput
                 placeholder="00"
-                onChangeText={secondValue => this.setState({secondValue:secondValue})}
+                onChangeText={secondValue =>
+                  this.setState({secondValue: secondValue})
+                }
                 keyboardType={'numeric'}
                 maxLength={2}
                 style={styles.value}
@@ -253,10 +257,10 @@ export default class ReleaseIWantPage extends Component {
           </View>
 
           <Loading
-              ref={r => {
-                this.Loading = r;
-              }}
-              hide={true}
+            ref={r => {
+              this.Loading = r;
+            }}
+            hide={true}
           />
         </ScrollView>
       </View>
