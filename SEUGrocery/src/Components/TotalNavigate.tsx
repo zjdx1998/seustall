@@ -41,6 +41,7 @@ import ShowUserInfoPage from "../pages/ShowUserInfoPage";
 //     </SafeAreaView>
 //   </ScrollView>
 // );
+
 var username = '';
 var info = '';
 var avatarurl = '';
@@ -453,7 +454,7 @@ const TotalNav = createDrawerNavigator(
             'showUser',
         ],
         initialRouteName: 'startP',
-        backBehavior: 'initialRoute',
+        backBehavior: 'home',
         // initialRouteParams: {
         //   jumpHomeCallBack: index => {
         //     this.setState({currentIndex: index});

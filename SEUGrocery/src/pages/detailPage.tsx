@@ -42,7 +42,7 @@ export default class DetailPage extends Component {
         this.state = {
         isCustomer: true,
         isFavorite: false,
-        button:'我想购买',
+        button:'',
         itemid: '',
         uuid: '',
         title:
@@ -67,6 +67,8 @@ export default class DetailPage extends Component {
         // }, 100);
 
         if (this.props.navigation.state.params.itemid == this.state.itemid) {
+        //     console.log('para',this.props.navigation.state.params.itemid);
+        //     console.log('state',this.state.itemid);
             return;
         } else {
             // alert("rua")
@@ -94,9 +96,9 @@ export default class DetailPage extends Component {
                                     itemid: rT.itemid,
                                 });
                                 if (my_uuid == rT.uuid) {
-                                    this.setState({button: '我已卖出'});
+                                    this.setState({button: '修改信息'});
                                 } else {
-                                    this.setState({button: '我想购买'})
+                                    this.setState({button: '联系卖家'});
                                 }
                                 ItemList.getFavList().then(list => {
                                     let isfav = false;
@@ -131,7 +133,7 @@ export default class DetailPage extends Component {
         this.fetchData()
     }
 
-    componentWillUpdate(){
+    componentDidUpdate(){
         this.fetchData()
     }
 
@@ -233,26 +235,27 @@ export default class DetailPage extends Component {
                                     [styles.textStyle, {color: 'white'}]
                                 }>
                                 {this.state.button}
+                                {/*用户自己看到和其他用户看到的按钮是不同的*/}
                             </Text>
                         </TouchableOpacity>
-                        {/*<TouchableOpacity*/}
-                        {/*    style={styles.buttonStyle}*/}
-                        {/*    onPress={() => {*/}
-                        {/*        this.props.navigation.navigate('chatP',{*/}
-                        {/*            uuid:this.state.uuid,*/}
-                        {/*            username:this.state.username,*/}
-                        {/*            title:this.state.title,*/}
-                        {/*            avatarurl:this.state.avatorurl*/}
-                        {/*        });*/}
-                        {/*        //*/}
-                        {/*    }}>*/}
-                        {/*    <Text*/}
-                        {/*        style={*/}
-                        {/*            styles.textStyle*/}
-                        {/*        }>*/}
-                        {/*        联系卖家*/}
-                        {/*    </Text>*/}
-                        {/*</TouchableOpacity>*/}
+                        <TouchableOpacity
+                            style={styles.buttonStyle}
+                            onPress={() => {
+                                this.props.navigation.navigate('chatP',{
+                                    uuid:this.state.uuid,
+                                    username:this.state.username,
+                                    title:this.state.title,
+                                    avatarurl:this.state.avatorurl
+                                });
+                                //
+                            }}>
+                            <Text
+                                style={
+                                    styles.textStyle
+                                }>
+                                联系卖家
+                            </Text>
+                        </TouchableOpacity>
                         <TouchableOpacity
                             style={styles.favoriteStyle}
                             onPress={() => {
