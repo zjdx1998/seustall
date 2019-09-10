@@ -455,7 +455,7 @@ function webServer()
 				{
 					if (resquery.data.to == verify.uuid)
 					{
-						const resupdate = database.deleteWant(id);
+						const resupdate = await database.deleteWant(id);
 						res = resupdate;
 					} else
 					{
@@ -530,7 +530,7 @@ function webServer()
 					ctx.response.status = 403;
 					return;
 				}
-				const resupdate =await database.preorderItem(ctx.request.body.to, ctx.request.body.itemid);
+				const resupdate = await database.preorderItem(ctx.request.body.to, ctx.request.body.itemid);
 				res = resupdate;
 				ctx.response.body = JSON.stringify(res);
 				ctx.response.type = "application/json";
@@ -562,7 +562,7 @@ function webServer()
 				{
 					if (resquery.uuid == verify.uuid)
 					{
-						const resupdate = database.resetItemStatus(resquery.itemid);
+						const resupdate = await database.resetItemStatus(resquery.itemid);
 						res = resupdate;
 					}
 					else
@@ -573,7 +573,7 @@ function webServer()
 				}
 				else
 				{
-					res.status = conf.res.success;
+					res.status = conf.res.failure;
 					res.info = resquery.info;
 				}
 				ctx.response.body = JSON.stringify(res);

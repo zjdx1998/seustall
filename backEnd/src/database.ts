@@ -44,7 +44,7 @@ export default class data
 					idle: 1000
 				},
 				logging: false,
-			});
+			}	);
 		this.connect();
 	}
 

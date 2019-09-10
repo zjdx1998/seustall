@@ -2,9 +2,9 @@
 
 [TOC]
 ## Version
-* server version: v7.0.1A
-* doc version: v7.0.0 alpha
-* updated: 2019/09/10 13:02
+* server version: v7.1.3A
+* doc version: v7.0.2 alpha
+* updated: 2019/09/10 16:56
 * author: Hanyuu Furude
 
 ## Characteristics
@@ -917,8 +917,97 @@ Content-Type: application/x-www-form-urlencoded
 ```
 
 ``` json
-{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzU2NTYwODkzNCwiaWF0IjoxNTY3NTY1NjA4fQ.J_END7-qsN7HyPmLpQXHcaBOylNvI96OTSEgVg4X-9w"}}
+{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2ODA4NDgyNTY4NywiaWF0IjoxNTY4MDg0ODI1fQ.tO3FJusJxxgaI8qChGInEH9goUDW7S6Io_p1LsjGvf8","id":"2"}}
 ```
+
+```json
+//success
+{	status: "success" }
+// Unauthorized operations
+{
+  "status": "failure",
+  "info": "Insufficient permissions"
+}
+```
+
+### delete all request
+
+```
+POST /user/want/deleteall
+```
+
+```
+Content-Type: application/x-www-form-urlencoded
+```
+
+```json
+{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzU2NTYwODkzNCwiaWF0IjoxNTY3NTY1NjA4fQ.J_END7-qsN7HyPmLpQXHcaBOylNvI96OTSEgVg4X-9w","itemid":"2"}}
+```
+
+```json
+//success
+{	status: "success" }
+// Unauthorized operations
+{
+  "status": "failure",
+  "info": "Insufficient permissions"
+}
+```
+
+### order
+
+```
+POST /item/order
+```
+
+```
+Content-Type: application/x-www-form-urlencoded
+```
+
+``` json
+{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzU2NTYwODkzNCwiaWF0IjoxNTY3NTY1NjA4fQ.J_END7-qsN7HyPmLpQXHcaBOylNvI96OTSEgVg4X-9w","to":"12","itemid":"3"}}
+```
+
+``` json
+//success
+{	status: "success" }
+// not for trade
+{
+  "status": "failure",
+  "info": "not for trade"
+}
+```
+
+### reset
+
+```
+POST /item/reset
+```
+
+```
+Content-Type: application/x-www-form-urlencoded
+```
+
+```json
+{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2ODA4NDgyNTY4NywiaWF0IjoxNTY4MDg0ODI1fQ.tO3FJusJxxgaI8qChGInEH9goUDW7S6Io_p1LsjGvf8","itemid":"4"}}
+```
+
+``` json
+//success
+{	status: "success" }
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
