@@ -174,7 +174,7 @@ function webServer()
 		/**
 		 * @description 手机号重置密码
 		 */
-		router.post('/user/reset', async (ctx, next) =>
+		router.post('/user/ =', async (ctx, next) =>
 		{
 			var res = new Object() as any;
 			try
@@ -372,7 +372,7 @@ function webServer()
 					ctx.response.status = 403;
 					return;
 				}
-				res = await database.chatPush(verify.uuid, ctx.request.body.to, ctx.request.body.type,ctx.request.body.data);
+				res = await database.chatPush(verify.uuid, ctx.request.body.to, ctx.request.body.type, ctx.request.body.data);
 				ctx.response.body = JSON.stringify(res);
 				ctx.response.type = "application/json";
 			} catch (error)
@@ -427,6 +427,159 @@ function webServer()
 				ctx.response.body = JSON.stringify(res);
 				ctx.response.type = "application/json";
 			} catch (error)
+			{
+				res.status = conf.res.failure;
+				res.info = error;
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			}
+		})
+		/**
+		 * @description token 用户删除单个物品单个其他用户发起的我想要请求
+		 * @todo
+		 */
+		router.post('/user/want/delete', async (ctx, next) =>
+		{
+			var res = new Object() as any;
+			try
+			{
+				const verify: any = verifyToken(ctx.request.body.token);
+				if (!verify)
+				{
+					ctx.response.status = 403;
+					return;
+				}
+				const id = ctx.request.body.id;
+				const resquery = await database.queryMsgid(id);
+				if (resquery.status == conf.res.success)
+				{
+					if (resquery.data.to == verify.uuid)
+					{
+						const resupdate = database.deleteWant(id);
+						res = resupdate;
+					} else
+					{
+						res.status = conf.res.failure;
+						res.info = conf.except.noPermission;
+					}
+				}
+				else
+				{
+					res.status = conf.res.failure;
+					res.info = resquery.info;
+				}
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			} catch (error)
+			{
+				res.status = conf.res.failure;
+				res.info = error;
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			}
+		})
+		/**
+		 * @description token 用户删除单个物品所有的我想要请求
+		 * @todo
+		 */
+		router.post('/user/want/deleteall', async (ctx, next) =>
+		{
+			var res = new Object() as any;
+			try
+			{
+				const verify: any = verifyToken(ctx.request.body.token);
+				if (!verify)
+				{
+					ctx.response.status = 403;
+					return;
+				}
+				const itemid = ctx.request.body.itemid;
+				const resquery = await database.queryItem(itemid);
+				if (resquery.status == conf.res.success)
+				{
+					const resupdate = database.deleteAllWant(itemid);
+					res = resupdate;
+				}
+				else
+				{
+					res.status = conf.res.failure;
+					res.info = resquery.info;
+				}
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			} catch (error)
+			{
+				res.status = conf.res.success;
+				res.info = error;
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			}
+		})
+		/**
+		 * @description 用户预定商品
+		 * @todo
+		 */
+		router.post('/item/order', async (ctx, next) =>
+		{
+			var res = new Object() as any;
+			try
+			{
+				const verify: any = verifyToken(ctx.request.body.token);
+				if (!verify)
+				{
+					ctx.response.status = 403;
+					return;
+				}
+				const resupdate = database.preorderItem(verify.uuid, ctx.request.body.itemid);
+				res = resupdate;
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			}
+			catch (error)
+			{
+				res.status = conf.res.failure;
+				res.info = error;
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			}
+		})
+		/**
+		 * @description  重置商品状态
+		 */
+		router.post('/item/reset', async (ctx, next) =>
+		{
+			var res = new Object() as any;
+			try
+			{
+				const verify: any = verifyToken(ctx.request.body.token);
+				if (!verify)
+				{
+					ctx.response.status = 403;
+					return;
+				}
+				const resquery = await database.queryItem(ctx.request.body.itemid);
+				if (resquery.status == conf.res.success)
+				{
+					if (resquery.uuid == verify.uuid)
+					{
+						const resupdate = database.resetItemStatus(resquery.itemid);
+						res = resupdate;
+					}
+					else
+					{
+						res.status = conf.res.failure;
+						res.info = conf.except.noPermission;
+					}
+				}
+				else
+				{
+					res.status = conf.res.success;
+					res.info = resquery.info;
+				}
+				ctx.response.body = JSON.stringify(res);
+				ctx.response.type = "application/json";
+			}
+			catch (error)
 			{
 				res.status = conf.res.failure;
 				res.info = error;

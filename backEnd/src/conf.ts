@@ -36,9 +36,12 @@ export default {
 		invaildReq: "invaild request",
 		noUser: "no such user",
 		noItem: "no such item",
+		noFav: "no such favorites",
+		noMwg: "no such message",
 		badVerifycode: "bad verify code",
 		reqtoofreq: "request too frequent",
 		notfortrade: "not for trade",
+		noPermission:"Insufficient permissions",
 	},
 	SMSConfig:
 	{
@@ -66,8 +69,9 @@ export default {
 	},
 	resend:
 	{
-		// switchOn: true,
-		switchOn: false,
+		// todo 打包时打开此开关
+		switchOn: true,
+		// switchOn: false,
 		host:
 		{
 			root: "http://hanyuu.top:9200",

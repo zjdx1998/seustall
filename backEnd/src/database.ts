@@ -174,7 +174,7 @@ export default class data
 			return this.responseFix(res);
 		} catch (error)
 		{
-			res.status = "failure";
+			res.status = conf.res.failure;
 			res.info = error;
 			return res;
 		}
@@ -862,6 +862,33 @@ export default class data
 		} catch (error)
 		{
 			console.error(error);
+			res.status = conf.res.failure;
+			res.info = error;
+			return res;
+		}
+	}
+	public async queryMsgid(id: number)
+	{
+		var res = new Object() as any;
+		try
+		{
+			const resquery = this.chat.findOne(
+				{ where: { id } }
+			)
+			if (resquery)
+			{
+				res.status = conf.res.success;
+				res.data = resquery;
+				return res;
+			}
+			else
+			{
+				res.status = conf.res.failure;
+				res.info = conf.except.noMwg;
+				return res;
+			}
+		} catch (error)
+		{
 			res.status = conf.res.failure;
 			res.info = error;
 			return res;
