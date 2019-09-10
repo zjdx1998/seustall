@@ -96,9 +96,6 @@ export default class NoticesPage extends Component {
                             that.setState({data:mlist})
 
                         })
-                    
-                
-            
                 // alert(JSON.stringify(mlist));
                 return mlist
 
