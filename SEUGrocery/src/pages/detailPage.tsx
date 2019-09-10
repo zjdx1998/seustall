@@ -222,10 +222,10 @@ export default class DetailPage extends Component {
                             style={[styles.buttonStyle, {backgroundColor: '#cc6699'}]}
                             onPress={() => {
                                 this.props.navigation.navigate('chatP', {
-                                    uuid: this.state.uuid,
-                                    username: this.state.username,
-                                    title: this.state.title,
-                                    avatarurl: this.state.avatorurl
+                                    uuid_chat: this.state.uuid,
+                                    username_chat: this.state.username,
+                                    title_chat: this.state.title,
+                                    avatarurl_chat: this.state.avatorurl
                                 });
                             }}>
                             <Text
@@ -235,24 +235,24 @@ export default class DetailPage extends Component {
                                 {this.state.button}
                             </Text>
                         </TouchableOpacity>
-                        {/*<TouchableOpacity*/}
-                        {/*    style={styles.buttonStyle}*/}
-                        {/*    onPress={() => {*/}
-                        {/*        this.props.navigation.navigate('chatP',{*/}
-                        {/*            uuid:this.state.uuid,*/}
-                        {/*            username:this.state.username,*/}
-                        {/*            title:this.state.title,*/}
-                        {/*            avatarurl:this.state.avatorurl*/}
-                        {/*        });*/}
-                        {/*        //*/}
-                        {/*    }}>*/}
-                        {/*    <Text*/}
-                        {/*        style={*/}
-                        {/*            styles.textStyle*/}
-                        {/*        }>*/}
-                        {/*        联系卖家*/}
-                        {/*    </Text>*/}
-                        {/*</TouchableOpacity>*/}
+                        <TouchableOpacity
+                           style={styles.buttonStyle}
+                            onPress={() => {
+                                this.props.navigation.navigate('chatP',{
+                                    uuid:this.state.uuid,
+                                   username:this.state.username,
+                                   title:this.state.title,
+                                    avatarurl:this.state.avatorurl
+                                });
+                                
+                            }}>
+                            <Text
+                                style={
+                                    styles.textStyle
+                                }>
+                                联系卖家
+                            </Text>
+                        </TouchableOpacity>
                         <TouchableOpacity
                             style={styles.favoriteStyle}
                             onPress={() => {
