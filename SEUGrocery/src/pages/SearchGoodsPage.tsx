@@ -70,7 +70,8 @@ export default class SearchGoodsPage extends Component {
         postData(url,data)
             .then(response=>{
                 if(response.status=='failure'){
-                    alert('请求错误')
+                    alert('请求错误');
+                    return;
                 }
                 console.log('response1',response);
                 this.updateLists(response.hits.hits);
@@ -101,7 +102,7 @@ export default class SearchGoodsPage extends Component {
                 continue;
             }
             let tempObj={
-                id:item._id,
+                itemid:item._id,
                 name: item._source.title,
                 icon_url: ' ',
                 price: item._source.price,
