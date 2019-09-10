@@ -70,8 +70,10 @@ export default {
 	resend:
 	{
 		// todo 打包时打开此开关
-		switchOn: true,
-		// switchOn: false,
+		switchOn: false,
+		/**
+		switchOn: false,
+			//*/
 		host:
 		{
 			root: "http://hanyuu.top:9200",

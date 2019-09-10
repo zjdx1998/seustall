@@ -497,7 +497,7 @@ function webServer()
 				const resquery = await database.queryItem(itemid);
 				if (resquery.status == conf.res.success)
 				{
-					const resupdate = database.deleteAllWant(itemid);
+					const resupdate = await database.deleteAllWant(itemid);
 					res = resupdate;
 				}
 				else
@@ -530,7 +530,7 @@ function webServer()
 					ctx.response.status = 403;
 					return;
 				}
-				const resupdate = database.preorderItem(verify.uuid, ctx.request.body.itemid);
+				const resupdate =await database.preorderItem(ctx.request.body.to, ctx.request.body.itemid);
 				res = resupdate;
 				ctx.response.body = JSON.stringify(res);
 				ctx.response.type = "application/json";
@@ -775,7 +775,7 @@ function webServer()
 					ctx.response.status = 403;
 					return;
 				}
-				const restrade = await database.tradeItem(ctx.request.body.itemid, verifyres.uuid);
+				const restrade = await database.tradeItem(ctx.request.body.itemid);
 				if (restrade)
 				{
 					res.status = conf.res.success;

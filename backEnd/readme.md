@@ -109,6 +109,7 @@ docker run --network host -d -v /home/.../avatar:/foof/avatar hanyuufurude/foofs
 | id        | int(11)      | NO   | PRI | NULL    | auto_increment |
 | from      | int(11)      | NO   |     | NULL    |                |
 | to        | int(11)      | NO   |     | NULL    |                |
+| type      | varchar(255) | NO   |     | NULL    |                |
 | data      | varchar(255) | NO   |     | NULL    |                |
 | fetched   | tinyint(1)   | NO   |     | NULL    |                |
 | createdAt | datetime     | NO   |     | NULL    |                |
@@ -903,6 +904,28 @@ Content-Type: application/x-www-form-urlencoded
 }
 ```
 
+## trade
+
+### delete single request
+
+```
+POST /user/want/delete
+```
+
+```
+Content-Type: application/x-www-form-urlencoded
+```
+
+``` json
+{"表单数据":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoxLCJnZW5lcmF0ZSI6MTU2NzU2NTYwODkzNCwiaWF0IjoxNTY3NTY1NjA4fQ.J_END7-qsN7HyPmLpQXHcaBOylNvI96OTSEgVg4X-9w"}}
+```
+
+
+
+
+
+
+
 ###  suggest structure of message
 
 > example message
@@ -925,7 +948,6 @@ Content-Type: application/x-www-form-urlencoded
 > }
 > ```
 >
-> 
 
 * id
   * id is the id of the message, it’s just a globally unique identifier of the message, you can ignore it in most situations.

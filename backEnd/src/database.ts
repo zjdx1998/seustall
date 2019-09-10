@@ -525,21 +525,20 @@ export default class data
 	/**
 	 * @description 发起交易
 	 */
-	public async tradeItem(itemid: number, uuid: number)
+	public async tradeItem(itemid: number)
 	{
 		try
 		{
 			const queryres: any = await this.queryItem(itemid as number)
-			if (queryres.status === "none" || queryres.sold == 2 || queryres.sold == -2)
+			if (queryres.status == "none" || !(queryres.sold == 3 || queryres.sold == -3))
 			{
 				return false;
 			}
-			if (queryres.sold == -1)
+			if (queryres.sold == -3)
 			{
 
 				const res = await this.items.update(
 					{
-						to: uuid,
 						sold: -2
 					},
 					{
@@ -550,11 +549,10 @@ export default class data
 					}
 				)
 				return true;
-			} else if (queryres.sold == 1)
+			} else if (queryres.sold == 3)
 			{
 				const res = await this.items.update(
 					{
-						to: uuid,
 						sold: 2
 					},
 					{
@@ -872,7 +870,7 @@ export default class data
 		var res = new Object() as any;
 		try
 		{
-			const resquery = this.chat.findOne(
+			const resquery = await this.chat.findOne(
 				{ where: { id } }
 			)
 			if (resquery)
@@ -902,7 +900,7 @@ export default class data
 		var res = new Object() as any;
 		try
 		{
-			const resdestroy = this.chat.destroy(
+			const resdestroy = await this.chat.destroy(
 				{ where: { id } }
 			);
 			res.status = conf.res.success;
@@ -923,8 +921,12 @@ export default class data
 		var res = new Object() as any;
 		try
 		{
-			const resdestroy = this.chat.destroy(
-				{ where: { itemid } }
+			const resdestroy = await this.chat.destroy(
+				{
+					where: {
+						data:itemid
+					}
+				}
 			);
 			res.status = conf.res.success;
 			res.info = resdestroy;
