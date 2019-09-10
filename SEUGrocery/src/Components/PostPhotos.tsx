@@ -55,22 +55,23 @@ export default class PostPhotos extends Component {
     }
   };
 
-  delete=()=>{
+  delete = () => {
     alert('将删除所有选中照片');
     this.setState({
       imgURL: '',
     });
-  }
+  };
 
   render = () => {
     return (
       <View>
-        <View style={{flexDirection:'row',justifyContent: 'flex-end',margin:20}}>
-        <Icon
-            name={'delete'}
-            type={'antdesign'}
-            onPress={this.delete}
-        />
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+            margin: 20,
+          }}>
+          <Icon name={'delete'} type={'antdesign'} onPress={this.delete} />
         </View>
         <View style={styles.container}>
           {this.renderImg()}

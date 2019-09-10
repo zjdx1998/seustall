@@ -97,14 +97,13 @@ export default class SignInUI extends Component {
       // password:sha1(this.state.inputedPW),
     })
       .then(data => {
-        if (data.status == "success") {
+        if (data.status == 'success') {
           UserInfo.saveUserInfo(data);
-         this.props.navigation.navigate('home');
+          this.props.navigation.navigate('home');
+        } else {
+          alert('账号或密码错误');
         }
-        else {
-          alert("账号或密码错误");
-        }
-                // alert(data.info.username+'\n'+UserInfo.get('username'));
+        // alert(data.info.username+'\n'+UserInfo.get('username'));
         // UserInfo.get('idcard').then(name => {
         //   alert(name);
         // });
@@ -117,9 +116,9 @@ export default class SignInUI extends Component {
     // });
   }
 
-  sendVerifyCode=(event)=>{
-    alert('验证码已发送')
-  }
+  sendVerifyCode = event => {
+    alert('验证码已发送');
+  };
 
   identifyingCodeLoginButton = () => {
     LayoutAnimation.spring();
@@ -133,94 +132,99 @@ export default class SignInUI extends Component {
     });
   };
 
-
   render() {
     return (
-        <KeyboardAvoidingView style={{width:totalWidth,height: totalHeight}} behavior="position">
-      <ImageBackground
-        source={require('../Common/img/loginBackground.png')}
-        style={styles.background}>
-        {/*//三个条形框*/}
-        <View style={styles.container}>
-          {/*//手机号输入*/}
-          <View style={[styles.inputStyle, styles.numberInputStyle]}>
-            <Icon
-                light
-              name={'phone-square'}
-              type={'font-awesome'}
-              color={'#772850'}
-            />
-
-            <TextInput
-              onChangeText={newText => this.updateNum(newText)}
-              placeholder={'请输入手机号'}
-              placeholderTextColor={'#772850'}
-              style={{width: componentWidth}}
-              value={this.state.inputedNum}
-              aitoFocus={true}
-              maxLength={11}
-              keyboardType={'numeric'}
-            />
-          </View>
-          {/*//密码输入*/}
-          <View style={styles.container_row}>
-            <View
-              style={[
-                styles.inputStyle,
-                styles.passwordInputStyle,
-                {width: this.state.PWInputWidth},
-              ]}>
+      <KeyboardAvoidingView
+        style={{width: totalWidth, height: totalHeight}}
+        behavior="position">
+        <ImageBackground
+          source={require('../Common/img/loginBackground.png')}
+          style={styles.background}>
+          {/*//三个条形框*/}
+          <View style={styles.container}>
+            {/*//手机号输入*/}
+            <View style={[styles.inputStyle, styles.numberInputStyle]}>
               <Icon
-                name={this.state.PWIcon}
-                type={'material-community'}
+                light
+                name={'phone-square'}
+                type={'font-awesome'}
                 color={'#772850'}
               />
+
               <TextInput
-                onChangeText={newText => this.updatePW(newText)}
-                password={true}
-                placeholder={this.state.PWplacehold}
+                onChangeText={newText => this.updateNum(newText)}
+                placeholder={'请输入手机号'}
                 placeholderTextColor={'#772850'}
-                style={{width: this.state.PWInputWidth}}
-                secureTextEntry={!this.state.PWVisible}
-                value={this.state.inputedPW}
+                style={{width: componentWidth}}
+                value={this.state.inputedNum}
+                aitoFocus={true}
+                maxLength={11}
+                keyboardType={'numeric'}
               />
             </View>
-            {/*//发送验证码*/}
-            <View
-              style={[styles.idButton, {opacity: this.state.idButtonAlpha}]}
-            >
-              <Text style={{color: '#cc6699'}} onPress={this.sendVerifyCode}>
-                {this.state.sendIDText}
-              </Text>
+            {/*//密码输入*/}
+            <View style={styles.container_row}>
+              <View
+                style={[
+                  styles.inputStyle,
+                  styles.passwordInputStyle,
+                  {width: this.state.PWInputWidth},
+                ]}>
+                <Icon
+                  name={this.state.PWIcon}
+                  type={'material-community'}
+                  color={'#772850'}
+                />
+                <TextInput
+                  onChangeText={newText => this.updatePW(newText)}
+                  password={true}
+                  placeholder={this.state.PWplacehold}
+                  placeholderTextColor={'#772850'}
+                  style={{width: this.state.PWInputWidth}}
+                  secureTextEntry={!this.state.PWVisible}
+                  value={this.state.inputedPW}
+                />
+              </View>
+              {/*//发送验证码*/}
+              <View
+                style={[styles.idButton, {opacity: this.state.idButtonAlpha}]}>
+                <Text style={{color: '#cc6699'}} onPress={this.sendVerifyCode}>
+                  {this.state.sendIDText}
+                </Text>
+              </View>
             </View>
-          </View>
-          {/*//登录按钮*/}
-          <TouchableOpacity
-            onPress={this.buttonPressed}
-            style={styles.bigButton}>
-            <Text style={styles.bigTextPrompt}>{this.state.bigButtonText}</Text>
-          </TouchableOpacity>
-          {/*//切换状态的按键*/}
-          <View style={[styles.container_row,{marginLeft:componentWidth*0.1}]}>
-          {/*<TouchableOpacity
+            {/*//登录按钮*/}
+            <TouchableOpacity
+              onPress={this.buttonPressed}
+              style={styles.bigButton}>
+              <Text style={styles.bigTextPrompt}>
+                {this.state.bigButtonText}
+              </Text>
+            </TouchableOpacity>
+            {/*//切换状态的按键*/}
+            <View
+              style={[
+                styles.container_row,
+                {marginLeft: componentWidth * 0.1},
+              ]}>
+              {/*<TouchableOpacity
             style={styles.registerButton}
             onPress={this.identifyingCodeLoginButton}>
             <Text style={styles.registerText}>{this.state.register}</Text>
           </TouchableOpacity>*/}
 
-          <TouchableOpacity
-              style={styles.registerButton}
-              onPress={()=>{
-                this.props.navigation.navigate('signUpP')
-                console.log('注册')
-              }}
-          >
-            <Text style={styles.registerText}>注册</Text>
-          </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.registerButton}
+                onPress={() => {
+                  this.props.navigation.navigate('signUpP');
+                  console.log('注册');
+                }}>
+                <Text style={styles.registerText}>注册</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </ImageBackground>
-        </KeyboardAvoidingView>
+        </ImageBackground>
+      </KeyboardAvoidingView>
     );
   }
 }
@@ -280,7 +284,7 @@ const styles = StyleSheet.create({
   registerButton: {
     bottom: heading + 30,
     left: leftStartPoint,
-    width: componentWidth*0.7,
+    width: componentWidth * 0.7,
   },
   inputStyle: {
     flexDirection: 'row',

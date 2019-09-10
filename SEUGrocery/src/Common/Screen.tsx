@@ -4,7 +4,7 @@
   @date: 2019-8-22
 */
 
-import {PixelRatio, Platform, StatusBar} from "react-native";
+import {PixelRatio, Platform, StatusBar} from 'react-native';
 
 const dim = require('Dimensions');
 
