@@ -189,25 +189,37 @@ export default class DetailPage extends Component {
     }
 
     renderButton=()=>{
-        // if(this.state.button=='me'){
-        //     return(
-        //         <View>
-        //             <TouchableOpacity
-        //                 style={styles.buttonStyle}
-        //                 onPress={() => {
-        //
-        //                 }}>
-        //                 <Text
-        //                     style={
-        //                         styles.textStyle
-        //                     }>
-        //                     修改信息
-        //                 </Text>
-        //             </TouchableOpacity>
-        //         </View>
-        //     )
-        // }
-        // else if(this.state.button=='other') {
+        if(this.state.button=='me'){
+            return(
+                <View style={{flexDirection:'row'}}>
+                    <TouchableOpacity
+                        style={styles.buttonStyle}
+                        onPress={() => {
+
+                        }}>
+                        <Text
+                            style={
+                                styles.textStyle
+                            }>
+                            修改信息
+                        </Text>
+                    </TouchableOpacity>
+                      <TouchableOpacity
+                        style={styles.buttonStyle}
+                        onPress={() => {
+
+                        }}>
+                        <Text
+                            style={
+                                styles.textStyle
+                            }>
+                            添加图片
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            )
+        }
+        else if(this.state.button=='other') {
             return (
                 <View style={{flexDirection: 'row'}}>
                     <TouchableOpacity
@@ -242,7 +254,7 @@ export default class DetailPage extends Component {
                 </View>
 
             )
-        // }
+        }
     }
 
     render() {
@@ -284,7 +296,7 @@ export default class DetailPage extends Component {
                 <View style={styles.contractButton}>
                     {this.renderButton()}
 
-                    <View style={{opacity:this.state.button=='other'?0:1}}>
+                    <View style={{opacity:this.state.button=='other'?1:0}}>
                         <TouchableOpacity
                             style={styles.favoriteStyle}
                             onPress={() => {

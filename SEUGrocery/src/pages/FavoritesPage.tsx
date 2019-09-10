@@ -9,7 +9,7 @@ import {Text, Avatar} from 'react-native-elements';
 import GoodsPanel from '../Components/GoodsPanel';
 import LocalBackHeader from '../Components/LocalBackHeader';
 import UserInfo from '../Common/UserInfo';
-// import ItemList from '../Common/ItemList';
+import ItemList from '../Common/ItemList';
 
 const favQueryURL = "fav/query";
 
