@@ -11,7 +11,7 @@ import LocalBackHeader from '../Components/LocalBackHeader';
 import UserInfo from '../Common/UserInfo';
 import ItemList from '../Common/ItemList';
 
-const favQueryURL = "fav/query";
+const favQueryURL = 'fav/query';
 
 export default class FavoritesPage extends Component {
   private goodsPanel: any;
@@ -19,14 +19,14 @@ export default class FavoritesPage extends Component {
     super(props);
     this.state = {
       showGoodsWay: '0',
-      avatarurl:'',
+      avatarurl: '',
     };
-    UserInfo.get('avatarurl').then(data=>{this.setState({avatarurl:data})})
+    UserInfo.get('avatarurl').then(data => {
+      this.setState({avatarurl: data});
+    });
   }
 
-  fetchData = () => {
-
-  };
+  fetchData = () => {};
 
   render() {
     return (
@@ -37,11 +37,7 @@ export default class FavoritesPage extends Component {
         <View style={styles.headerContainer}>
           <View style={styles.headerArea}>
             <View style={styles.viewUserTop}>
-              <Avatar
-                size={120}
-                rounded
-                source={{uri:this.state.avatarurl}}
-              />
+              <Avatar size={120} rounded source={{uri: this.state.avatarurl}} />
             </View>
             <View style={styles.txtArea}>
               <Text style={styles.txtTitle}>我的收藏</Text>
@@ -130,8 +126,7 @@ export default class FavoritesPage extends Component {
     //               })
     //         }
     //       }
-
-        // } )
+    // } )
   }
 }
 

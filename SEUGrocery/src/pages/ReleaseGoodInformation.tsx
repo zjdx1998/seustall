@@ -15,7 +15,7 @@ import {
   TextInput,
   Text,
 } from 'react-native';
-import {Icon} from "react-native-elements";
+import {Icon} from 'react-native-elements';
 import LocalBackHeader from '../Components/LocalBackHeader';
 import * as SP from '../Common/ScreenProperty';
 import PostPhoto from '../Components/PostPhotos';
@@ -24,8 +24,7 @@ import {getImgUrl} from '../Components/PostPhotos';
 import Loading from '../Components/Loading';
 import ItemList from '../Common/ItemList';
 import {postData} from '../Common/FetchHelper';
-import {TouchableOpacity} from "react-native-gesture-handler";
-
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 var {height, width} = Dimensions.get('window');
 const classes = [
@@ -38,7 +37,6 @@ const classes = [
   '运动健身',
   '其他',
 ];
-
 
 export default class ReleaseInformation extends Component {
   private state: any;
@@ -56,19 +54,18 @@ export default class ReleaseInformation extends Component {
     };
   }
 
-
   checkNewDegree = () => {
     let value = Number(this.state.newDegree);
-    let flag=true;
+    let flag = true;
     if (isNaN(value)) {
       alert('请输入新旧程度');
-      flag=false;
+      flag = false;
     } else if (value === 0) {
       alert('新旧程度不能等于零');
-      flag=false;
+      flag = false;
     } else if (value > 100) {
       alert('新旧程度不能大于100%');
-      flag=false;
+      flag = false;
     }
     console.log('new degree:', value);
     console.log(flag);
@@ -89,7 +86,6 @@ export default class ReleaseInformation extends Component {
       console.log('value', this.computeValue());
       return true;
     }
-
   };
 
   computeValue = () => {
@@ -106,7 +102,7 @@ export default class ReleaseInformation extends Component {
 
     let params = {
       token: token,
-      itemid:'',
+      itemid: '',
       path: getImgUrl(), //本地文件地址
     };
     let data = {
@@ -122,158 +118,156 @@ export default class ReleaseInformation extends Component {
     const addImageURL = 'http://hanyuu.top:8080/item/image';
     const addItemURL = 'http://hanyuu.top:8080/item/add';
 
-    console.log('data',data);
+    console.log('data', data);
 
     postData(addItemURL, data)
-        .then(response => {
-          console.log('uploadData', response);
-          if (response.status == 'success') {
-            params.itemid=response.data.itemid;
-            console.log('params',params);
-            uploadImage(addImageURL, params)
-                .then(responseData => {
-                  console.log('uploadImage', responseData);
-                  if (responseData.status == 'success') {
-                    this.Loading.close();
-                    alert('发布成功');
-                  }else{
-                    alert('上传图片失败');
-                    this.Loading.close();
-                  }
-                })
-          } else {
-            alert('上传数据失败');
-            this.Loading.close();
-          }
-        })
-        .catch(err => {
-          console.error(err);
+      .then(response => {
+        console.log('uploadData', response);
+        if (response.status == 'success') {
+          params.itemid = response.data.itemid;
+          console.log('params', params);
+          uploadImage(addImageURL, params).then(responseData => {
+            console.log('uploadImage', responseData);
+            if (responseData.status == 'success') {
+              this.Loading.close();
+              alert('发布成功');
+            } else {
+              alert('上传图片失败');
+              this.Loading.close();
+            }
+          });
+        } else {
           alert('上传数据失败');
           this.Loading.close();
-        });
-
-  }
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert('上传数据失败');
+        this.Loading.close();
+      });
+  };
 
   confirm = () => {
-    console.log(this.checkInput())
+    console.log(this.checkInput());
     if (this.checkInput()) {
       this.uploadItemData();
     }
   };
   render() {
     return (
-        <View style={styles.baseContainer}>
-          <ScrollView style={styles.test}>
-            {/*顶端返回和确认按钮*/}
-            <View style={{height: SP.HB(12)}}>
-              <LocalBackHeader navigation={this.props.navigation} />
-              <View style={styles.buttonContainer}>
-                {/*<TouchableOpacity*/}
-                {/*style={styles.button}*/}
-                {/*onPress={this.confirm}*/}
-                {/*>*/}
-                {/*  <Icon name={'upload'} type={'font-awesome'} color={'#cc6699'}/>*/}
-                {/*  <Text style={{color:'#cc6699'}}>确认发布</Text>*/}
-                {/*</TouchableOpacity>*/}
-                <Button
-                    title="确认"
-                    type="clear"
-                    color={'#cc6699'}
-                    onPress={this.confirm}
-                />
-              </View>
+      <View style={styles.baseContainer}>
+        <ScrollView style={styles.test}>
+          {/*顶端返回和确认按钮*/}
+          <View style={{height: SP.HB(12)}}>
+            <LocalBackHeader navigation={this.props.navigation} />
+            <View style={styles.buttonContainer}>
+              {/*<TouchableOpacity*/}
+              {/*style={styles.button}*/}
+              {/*onPress={this.confirm}*/}
+              {/*>*/}
+              {/*  <Icon name={'upload'} type={'font-awesome'} color={'#cc6699'}/>*/}
+              {/*  <Text style={{color:'#cc6699'}}>确认发布</Text>*/}
+              {/*</TouchableOpacity>*/}
+              <Button
+                title="确认"
+                type="clear"
+                color={'#cc6699'}
+                onPress={this.confirm}
+              />
             </View>
-            {/*<View style={styles.titleContainer}>*/}
+          </View>
+          {/*<View style={styles.titleContainer}>*/}
+          <TextInput
+            style={styles.title}
+            onChangeText={title => this.setState({title})}
+            value={this.state.title}
+            placeholder={'标题'}
+            multiline={true}
+            maxLength={40}
+          />
+          {/*</View>*/}
+          <View style={styles.container_row}>
+            <Text style={styles.h4}>新旧程度：</Text>
             <TextInput
-                style={styles.title}
-                onChangeText={title => this.setState({title})}
-                value={this.state.title}
-                placeholder={'标题'}
-                multiline={true}
-                maxLength={40}
+              placeholder={'90'}
+              value={this.state.newDegree}
+              editable={true}
+              onChangeText={newDegree => this.setState({newDegree})}
+              keyboardType={'numeric'}
+              maxLength={3}
+              style={styles.h4}
             />
-            {/*</View>*/}
-            <View style={styles.container_row}>
-              <Text style={styles.h4}>新旧程度：</Text>
-              <TextInput
-                  placeholder={'90'}
-                  value={this.state.newDegree}
-                  editable={true}
-                  onChangeText={newDegree => this.setState({newDegree})}
-                  keyboardType={'numeric'}
-                  maxLength={3}
-                  style={styles.h4}
-              />
-              <Text style={styles.h4}>%</Text>
-            </View>
-            <View style={styles.container_row}>
-              <Text style={styles.h4}>校区：</Text>
-              <Picker
-                  selectedValue={this.state.campus}
-                  style={{width: width * 0.3, fontSize: 20}}
-                  onValueChange={(itemValue, itemIndex) => {
-                    this.setState({campus: itemValue});
-                  }}>
-                <Picker.Item label="九龙湖校区" value="九龙湖校区，" />
-                <Picker.Item label="四牌楼校区" value="四牌楼校区，" />
-                <Picker.Item label="丁家桥校区" value="丁家桥校区，" />
-              </Picker>
-            </View>
+            <Text style={styles.h4}>%</Text>
+          </View>
+          <View style={styles.container_row}>
+            <Text style={styles.h4}>校区：</Text>
+            <Picker
+              selectedValue={this.state.campus}
+              style={{width: width * 0.3, fontSize: 20}}
+              onValueChange={(itemValue, itemIndex) => {
+                this.setState({campus: itemValue});
+              }}>
+              <Picker.Item label="九龙湖校区" value="九龙湖校区，" />
+              <Picker.Item label="四牌楼校区" value="四牌楼校区，" />
+              <Picker.Item label="丁家桥校区" value="丁家桥校区，" />
+            </Picker>
+          </View>
 
-            <View style={styles.container_row}>
-              <Text style={styles.h4}>商品分类：</Text>
-              <Picker
-                  selectedValue={this.state.classes}
-                  style={{width: width * 0.35, fontSize: 20}}
-                  onValueChange={itemValue => this.setState({classes: itemValue})}>
-                {classes.map((i,j) => (
-                    <Picker.Item label={i} value={j+1} />
-                ))}
-              </Picker>
-            </View>
+          <View style={styles.container_row}>
+            <Text style={styles.h4}>商品分类：</Text>
+            <Picker
+              selectedValue={this.state.classes}
+              style={{width: width * 0.35, fontSize: 20}}
+              onValueChange={itemValue => this.setState({classes: itemValue})}>
+              {classes.map((i, j) => (
+                <Picker.Item label={i} value={j + 1} />
+              ))}
+            </Picker>
+          </View>
 
-            <View style={styles.container_row}>
-              <Text style={styles.value}>￥</Text>
-              <TextInput
-                  placeholder="0"
-                  onChangeText={firstValue => this.setState({firstValue})}
-                  keyboardType={'numeric'}
-                  style={styles.value}
-                  value={this.state.firstValue}
-              />
-              <Text style={styles.value}> . </Text>
-              <TextInput
-                  placeholder="00"
-                  onChangeText={secondValue => this.setState({secondValue})}
-                  keyboardType={'numeric'}
-                  maxLength={2}
-                  style={styles.value}
-                  value={this.state.secondValue}
-              />
-            </View>
-            <View>
-              <TextInput
-                  style={styles.detail}
-                  onChangeText={detail => this.setState({detail})}
-                  value={this.state.detail}
-                  placeholder={'为你的商品添加一些更详细的描述吧！'}
-                  multiline={true}
-                  maxLength={100}
-              />
-              <Text style={{alignSelf: 'flex-end'}}>
-                {100 - this.state.detail.length}/100
-              </Text>
-            </View>
-            <PostPhoto />
-
-            <Loading
-                ref={r => {
-                  this.Loading = r;
-                }}
-                hide={true}
+          <View style={styles.container_row}>
+            <Text style={styles.value}>￥</Text>
+            <TextInput
+              placeholder="0"
+              onChangeText={firstValue => this.setState({firstValue})}
+              keyboardType={'numeric'}
+              style={styles.value}
+              value={this.state.firstValue}
             />
-          </ScrollView>
-        </View>
+            <Text style={styles.value}> . </Text>
+            <TextInput
+              placeholder="00"
+              onChangeText={secondValue => this.setState({secondValue})}
+              keyboardType={'numeric'}
+              maxLength={2}
+              style={styles.value}
+              value={this.state.secondValue}
+            />
+          </View>
+          <View>
+            <TextInput
+              style={styles.detail}
+              onChangeText={detail => this.setState({detail})}
+              value={this.state.detail}
+              placeholder={'为你的商品添加一些更详细的描述吧！'}
+              multiline={true}
+              maxLength={100}
+            />
+            <Text style={{alignSelf: 'flex-end'}}>
+              {100 - this.state.detail.length}/100
+            </Text>
+          </View>
+          <PostPhoto />
+
+          <Loading
+            ref={r => {
+              this.Loading = r;
+            }}
+            hide={true}
+          />
+        </ScrollView>
+      </View>
     );
   }
 }
@@ -291,11 +285,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 10,
   },
-  button:{
+  button: {
     flexDirection: 'row',
-    backgroundColor:"#000",
-    borderRadius:50,
-    flex:1,
+    backgroundColor: '#000',
+    borderRadius: 50,
+    flex: 1,
   },
   title: {
     fontSize: 40,

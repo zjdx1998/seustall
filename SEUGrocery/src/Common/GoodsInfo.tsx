@@ -4,15 +4,10 @@
   @date: 2019-9-7
 */
 
-
 const fetch = require('node-fetch');
 
-const itemUrl = 'http://hanyuu.top:8080/item/'
+const itemUrl = 'http://hanyuu.top:8080/item/';
 
 export function goodsInfo(index) {
-    return(
-        fetch(itemUrl+String(index))
-            .then((response) => response.json())
-
-    )
+  return fetch(itemUrl + String(index)).then(response => response.json());
 }

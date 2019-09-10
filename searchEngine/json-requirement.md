@@ -21,12 +21,12 @@
 {
     "from": 0,
     "size":1000,
-	"query": {
-  	"multi_match": {
-    	"query": 这里是传入的参数,
-  		"fields":["note","title"]
+		"query": {
+  		"multi_match": {
+    		"query": 这里是传入的参数,
+  			"fields":["note","title"]
+  		}
   	}
-  }
 }
 ```
 
@@ -36,19 +36,22 @@
 
 对于前端提交的User信息
 
-`curl -H "Content-Type: application/json" -XPOST "localhost:9200/index-users/users" -d @jsonfile`
+`curl -H "Content-Type: application/json" -XPOST "localhost:9200/index-users/users/uuid" -d @jsonfile`
 
 其中`jsonfile`为:
 
 ```json
 {
-  "_id": uuid //This can also move to curl address: /index-users/users/uuid, recommend this way.
-  "address": a,
-  "idcard":b,
-  "info":c,
-  "score":d,
-  "studentid":e,
-  "username":f
+  "doc":{
+    "address": a,
+    "idcard":b,
+    "info":c,
+    "score":d,
+    "studentid":e,
+    "username":f
+  },
+  "doc_as_upsert": true,
+  "detect_noop": false
 }
 ```
 

@@ -43,14 +43,14 @@ const Goods = [
 
 export default class GoodsPanel extends Component {
   private props;
-  state:{
-    goodsList:any
-  }
-  constructor(props){
+  state: {
+    goodsList: any;
+  };
+  constructor(props) {
     super(props);
-    this.state={
-      goodsList:Goods,
-    }
+    this.state = {
+      goodsList: Goods,
+    };
   }
 
   render() {
@@ -58,8 +58,8 @@ export default class GoodsPanel extends Component {
       <View style={styles.goodsList}>
         {this.state.goodsList.map(i => (
           <Good
-            itemid ={i.itemid}
-            imgurl={{uri: "http://hanyuu.top:8080/"+i.imgurl}}
+            itemid={i.itemid}
+            imgurl={{uri: 'http://hanyuu.top:8080/' + i.imgurl}}
             title={i.title}
             price={i.price}
             depreciatione={i.depreciatione}
