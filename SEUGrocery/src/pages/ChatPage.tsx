@@ -74,19 +74,22 @@ export default class ChatPage extends Component {
             avatar: this.props.navigation.state.params.avatarurl_chat,
         }
         var count = 1;
+        console.log("user:  "+JSON.stringify(user))
 
         if (this.props.navigation.state.params.text_chat !== undefined) {
-            // alert(JSON.stringify(this.props.navigation.state.params.text))
+            console.log("text_chat:"+JSON.stringify(this.props.navigation.state.params.text_chat))
             this.props.navigation.state.params.text_chat.forEach(function (value) {
                 // alert(JSON.stringify(value))
                 // alert(JSON.stringify(user))
                 // alert(value.time)
+                console.log("value:"+JSON.stringify(value));
                 var message = {
-                    _id: count++,
-                    text: value.text,
-                    createdAt: new Date(value.time),
+                    _id: new Date(value.newTime).getTime(),
+                    text: value.newData,
+                    createdAt: new Date(value.newTime),
                     user: user
                 }
+                // message._id = GiftedChat.messageIdGenerator(message);
                 mList.push(message);
                 // alert(JSON.stringify(mList))
             })
@@ -112,7 +115,7 @@ export default class ChatPage extends Component {
 
     
             if ((this.props.navigation.state.params.text_chat !== undefined)
-            &&(this.props.navigation.state.params.type_chat== 2)    ) {
+            &&(this.props.navigation.state.params.type_chat=== 2)    ) {
                 var mList = [];
                 var user={                    
                     _id: this.props.navigation.state.params.uuid_chat,
@@ -125,10 +128,11 @@ export default class ChatPage extends Component {
                     // alert(JSON.stringify(value))
                     // alert(JSON.stringify(user))
                     // alert(value.time)
+                    console.log("value:"+JSON.stringify(value))
                     var message = {
-                        _id: count++,
-                        text: value.text,
-                        createdAt: new Date(value.time),
+                        _id: new Date(value.newTime).getTime(),
+                        text: value.newData,
+                        createdAt: new Date(value.newTime),
                         user: user
                     }
                     mList.push(message);
@@ -143,26 +147,38 @@ export default class ChatPage extends Component {
     }
     refreshMessage(){
         var uuid = this.state.uuid_to;
+        var user = {
+            _id:uuid,
+            name:this.state.username_to,
+            avatar:this.state.avatarurl_to,
+        }
         var messages = [];
+        console.log("chatFetch")
         MessageCenter.getNewMessageMap(function(mlist){
+            if(mlist.length==0){
+                return
+            }
+
             var texts = mlist.filter(function(e){
                 return e.key==uuid
             })
             // alert(JSON.stringify(texts))
             // alert(JSON.stringify(texts))
             // alert(JSON.stringify(texts[0].value))
+            console.log("mlist2:"+JSON.stringify(mlist))
+            console.log("texts:"+JSON.stringify(texts))
+            console.log("texts[0].value:"+JSON.stringify(texts[0].value))
             texts[0].value.forEach(function(data){
                 // alert(JSON.stringify(data))
+                console.log("data:"+JSON.stringify(data));
                 var message = {
-                    text:data.text,
-                    createdAt: new Date(data.time),
-                    user: {
-                        _id: uuid,
-                        name: data.username,
-                        avatar: data.avatarurl,                    
-                    }
+                    _id: new Date(data.newTime).getTime(),
+                    text:data.newData,
+                    createdAt: new Date(data.newTime),
+                    user: user,
                 }
                 // alert(JSON.stringify(message))
+                console.log("message:"+JSON.stringify(message))
                 messages.push(message)
             })
             messages.reverse();
@@ -180,16 +196,16 @@ export default class ChatPage extends Component {
 
         var newdata = {
             // type:1,
-            text:messages[0].text,
+            token:this.state.token,
+            to:this.state.uuid_to,
+            type:1,
+            data:messages[0].text,
             // username:messages[0].user.name,
             // avatarurl:messages[0].user.avatar,
         }
+        console.log(JSON.stringify(newdata))
 
-        postData(sendChatUrl,{
-            token:this.state.token,
-            to:this.state.uuid_to,
-            data:JSON.stringify(newdata),
-        }).then(data=>{
+        postData(sendChatUrl,newdata).then(data=>{
         // alert(JSON.stringify(data))
         this.setState(previousState => ({
             messages: GiftedChat.append(previousState.messages, messages),

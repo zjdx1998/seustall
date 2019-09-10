@@ -68,14 +68,14 @@ export default class NoticesPage extends Component {
             info: '',
         };
         that = this
-        setInterval(()=>{
-            this.refreshNoticeData();
-
-        },5000)
     }
 
     componentDidMount() {
-        var mlist = MessageCenter.getNoticesMap(
+        this.timeInterval1 = setInterval(()=>{
+            this.refreshNoticeData();
+        },8000)
+
+        var mlist = MessageCenter.getNewMessageMap(
             async function (list) {
                 // alert(JSON.stringify(list))
                 var mlist = [];
@@ -99,6 +99,7 @@ export default class NoticesPage extends Component {
                     })
                     // alert(JSON.stringify(mlist))
                     that.setState({ data: mlist })
+                    // console.log("mlist1:"+JSON.stringify(mlist))
 
                 })
                 // alert(JSON.stringify(mlist));
@@ -108,6 +109,12 @@ export default class NoticesPage extends Component {
         // this.setState({data:mlist})
     }
 
+    componentWillUnmount(){
+        clearInterval(this.timeInterval1);
+        // console.log("clear interval");
+    }
+
+
     updateState = data => {
         this.setState(data);
     };
@@ -116,14 +123,18 @@ export default class NoticesPage extends Component {
 
     renderItem = ({ item }) => (
         <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('chatP', {
+            onPress={() => {
+                // clearInterval(this.timeInterval1);
+                // console.log("clear interval");
+
+                this.props.navigation.navigate('chatP', {
                 uuid_chat: item.uuid,
                 username_chat: item.name,
                 title_chat: item.title,
                 avatarurl_chat: item.avatar_url,
                 text_chat: item.text,
                 type_chat:2,
-            })}
+            })}}
         >
             <ListItem
                 title={item.name}
@@ -139,13 +150,17 @@ export default class NoticesPage extends Component {
     refreshNoticeData() {
         var keyset = new Set();
         var data = this.state.data;
+        if(!data){
+            return
+        }
         data.forEach(function(value){
             keyset.add(value.uuid);
         })
-        console.log(keyset);
+        // console.log(keyset);
 
         MessageCenter.getNewMessageMap(function (mlist){
             // console.log(JSON.stringify(mlist))
+            
             mlist.forEach(async function(value){
                 if(keyset.has(value.key)){
                     for(var info of data){
