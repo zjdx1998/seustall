@@ -122,6 +122,7 @@ export default class NoticesPage extends Component {
                 title_chat: item.title,
                 avatarurl_chat: item.avatar_url,
                 text_chat: item.text,
+                type_chat:2,
             })}
         >
             <ListItem

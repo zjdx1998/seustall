@@ -42,6 +42,7 @@ export default class ChatPage extends Component {
             title: this.props.navigation.state.params.title_chat,
             username_to: this.props.navigation.state.params.username_chat,
             avatarurl_to: this.props.navigation.state.params.avatarurl_chat,
+            chat_messages :this.props.navigation.state.params.text_chat,
             messages: [],
         }
         UserInfo.get('token').then(data=>{this.setState({token:data})});
@@ -90,7 +91,54 @@ export default class ChatPage extends Component {
                 // alert(JSON.stringify(mList))
             })
             mList.reverse();
-            this.setState({messages:mList})
+            this.setState({messages:mList,
+                chat_messages :this.props.navigation.state.params.text_chat,
+            })
+        }
+    }
+    componentDidUpdate(){
+        this.resetUI();
+    }
+    resetUI(){
+        if(this.state.uuid_to!=this.props.navigation.state.params.uuid_chat){
+            console.log(this.state.uuid_to)
+            this.setState({
+                uuid_to: this.props.navigation.state.params.uuid_chat,
+                title: this.props.navigation.state.params.title_chat,
+                username_to: this.props.navigation.state.params.username_chat,
+                avatarurl_to: this.props.navigation.state.params.avatarurl_chat,
+                messages:[],
+            })
+
+    
+            if ((this.props.navigation.state.params.text_chat !== undefined)
+            &&(this.props.navigation.state.params.type_chat== 2)    ) {
+                var mList = [];
+                var user={                    
+                    _id: this.props.navigation.state.params.uuid_chat,
+                    name: this.props.navigation.state.params.username_chat,
+                    avatar: this.props.navigation.state.params.avatarurl_chat,
+                }
+                var count = 1;
+                // alert(JSON.stringify(this.props.navigation.state.params.text))
+                this.props.navigation.state.params.text_chat.forEach(function (value) {
+                    // alert(JSON.stringify(value))
+                    // alert(JSON.stringify(user))
+                    // alert(value.time)
+                    var message = {
+                        _id: count++,
+                        text: value.text,
+                        createdAt: new Date(value.time),
+                        user: user
+                    }
+                    mList.push(message);
+                    // alert(JSON.stringify(mList))
+                })
+                mList.reverse();
+                this.setState({messages:mList,
+                                chat_messages :this.props.navigation.state.params.text_chat,    
+                })
+            }
         }
     }
     refreshMessage(){
