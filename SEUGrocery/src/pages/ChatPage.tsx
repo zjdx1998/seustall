@@ -42,22 +42,23 @@ export default class ChatPage extends Component {
         }
         var count = 1;
 
-        // alert(JSON.stringify(this.props.navigation.state.params.text))
-        this.props.navigation.state.params.text.forEach(function(value){
-            // alert(JSON.stringify(value))
-            // alert(JSON.stringify(user))
-            // alert(value.time)
-            var message = {
-                _id:count++,
-                text:value.text,
-                createdAt: new Date(value.time),
-                user: user
-            }
-            mList.push(message);
-            // alert(JSON.stringify(mList))
-        })
-        mList.reverse();
-
+        if (this.props.navigation.state.params.text !== undefined) {
+            // alert(JSON.stringify(this.props.navigation.state.params.text))
+            this.props.navigation.state.params.text.forEach(function (value) {
+                // alert(JSON.stringify(value))
+                // alert(JSON.stringify(user))
+                // alert(value.time)
+                var message = {
+                    _id: count++,
+                    text: value.text,
+                    createdAt: new Date(value.time),
+                    user: user
+                }
+                mList.push(message);
+                // alert(JSON.stringify(mList))
+            })
+            mList.reverse();
+        }
 
 
         this.state = {
