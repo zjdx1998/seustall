@@ -45,6 +45,7 @@ export default {
 	},
 	SMSConfig:
 	{
+		switchOn:true,
 		minInterval: 60000,
 		livetime: 1800000,
 	},
@@ -70,7 +71,7 @@ export default {
 	resend:
 	{
 		// todo 打包时打开此开关
-		switchOn: false,
+		switchOn: true,
 		/**
 		switchOn: false,
 			//*/

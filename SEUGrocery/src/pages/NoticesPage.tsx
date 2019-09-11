@@ -69,13 +69,14 @@ export default class NoticesPage extends Component {
       info: '',
     };
     that = this;
-    setInterval(() => {
-      this.refreshNoticeData();
-    }, 5000);
   }
 
   componentDidMount() {
-    var mlist = MessageCenter.getNoticesMap(async function(list) {
+    this.timeInterval1 = setInterval(() => {
+      this.refreshNoticeData();
+    }, 8000);
+
+    var mlist = MessageCenter.getNewMessageMap(async function(list) {
       // alert(JSON.stringify(list))
       var mlist = [];
       var c = await list.forEach(async function(value) {
@@ -98,11 +99,17 @@ export default class NoticesPage extends Component {
         });
         // alert(JSON.stringify(mlist))
         that.setState({data: mlist});
+        // console.log("mlist1:"+JSON.stringify(mlist))
       });
       // alert(JSON.stringify(mlist));
       return mlist;
     });
     // this.setState({data:mlist})
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timeInterval1);
+    // console.log("clear interval");
   }
 
   updateState = data => {
@@ -113,7 +120,10 @@ export default class NoticesPage extends Component {
 
   renderItem = ({item}) => (
     <TouchableOpacity
-      onPress={() =>
+      onPress={() => {
+        // clearInterval(this.timeInterval1);
+        // console.log("clear interval");
+
         this.props.navigation.navigate('chatP', {
           uuid_chat: item.uuid,
           username_chat: item.name,
@@ -121,8 +131,8 @@ export default class NoticesPage extends Component {
           avatarurl_chat: item.avatar_url,
           text_chat: item.text,
           type_chat: 2,
-        })
-      }>
+        });
+      }}>
       <ListItem
         title={item.name}
         subtitle={item.subtitle}
@@ -141,19 +151,23 @@ export default class NoticesPage extends Component {
   refreshNoticeData() {
     var keyset = new Set();
     var data = this.state.data;
+    if (!data) {
+      return;
+    }
     data.forEach(function(value) {
       keyset.add(value.uuid);
     });
-    console.log(keyset);
+    // console.log(keyset);
 
     MessageCenter.getNewMessageMap(function(mlist) {
       // console.log(JSON.stringify(mlist))
+
       mlist.forEach(async function(value) {
         if (keyset.has(value.key)) {
           for (var info of data) {
             // console.log(JSON.stringify(info.text))
             // console.log(JSON.stringify(value.value))
-            if (info.uuid === value.key) {
+            if (info.uuid == value.key) {
               var len = 0;
               for (var mes in value.value) {
                 len++;
@@ -223,12 +237,12 @@ export default class NoticesPage extends Component {
   render() {
     return (
       <View style={styles.baseContainer}>
-        <ScrollView>
+        <ScrollView style={styles.test}>
           <LocalBackHeader navigation={this.props.navigation} />
-          <Text h4 style={{alignSelf: 'center'}}>
+          <Text h4 style={{alignSelf: 'center', top: -SP.HB(5)}}>
             消息中心
           </Text>
-          <View>
+          <View style={{top: -SP.HB(4)}}>
             <FlatList
               keyExtractor={this.keyExtractor}
               data={this.state.data}
@@ -245,5 +259,69 @@ const styles = StyleSheet.create({
   baseContainer: {
     backgroundColor: '#FFF0F5',
     flex: 1,
+  },
+  buttonContainer: {
+    top: -50,
+    left: SP.WB(100) * 0.7,
+    height: 40,
+    width: SP.WB(100) * 0.25,
+    justifyContent: 'center',
+    padding: 10,
+  },
+  title: {
+    padding: 10,
+    fontSize: 40,
+    marginTop: 15,
+    marginRight: 10,
+    marginLeft: 10,
+    marginBottom: 5,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    //borderBottomColor:'white',
+    //borderBottomWidth:0.5,
+  },
+  detailContainer: {
+    marginTop: 5,
+    marginLeft: 10,
+    marginRight: 10,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    height: 200,
+    justifyContent: 'space-between',
+  },
+  detail: {
+    fontSize: 20,
+    /*borderTopColor:'white',
+            borderTopWidth:0.5,*/
+  },
+  secondCard: {
+    flex: 1,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    marginLeft: 10,
+    marginRight: 10,
+  },
+
+  container_row: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    margin: 5,
+    flex: 1,
+    //margin:10,
+    backgroundColor: 'white',
+    borderRadius: 10,
+  },
+  h4: {
+    fontSize: 20,
+    margin: 5,
+
+    backgroundColor: 'white',
+    borderRadius: 10,
+  },
+  value: {
+    color: '#cc6699',
+    fontSize: 30,
+    fontWeight: 'bold',
   },
 });
