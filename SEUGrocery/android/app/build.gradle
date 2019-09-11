@@ -147,16 +147,16 @@ android {
     }
     signingConfigs {
         debug {
-            storeFile file('TedsKeyStore.keystore')
-            storePassword 'TedStack'
-            keyAlias 'TedsKeyAlias'
-            keyPassword 'TedStack'
+//            storeFile file('TedsKeyStore.keystore')
+//            storePassword 'TedStack'
+//            keyAlias 'TedsKeyAlias'
+//            keyPassword 'TedStack'
         }
         release {
-            storeFile file('TedsKeyStore.keystore')
-            storePassword 'TedStack'
-            keyAlias 'TedsKeyAlias'
-            keyPassword 'TedStack'
+//            storeFile file('TedsKeyStore.keystore')
+//            storePassword 'TedStack'
+//            keyAlias 'TedsKeyAlias'
+//            keyPassword 'TedStack'
         }
     }
     buildTypes {

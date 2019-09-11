@@ -17,6 +17,7 @@ import IDReminder from '../Components/IDReminder';
 import * as TL from '../Common/testItemList';
 import {list} from '../Common/testItemList';
 import UserInfo from '../Common/UserInfo';
+import * as SP from '../Common/ScreenProperty';
 
 export default class MainPages extends Component {
   private props: any;
@@ -79,6 +80,7 @@ export default class MainPages extends Component {
     });
   };
 
+
   render() {
     return (
       <View style={styles.baseContainer}>
@@ -98,7 +100,8 @@ export default class MainPages extends Component {
             style={{
               backgroundColor: '#fff',
               justifyContent: 'center',
-              marginHorizontal: 10,
+              marginHorizontal: SP.HB(10),
+              borderRadius:20,
             }}>
             <Text style={{fontSize: 20, color: '#cc6699', alignSelf: 'center'}}>
               为你推荐
@@ -192,7 +195,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF0F5',
   },
   headerContainer: {
-    // flex: 1,
+    flex: 1,
   },
   slideshowContainer: {
     flex: 5,
