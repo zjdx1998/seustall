@@ -164,9 +164,9 @@ function webServer()
 			// var res = requireCode(ctx.request.body.phonenumber);
 			var rescode = verifyCenter.push(ctx.request.body.phonenumber);
 			res = rescode
-			if (rescode.status == conf.res.success)
+			if (rescode.status == conf.res.success && conf.SMSConfig.switchOn)
 			{
-				// sendSMS(ctx.request.body.phonenumber, rescode.data.code)
+				sendSMS(ctx.request.body.phonenumber, rescode.data.code)
 			}
 			ctx.response.body = JSON.stringify(res);
 			ctx.response.type = "application/json";
