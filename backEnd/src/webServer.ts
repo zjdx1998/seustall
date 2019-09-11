@@ -311,8 +311,12 @@ function webServer()
 					ctx.response.status = 403;
 					return;
 				}
-				const queryres: any = await database.queryUserS(verify.uuid);
-				await mail(queryres as UserInterface)
+				const resquery: any = await database.queryUserS(verify.uuid);
+				if (ctx.request.body.idcard)
+				{
+					resquery.idcard = ctx.request.body.idcard;
+				}
+				await mail(resquery as UserInterface)
 				res.status = conf.res.success;
 				ctx.response.body = JSON.stringify(res);
 				ctx.response.type = 'application/json';
