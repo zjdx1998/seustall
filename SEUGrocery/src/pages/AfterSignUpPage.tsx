@@ -212,7 +212,7 @@ export default class AfterSignUpPage extends Component {
             <View style={styles.inputContainer}>
               <Picker
                 selectedValue={this.state.campus}
-                style={{width: SP.WB(30), fontSize: 20}}
+                style={{width: SP.WB(70), fontSize: 20}}
                 onValueChange={(itemValue, itemIndex) => {
                   this.setState({campus: itemValue});
                 }}>
@@ -275,30 +275,31 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   buttonContainer: {
-    height: 50,
+    height: SP.HB(10),
     width: SP.WB(50),
     justifyContent: 'center',
     alignSelf: 'center',
-    padding: 10,
+    padding: SP.WB(1),
   },
   viewUserTop: {
-    marginBottom: 5,
-    height: 200,
+    marginBottom: SP.HB(3),
+    height: SP.HB(30),
     backgroundColor: '#cc6699',
     alignItems: 'center',
     justifyContent: 'flex-end',
   },
   txtArea: {
     justifyContent: 'center',
-    margin: 20,
+    margin: SP.WB(6),
   },
   detailContainer: {
-    marginBottom: 5,
-    marginLeft: 15,
-    marginRight: 15,
+    marginBottom: SP.HB(3),
+    marginLeft: SP.WB(5),
+    marginRight: SP.WB(5),
     backgroundColor: 'white',
     borderRadius: 10,
-    height: 150,
+    height: SP.WB(30),
+    width:SP.WB(90),
     justifyContent: 'space-between',
   },
   detail: {
@@ -309,7 +310,7 @@ const styles = StyleSheet.create({
 
   inputContainer: {
     //margin:1,
-    width: 200,
+    width: SP.WB(90),
     backgroundColor: 'white',
     borderRadius: 10,
     flex: 1,
@@ -320,16 +321,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     //justifyContent: 'center',
     justifyContent: 'space-between',
-    marginBottom: 5,
-    marginLeft: 15,
-    marginRight: 15,
+    marginBottom: SP.HB(1),
+    marginLeft: SP.WB(5),
+    marginRight: SP.WB(5),
 
     //flex: 1,
   },
   h4: {
     alignSelf: 'center',
     fontSize: 15,
-    margin: 5,
+    margin: SP.WB(1),
   },
   value: {
     color: '#cc6699',
@@ -337,15 +338,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   viewEdit: {
-    width: 90,
+    width: SP.WB(40),
     //marginTop: 10,
-    height: 20,
+    height: SP.HB(3),
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
   txtEdit: {
-    marginLeft: 3,
+    marginLeft: SP.WB(2),
     alignSelf: 'center',
     color: 'white',
     fontSize: 12,

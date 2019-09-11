@@ -317,7 +317,7 @@ export default class ReleaseIWantPage extends Component {
                 <View style={styles.inputContainer}>
                   <Picker
                     selectedValue={this.state.campus}
-                    style={{width: width * 0.3, fontSize: 20}}
+                    style={{width: width * 0.7, fontSize: 20}}
                     onValueChange={(itemValue, itemIndex) => {
                       this.setState({campus: itemValue});
                     }}>

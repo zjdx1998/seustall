@@ -5,6 +5,7 @@
 */
 import React, {Component} from 'react';
 import AppTotalNavigation from './src/Components/TotalNavigate';
+import AfterSignUpPage from "./src/pages/AfterSignUpPage";
 
 export default class App extends Component {
   state = {
@@ -13,6 +14,7 @@ export default class App extends Component {
 
   render() {
     return <AppTotalNavigation />;
+    // return <AfterSignUpPage/>
   }
 
 }
