@@ -56,7 +56,7 @@ export default class FavoritesPage extends Component {
               onPress={() => {
                 this.setState({showGoodsWay: '0'});
               }}>
-              <Text style={{color: '#cc6699'}}>全部</Text>
+              <Text style={{fontSize:18, color: '#cc6699'}}>全部</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity activeOpacity={0.2} focusedOpacity={0.5}>
@@ -69,7 +69,7 @@ export default class FavoritesPage extends Component {
               onPress={() => {
                 this.setState({showGoodsWay: '1'});
               }}>
-              <Text style={{color: '#cc6699'}}>未卖出</Text>
+              <Text style={{fontSize:18, color: '#cc6699'}}>未卖出</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity activeOpacity={0.2} focusedOpacity={0.5}>
@@ -82,7 +82,7 @@ export default class FavoritesPage extends Component {
               onPress={() => {
                 this.setState({showGoodsWay: '2'});
               }}>
-              <Text style={{color: '#cc6699'}}>已卖出</Text>
+              <Text style={{fontSize:18, color: '#cc6699'}}>已卖出</Text>
             </View>
           </TouchableOpacity>
         </View>

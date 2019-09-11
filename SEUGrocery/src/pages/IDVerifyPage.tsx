@@ -42,11 +42,11 @@ export default class IDVerifyPage extends Component {
   }
 
   buttonPressed = () => {
-    if (this.state.inputNum == '') {
+    if (this.state.inputNum === '') {
       alert('请输入一卡通号');
       return;
     }
-    if (this.state.inputedCode == '') {
+    if (this.state.inputedCode === '') {
       alert('请输入验证码');
       return;
     }

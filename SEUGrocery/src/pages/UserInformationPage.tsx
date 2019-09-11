@@ -12,7 +12,7 @@ import {
   ImageBackground,
 } from 'react-native';
 import {Avatar, Text} from 'react-native-elements';
-
+import * as SP from '../Common/ScreenProperty';
 import LocalBackHeader from '../Components/LocalBackHeader';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import GoodsPanel from '../Components/GoodsPanel';
@@ -54,7 +54,7 @@ export default class UserInformationPage extends Component {
     });
   }
   getVerify() {
-    if (this.state.verified == '0') {
+    if (this.state.verified === '0') {
       return '未认证';
     } else {
       return '已认证';
