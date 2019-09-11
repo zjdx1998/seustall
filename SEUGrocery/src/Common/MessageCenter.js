@@ -28,16 +28,20 @@ class MessageCenter{
   static getNoticesMap(callback) {
     UserInfo.get('token').then(toke => {
       this.fetchAllMessage(toke).then(list => {
+        if(!list.data){
+          return
+        }
 
         var uidmap = new Map()
+        console.log("resData:"+JSON.stringify(list))
 
         for(var i of list.data){
-          var newData = JSON.parse(i.data);
-          newData.time = i.createdAt;
+          var newData = i.data;
+          var newTime = i.createdAt;
           if (uidmap.has(i.from)) {
-            uidmap.get(i.from).push(newData)
+            uidmap.get(i.from).push({newData,newTime})
           } else {
-            uidmap.set(i.from, [newData])
+            uidmap.set(i.from, [{newData,newTime}])
           }
           
         }
@@ -64,16 +68,18 @@ class MessageCenter{
       this.fetchNewMessage(toke).then(list => {
 
         var uidmap = new Map()
+        if(!list.data){
+          return
+        }
 
         for(var i of list.data){
-          var newData = JSON.parse(i.data);
-          newData.time = i.createdAt;
+          var newData = i.data;
+          var newTime = i.createdAt;
           if (uidmap.has(i.from)) {
-            uidmap.get(i.from).push(newData)
+            uidmap.get(i.from).push({newData,newTime})
           } else {
-            uidmap.set(i.from, [newData])
+            uidmap.set(i.from, [{newData,newTime}])
           }
-          
         }
         var mList = [];
 

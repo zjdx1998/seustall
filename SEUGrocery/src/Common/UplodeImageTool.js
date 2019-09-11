@@ -9,20 +9,20 @@
  * @param {JSON} params body的请求参数
  * @return 返回Promise
  */
-export function uploadImage(url,params) {
-    let formData = new FormData();
-    for (let key in params) {
-        formData.append(key, params[key]);
-    }
-    for (let url of params.path.split('++')) {
+export function uploadImage(url, params) {
+  let formData = new FormData();
+  for (let key in params) {
+    formData.append(key, params[key]);
+  }
+  for (let url of params.path.split('++')) {
     let file = {uri: url, type: 'image/jpeg', name: 'image.jpg'};
-    formData.append("file", file);
-    }
-    return fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'multipart/form-data;charset=utf-8',
-        },
-        body: formData,
-    }).then((response) => response.json())
+    formData.append('file', file);
+  }
+  return fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data;charset=utf-8',
+    },
+    body: formData,
+  }).then(response => response.json());
 }

@@ -79,31 +79,28 @@ export default class SlideShow extends Component {
           }}
           loop>
           <View style={styles.slide}>
-
             <Image
               resizeMode="stretch"
               style={styles.image}
               source={require('../Common/img/banner1.png')}
             />
-              <Text numberOfLines={1}> </Text>
+            <Text numberOfLines={1} />
           </View>
           <View style={styles.slide}>
-
             <Image
               resizeMode="stretch"
               style={styles.image}
               source={require('../Common/img/banner2.png')}
             />
-              <Text numberOfLines={1}> </Text>
+            <Text numberOfLines={1} />
           </View>
           <View style={styles.slide}>
-
             <Image
               resizeMode="stretch"
               style={styles.image}
               source={require('../Common/img/banner3.png')}
             />
-              <Text numberOfLines={1}> </Text>
+            <Text numberOfLines={1} />
           </View>
           <View style={styles.slide}>
             <Image
@@ -111,7 +108,7 @@ export default class SlideShow extends Component {
               style={styles.image}
               source={require('../Common/img/banner4.png')}
             />
-              <Text numberOfLines={1}> </Text>
+            <Text numberOfLines={1} />
           </View>
         </Swiper>
       </View>

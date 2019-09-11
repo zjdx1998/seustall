@@ -5,38 +5,37 @@
 */
 import React, {Component} from 'react';
 import {
-    ActivityIndicator,
-    View,
-    ScrollView,
-    StyleSheet,
-    Dimensions,
-    Alert,
+  ActivityIndicator,
+  View,
+  ScrollView,
+  StyleSheet,
+  Dimensions,
+  Alert,
 } from 'react-native';
 import {
-    Text,
-    Button,
-    ThemeProvider,
-    Image,
-    Avatar,
+  Text,
+  Button,
+  ThemeProvider,
+  Image,
+  Avatar,
 } from 'react-native-elements';
 import LocalBackHeader from '../Components/LocalBackHeader';
 import * as SP from '../Common/ScreenProperty';
-import {TouchableOpacity} from "react-native-gesture-handler";
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import UserInfo from '../Common/UserInfo';
-import { postData } from '../Common/FetchHelper';
+import {postData} from '../Common/FetchHelper';
 import ItemList from '../Common/ItemList';
 
-export default class OrderForm extends Component{
-    constructor(props){
-          super(props);
-          this.state=this.props.navigation.state.params.orderForm;
-    }
-    render(){
-        return(
-        <View>
+export default class OrderForm extends Component {
+  constructor(props) {
+    super(props);
+    this.state = this.props.navigation.state.params.orderForm;
+  }
+  render() {
+    return (
+      <View>
         <Text h3>{this.state.title}</Text>
-        </View>
-        )
-    }
-
+      </View>
+    );
+  }
 }
