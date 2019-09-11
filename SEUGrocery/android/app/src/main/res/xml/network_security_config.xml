@@ -1,11 +1,4 @@
-<<<<<<< HEAD
 <?xml version = "1.0" encoding = "utf-8"?>
 <network-security-config>
     <base-config cleartextTrafficPermitted ="true"/>
 </network-security-config>
-=======
-<?xml version="1.0" encoding="utf-8" ?>
-<network-security-config>
-    <base-config cleartextTrafficPerimitted="true"/>
-</network-security-config>
->>>>>>> 8f77b77b89577d74823b8d6ef7912f0b5ca892fb
