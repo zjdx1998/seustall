@@ -80,6 +80,11 @@ export default class MainPages extends Component {
     });
   };
 
+  // showButton= async () =>{
+  //   let verified=await UserInfo.get('verified');
+  //   console.log(verified); 
+  // }
+
 
   render() {
     return (
@@ -116,6 +121,7 @@ export default class MainPages extends Component {
             />
           </View>
           <View style={styles.headerContainer}>
+            {/* {this.showButton();} */}
             <Button
               onPress={() => this.setModalVisible(true)}
               title="去认证"

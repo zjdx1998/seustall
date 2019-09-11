@@ -52,7 +52,7 @@ export default class IDVerifySuccess extends Component {
                 source={require('../Common/img/CatWithFlower.png')}
               />
               <Text style={{fontSize: 26, color: '#cc6699', top: SP.H(-160)}}>
-                恭喜您，认证成功
+                请去东大邮箱点击链接完成认证
               </Text>
             </View>
             <TouchableHighlight

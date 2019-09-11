@@ -76,7 +76,7 @@ export default class NoticesPage extends Component {
       this.refreshNoticeData();
     }, 8000);
 
-    var mlist = MessageCenter.getNewMessageMap(async function(list) {
+    var mlist = MessageCenter.getNoticesMap(async function(list) {
       // alert(JSON.stringify(list))
       var mlist = [];
       var c = await list.forEach(async function(value) {
@@ -121,7 +121,7 @@ export default class NoticesPage extends Component {
   renderItem = ({item}) => (
     <TouchableOpacity
       onPress={() => {
-        // clearInterval(this.timeInterval1);
+        clearInterval(this.timeInterval1);
         // console.log("clear interval");
 
         this.props.navigation.navigate('chatP', {

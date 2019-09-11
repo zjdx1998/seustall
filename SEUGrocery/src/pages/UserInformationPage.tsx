@@ -54,7 +54,7 @@ export default class UserInformationPage extends Component {
     });
   }
   getVerify() {
-    if (this.state.verified === '0') {
+    if (this.state.verified == '0') {
       return '未认证';
     } else {
       return '已认证';

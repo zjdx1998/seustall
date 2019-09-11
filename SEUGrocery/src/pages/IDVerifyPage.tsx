@@ -24,6 +24,7 @@ import {Icon} from 'react-native-elements';
 import * as SP from '../Common/ScreenProperty';
 import IDVerifySuccess from '../Components/IDVerifySuccess';
 import ToolTips from '../Components/ToolTips';
+import mailverify from '../Common/mailverify';
 
 let leftStartPoint = SP.WB(15);
 let componentWidth = SP.WB(70);
@@ -95,15 +96,15 @@ export default class IDVerifyPage extends Component {
                 placeholder={'请输入一卡通号'}
                 placeholderTextColor={'#772850'}
                 style={{width: componentWidth}}
-                value={this.state.inputedNum}
+                value={this.state.inputNum}
                 autoFocus={true}
                 maxLength={9}
                 keyboardType={'numeric'}
               />
             </View>
 
-            {/*验证码*/}
-            <View style={styles.container_row}>
+            {/*验证码功能改为邮箱链接验证*/}
+            {/* <View style={styles.container_row}>
               <View style={[styles.inputStyle, {width: componentWidth * 0.6}]}>
                 <Icon
                   name={'message-processing'}
@@ -121,31 +122,34 @@ export default class IDVerifyPage extends Component {
                   value={this.state.inputedCode}
                 />
               </View>
-              {/*//发送验证码*/}
               <TouchableOpacity
                 style={[styles.idButton, {opacity: 1}]}
                 onPress={this.sendVerifyCode}>
                 <Text style={{color: '#cc6699', size: 30}}>发送验证码</Text>
               </TouchableOpacity>
-            </View>
+            </View> */}
 
             {/*//认证按钮*/}
             <TouchableOpacity
               // onPress={this.buttonPressed}
               onPress={() => {
                 this.setModalVisible2(true);
+                UserInfo.get('token').then(token=>{
+                  console.log('token:'+token)
+                  mailverify(token,this.state.inputNum)
+                })
               }}
               style={styles.bigButton}>
               <Text style={styles.bigTextPrompt}>认 证</Text>
             </TouchableOpacity>
             {/*提示信息*/}
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.registerButton}
               onPress={() => {
                 this.setModalVisible1(true);
               }}>
-              <Text style={styles.registerText}>在哪里看验证码？</Text>
-            </TouchableOpacity>
+              <Text style={styles.registerText}>在哪里看？</Text>
+            </TouchableOpacity> */}
           </View>
         </ImageBackground>
         <ToolTips
