@@ -47,10 +47,13 @@ class UserInfo {
    */
 
   static get(key) {
-    return AsyncStorage.getItem(key).then(value => {
-      const jsonValue = JSON.parse(value);
-      return jsonValue;
-    });
+    try {
+      return AsyncStorage.getItem(key).then(value => {
+          const jsonValue = JSON.parse(value);
+          return jsonValue;
+        })
+        .catch(e => {});
+    } catch (e) {}
   }
 
   /**
@@ -60,7 +63,9 @@ class UserInfo {
    * @returns {*}
    */
   static save(key, value) {
-    return AsyncStorage.setItem(key, JSON.stringify(value));
+    try {
+      return AsyncStorage.setItem(key, JSON.stringify(value));
+    } catch (e) {}
   }
 
   static saveUserInfo(userInfo) {

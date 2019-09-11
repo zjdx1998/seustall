@@ -5,12 +5,13 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
+		021319152328A1F1000C6B5B /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 021319132328A1F1000C6B5B /* LaunchScreen.xib */; };
 		028817DF231C4B820089AB26 /* SEUGroceryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* SEUGroceryTests.m */; };
 		028817E0231C4B830089AB26 /* SEUGroceryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* SEUGroceryTests.m */; };
 		0856877C7C4245A192A6DC24 /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1C02306195114BAC97FD68E6 /* Fontisto.ttf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
-		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		1735F5F50A544FFFBC3FDC46 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2EACA6055FA64C55B0A266C8 /* MaterialCommunityIcons.ttf */; };
@@ -59,12 +60,12 @@
 		00E356EE1AD99517003FC87E /* SEUGroceryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SEUGroceryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* SEUGroceryTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SEUGroceryTests.m; sourceTree = "<group>"; };
+		021319142328A1F1000C6B5B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = SEUGrocery/Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		08DB51E651C6413385463A6E /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		0AC314A3D14E46A98B56E073 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* SEUGrocery.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SEUGrocery.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = SEUGrocery/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = SEUGrocery/AppDelegate.m; sourceTree = "<group>"; };
-		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = SEUGrocery/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = SEUGrocery/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = SEUGrocery/main.m; sourceTree = "<group>"; };
@@ -156,12 +157,12 @@
 		13B07FAE1A68108700A75B9A /* SEUGrocery */ = {
 			isa = PBXGroup;
 			children = (
+				021319132328A1F1000C6B5B /* LaunchScreen.xib */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
 			name = SEUGrocery;
@@ -399,7 +400,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				88A1C9449F164F7FB6FD17A9 /* AntDesign.ttf in Resources */,
 				BDA9BCAD950E425C81C2FBB4 /* Entypo.ttf in Resources */,
 				80C84509DDA349A29CEF7918 /* EvilIcons.ttf in Resources */,
@@ -415,6 +415,7 @@
 				4AE83E6FC1D04ABEBBE46233 /* MaterialIcons.ttf in Resources */,
 				C059AF4B7D724A9EAE4A2B03 /* Octicons.ttf in Resources */,
 				656A1F0B9D8749D7B9B46B4B /* SimpleLineIcons.ttf in Resources */,
+				021319152328A1F1000C6B5B /* LaunchScreen.xib in Resources */,
 				5CD341FC5F52467493FC6443 /* Zocial.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -692,13 +693,12 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		13B07FB11A68108700A75B9A /* LaunchScreen.xib */ = {
+		021319132328A1F1000C6B5B /* LaunchScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				13B07FB21A68108700A75B9A /* Base */,
+				021319142328A1F1000C6B5B /* Base */,
 			);
 			name = LaunchScreen.xib;
-			path = SEUGrocery;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -981,6 +981,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = GMC4N6DPWC;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
