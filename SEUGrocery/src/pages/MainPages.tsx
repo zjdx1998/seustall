@@ -25,6 +25,7 @@ export default class MainPages extends Component {
     modalVisible: false,
     list: [],
     wantList: [],
+    verified: 0,
   };
   itemids = [];
 
@@ -36,8 +37,11 @@ export default class MainPages extends Component {
     alert('刷新');
   }
 
-  componentDidMount(): void {
+  async componentDidMount(): void {
     this.getMore();
+    let verified = await UserInfo.get('verified');
+    this.setState({verified:verified != 0});
+    console.log(verified);
   }
 
   getMore = () => {
@@ -80,10 +84,18 @@ export default class MainPages extends Component {
     });
   };
 
-  // showButton= async () =>{
-  //   let verified=await UserInfo.get('verified');
-  //   console.log(verified); 
-  // }
+  showButton=() =>{
+    if(this.state.verified){
+      return null;
+    }
+    else {return (
+         <Button
+              onPress={() => this.setModalVisible(true)}
+              title="去认证"
+              buttonStyle={{backgroundColor: '#cc6699'}}
+            />
+    )}
+  }
 
 
   render() {
@@ -121,12 +133,7 @@ export default class MainPages extends Component {
             />
           </View>
           <View style={styles.headerContainer}>
-            {/* {this.showButton();} */}
-            <Button
-              onPress={() => this.setModalVisible(true)}
-              title="去认证"
-              buttonStyle={{backgroundColor: '#cc6699'}}
-            />
+             {this.showButton()}
           </View>
           <IDReminder
             modalVisible={this.state.modalVisible}
