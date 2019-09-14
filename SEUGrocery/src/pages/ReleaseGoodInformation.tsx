@@ -204,7 +204,7 @@ export default class ReleaseInformation extends Component {
             <Text style={styles.h4}>校区：</Text>
             <Picker
               selectedValue={this.state.campus}
-              style={{width: width * 0.3, fontSize: 20}}
+              style={{width: width * 0.7, fontSize: 20}}
               onValueChange={(itemValue, itemIndex) => {
                 this.setState({campus: itemValue});
               }}>

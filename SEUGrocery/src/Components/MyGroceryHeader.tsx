@@ -79,7 +79,7 @@ export default class MyGroceryHeader extends Component {
     var i: number;
     var soldnum = 0;
     for (i = 0; i < num; i++) {
-      if (list[i].sold == 2) {
+      if (list[i].sold === 2) {
         soldnum++;
       }
     }
@@ -111,7 +111,7 @@ export default class MyGroceryHeader extends Component {
       <View style={styles.container}>
         <View style={styles.viewUserTop}>
           <Avatar
-            size={SP.WB(20)}
+            size={SP.WB(25)}
             rounded
             source={{uri: this.state.userAvatar}}
             // source={{uri: UserInfo.get('avatarurl').avatarurl}}
@@ -144,21 +144,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   viewUserTop: {
-    padding: 10,
-    margin: 10,
-    height: 150,
+    padding: SP.HB(1.2),
+    margin: SP.HB(1.2),
+    height: SP.HB(20),
   },
   txtArea: {
     justifyContent: 'center',
-    margin: 20,
+    margin: SP.HB(1),
   },
   txtTitle: {
-    fontSize: SP.setSpText(15),
+    fontSize: SP.setSpText(10),
     alignSelf: 'center',
     color: '#ffffff',
   },
   txtInfo: {
-    fontSize: SP.setSpText(10),
+    fontSize: SP.setSpText(7),
     alignSelf: 'center',
     color: '#ffffff',
     marginTop: 40,

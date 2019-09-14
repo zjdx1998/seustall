@@ -152,10 +152,10 @@ export default class OrderCenterPage extends Component {
         <View style={styles.headerContainer}>
           <LocalBackHeader navigation={this.props.navigation} />
         </View>
-        <Text h3 style={{alignSelf: 'center', color: 'white', top: -SP.HB(5)}}>
+        <Text h4 style={{alignSelf: 'center', color: 'black', top: -SP.HB(0)}}>
           订单中心
         </Text>
-        <View style={{top: -SP.HB(3)}}>
+        <View style={{top: -SP.HB(0)}}>
           {this.state.orderList.map((i, j) => {
             return (
               <View style={styles.orderContainer}>
@@ -290,7 +290,6 @@ export default class OrderCenterPage extends Component {
                         'http://hanyuu.top:8080/user/want/delete',
                         data,
                       ).then(res => {
-                        console.log('delete', res);
                         this.getInfo();
                       });
                     }}

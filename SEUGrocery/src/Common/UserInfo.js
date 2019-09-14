@@ -47,10 +47,14 @@ class UserInfo {
    */
 
   static get(key) {
-    return AsyncStorage.getItem(key).then(value => {
-      const jsonValue = JSON.parse(value);
-      return jsonValue;
-    });
+    try {
+      return AsyncStorage.getItem(key)
+        .then(value => {
+          const jsonValue = JSON.parse(value);
+          return jsonValue;
+        })
+        .catch(e => {});
+    } catch (e) {}
   }
 
   /**
@@ -60,12 +64,14 @@ class UserInfo {
    * @returns {*}
    */
   static save(key, value) {
-    return AsyncStorage.setItem(key, JSON.stringify(value));
+    try {
+      return AsyncStorage.setItem(key, JSON.stringify(value)).catch(e => {});
+    } catch (e) {}
   }
 
   static saveUserInfo(userInfo) {
     this.save('uuid', userInfo.info.uuid);
-    this.save('password', userInfo.info.password);
+    //this.save('password', userInfo.info.password);
     this.save('username', userInfo.info.username);
     this.save('phonenumber', userInfo.info.phonenumber);
     this.save('idcard', userInfo.info.idcard);

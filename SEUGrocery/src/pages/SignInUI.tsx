@@ -155,7 +155,7 @@ export default class SignInUI extends Component {
                 onChangeText={newText => this.updateNum(newText)}
                 placeholder={'请输入手机号'}
                 placeholderTextColor={'#772850'}
-                style={{width: componentWidth}}
+                style={{width: componentWidth,height:totalHeight*0.06}}
                 value={this.state.inputedNum}
                 aitoFocus={true}
                 maxLength={11}
@@ -180,7 +180,7 @@ export default class SignInUI extends Component {
                   password={true}
                   placeholder={this.state.PWplacehold}
                   placeholderTextColor={'#772850'}
-                  style={{width: this.state.PWInputWidth}}
+                  style={{width: this.state.PWInputWidth,height:totalHeight*0.06}}
                   secureTextEntry={!this.state.PWVisible}
                   value={this.state.inputedPW}
                 />
@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
   },
 
   numberInputStyle: {
-    bottom: heading + 90,
+    bottom: heading +totalHeight*0.15,
     left: leftStartPoint,
     width: componentWidth,
     backgroundColor: 'white',
@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   passwordInputStyle: {
-    bottom: heading + 70,
+    bottom: heading + totalHeight*0.12,
     left: leftStartPoint,
     // width: componentWidth,
     // backgroundColor:'#cc6699',
@@ -262,12 +262,12 @@ const styles = StyleSheet.create({
     borderColor: '#cc6699',
   },
   bigButton: {
-    bottom: heading + 50,
+    bottom: heading + totalHeight*0.09,
     backgroundColor: 'white',
     left: leftStartPoint,
     width: componentWidth,
     borderRadius: 50,
-    padding: 10,
+    padding: totalHeight*0.01,
   },
   bigTextPrompt: {
     color: '#cc6699',
@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   registerButton: {
-    bottom: heading + 30,
+    bottom: heading + totalHeight*0.06,
     left: leftStartPoint,
     width: componentWidth * 0.7,
   },
@@ -290,19 +290,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingLeft: 20,
+    paddingLeft: totalWidth*0.05,
     opacity: 0.7,
     borderWidth: 1,
     borderRadius: 50,
   },
   idButton: {
-    bottom: heading + 70,
+    bottom: heading + totalHeight*0.09,
     backgroundColor: 'white',
     // color:'#cc6699'
     textAlign: 'center',
     fontSize: 30,
     borderRadius: 50,
-    padding: 15,
+    padding: totalHeight*0.01,
     // left:totalWidth*0.15,
     marginLeft: totalWidth * 0.2,
   },
