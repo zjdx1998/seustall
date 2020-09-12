@@ -25,7 +25,7 @@
     "koa-static": "^5.0.0",
     "mkdirp": "^0.5.1",
     "mysql2": "^1.6.5",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "nodemailer": "^6.3.0",
     "pg": "^7.12.1",
     "pg-hstore": "^2.3.3",
